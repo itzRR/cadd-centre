@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, CartesianGrid, Legend
@@ -141,7 +142,9 @@ export default function MarketingDashboard() {
           </div>
           <div>
             <h1 className="font-bold text-lg leading-tight tracking-tight text-gray-900">Marketing</h1>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Scholar Sync</p>
+            <Link href="/admin/ims" className="text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-orange-500 transition-colors flex items-center gap-1">
+              ← Scholar Sync Hub
+            </Link>
           </div>
         </div>
 
