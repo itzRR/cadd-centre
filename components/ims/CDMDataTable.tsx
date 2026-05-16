@@ -400,7 +400,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
                             })}
                           </div>
                         ) : (
-                          <div className="relative">
+                          <div className="relative inline-block text-left">
                             <button
                               onClick={() => setOpenActionRow(openActionRow === rowId ? null : rowId)}
                               className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all"
