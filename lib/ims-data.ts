@@ -46,6 +46,7 @@ export async function updateProfileRole(id: string, updates: Partial<{
   avatar_url: string
   documents: any[]
   nic: string
+  device_id: string | null
   join_date: string
   contract_type: string
   monthly_salary: number
