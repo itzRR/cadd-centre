@@ -360,6 +360,7 @@ export default function IMSUsersPage() {
         work_schedule: editForm.work_schedule,
         office_assets: editForm.office_assets,
         nic: editForm.nic,
+        device_id: editForm.device_id || null,
         join_date: editForm.join_date || undefined,
         contract_type: editForm.contract_type,
         monthly_salary: editForm.monthly_salary ? parseFloat(editForm.monthly_salary) : undefined,

@@ -181,6 +181,7 @@ CREATE TABLE public.profiles (
   phone                   TEXT,
   role                    public.user_role NOT NULL DEFAULT 'student',
   avatar_url              TEXT,
+    device_id               TEXT,
   branch_id               UUID REFERENCES public.branches(id) ON DELETE SET NULL,
   -- Student fields
   student_id              TEXT UNIQUE,

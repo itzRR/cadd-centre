@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     const {
       email, password, name, role, position, department,
       access_level, permissions, work_schedule, office_assets,
-      phone, nic, join_date, contract_type, monthly_salary,
+      phone, nic, device_id, join_date, contract_type, monthly_salary,
       employee_status, student_id,
       // Student-specific fields
       personal_email, academic_email, academic_password,
@@ -105,6 +105,7 @@ export async function POST(req: NextRequest) {
         office_assets: office_assets || [],
         phone: phone || null,
         nic: nic || null,
+        device_id: device_id || null,
         join_date: join_date || null,
         contract_type: contract_type || 'Full-time',
         monthly_salary: monthly_salary || null,

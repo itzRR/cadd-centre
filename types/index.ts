@@ -68,6 +68,7 @@ export interface Profile {
   monthly_salary?: number
   employee_status?: string
   disabled: boolean
+  device_id: string | null
   last_active: string | null
   is_active: boolean
   created_at: string
