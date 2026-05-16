@@ -207,7 +207,7 @@ export default function IMSUsersPage() {
     permissions: [] as Permission[],
     work_schedule: [] as { startTime: string, durationHours: number }[],
     office_assets: [] as { item: string, serialNo?: string, issuedDate?: string }[],
-    phone: "", nic: "", join_date: "",
+    phone: "", nic: "", device_id: "", join_date: "",
     contract_type: "Full-time", monthly_salary: "" as string,
     employee_status: "Active",
   }
