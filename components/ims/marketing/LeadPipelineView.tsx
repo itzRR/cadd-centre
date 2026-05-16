@@ -37,6 +37,21 @@ export default function LeadPipelineView({ leads, staff, currentUser, onRefresh 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    const phoneRegex = /^(0|\+94)[0-9]{9}$/
+    if (!phoneRegex.test(form.contact)) {
+      toast.error("Invalid phone number format. Use 07XXXXXXXX or +947XXXXXXXX")
+      return
+    }
+
+    if (form.email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(form.email)) {
+        toast.error("Invalid email address format")
+        return
+      }
+    }
+
     try {
       const payload = { ...form, updated_at: new Date().toISOString() }
       if (editingLead) {
