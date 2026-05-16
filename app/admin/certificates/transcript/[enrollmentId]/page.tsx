@@ -35,6 +35,7 @@ export default function TranscriptPage() {
     courseLevel: "Loading...",
     batchId: "N/A",
     status: "Completed",
+    dateIssued: new Date().toLocaleDateString('en-GB'),
   })
   
   // Module Data State
@@ -77,7 +78,8 @@ export default function TranscriptPage() {
         if (assError) throw assError
 
         // Initialize Overrides
-        setDataOverrides({
+        setDataOverrides(prev => ({
+          ...prev,
           studentName: student?.full_name || "Unknown",
           studentId: student?.student_id || "Unknown",
           nic: student?.nic || "N/A",
@@ -85,7 +87,7 @@ export default function TranscriptPage() {
           courseLevel: enrollment.courses?.level || "Unknown",
           batchId: enrollment.batches?.batch_code || enrollment.batches?.name || "N/A",
           status: enrollment.status?.toUpperCase() || "COMPLETED"
-        })
+        }))
 
         // Initialize Modules
         const processedModules = modules.map((mod: any) => {
@@ -171,6 +173,7 @@ export default function TranscriptPage() {
               <div><label className="block text-xs font-semibold text-gray-700 mb-1">Level</label><input type="text" value={dataOverrides.courseLevel} onChange={e => setDataOverrides(p => ({ ...p, courseLevel: e.target.value }))} className="w-full border rounded-lg px-3 py-1.5 text-sm bg-blue-50 focus:bg-white" /></div>
               <div><label className="block text-xs font-semibold text-gray-700 mb-1">Batch</label><input type="text" value={dataOverrides.batchId} onChange={e => setDataOverrides(p => ({ ...p, batchId: e.target.value }))} className="w-full border rounded-lg px-3 py-1.5 text-sm bg-blue-50 focus:bg-white" /></div>
             </div>
+            <div><label className="block text-xs font-semibold text-gray-700 mb-1">Date Issued</label><input type="text" value={dataOverrides.dateIssued} onChange={e => setDataOverrides(p => ({ ...p, dateIssued: e.target.value }))} className="w-full border rounded-lg px-3 py-1.5 text-sm bg-blue-50 focus:bg-white" /></div>
           </div>
 
           <div className="space-y-3 border-b border-gray-100 pb-5">
@@ -251,7 +254,7 @@ export default function TranscriptPage() {
               </div>
               <div className="text-right">
                 <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Date Issued</p>
-                <p className="text-gray-900 font-bold mb-4">{new Date().toLocaleDateString('en-GB')}</p>
+                <p className="text-gray-900 font-bold mb-4">{dataOverrides.dateIssued}</p>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 rounded-md">
                   <ShieldCheck className="w-4 h-4 text-emerald-600" />
                   <span className="text-xs font-bold text-gray-700">Verified Document</span>

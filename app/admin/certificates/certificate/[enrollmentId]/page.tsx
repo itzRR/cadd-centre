@@ -31,6 +31,7 @@ export default function CertificatePage() {
   const [dataOverrides, setDataOverrides] = useState({
     studentName: "Loading...",
     courseTitle: "Loading...",
+    dateIssued: new Date().toLocaleDateString('en-GB'),
   })
 
   useEffect(() => {
@@ -53,10 +54,11 @@ export default function CertificatePage() {
 
         if (stdError) throw stdError
 
-        setDataOverrides({
+        setDataOverrides(prev => ({
+          ...prev,
           studentName: student?.full_name || "Unknown Student",
           courseTitle: enrollment.courses?.title || "Unknown Course"
-        })
+        }))
       } catch (err: any) {
         setError(err.message)
       } finally {
@@ -101,6 +103,10 @@ export default function CertificatePage() {
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Course Title</label>
               <input type="text" value={dataOverrides.courseTitle} onChange={e => setDataOverrides(p => ({ ...p, courseTitle: e.target.value }))} className="w-full border rounded-lg px-3 py-2 text-sm bg-blue-50 focus:bg-white" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Date Issued</label>
+              <input type="text" value={dataOverrides.dateIssued} onChange={e => setDataOverrides(p => ({ ...p, dateIssued: e.target.value }))} className="w-full border rounded-lg px-3 py-2 text-sm bg-blue-50 focus:bg-white" />
             </div>
           </div>
 
@@ -235,7 +241,7 @@ export default function CertificatePage() {
               {/* Award Icon Center */}
               <div className="flex flex-col items-center pb-4">
                 <Award className="w-16 h-16 opacity-20" style={{ color: settings.primaryColor }} />
-                <p className="text-xs font-bold text-gray-400 mt-2 tracking-widest">{new Date().toLocaleDateString('en-GB')}</p>
+                <p className="text-xs font-bold text-gray-400 mt-2 tracking-widest">{dataOverrides.dateIssued}</p>
               </div>
               
               <div className="flex flex-col items-center justify-end w-64">
