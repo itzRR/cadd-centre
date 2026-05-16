@@ -39,6 +39,9 @@ export async function POST(req: NextRequest) {
 
     const supabaseAdmin = getSupabaseAdmin()
 
+    // Generate a deterministic random avatar based on the user's name
+    const generatedAvatarUrl = `https://api.dicebear.com/7.x/lorelei/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9`
+
     // Step 1: Create the auth user using admin API (no email confirmation needed)
     const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email,
@@ -62,6 +65,7 @@ export async function POST(req: NextRequest) {
         id: authData.user.id,
         email,
         full_name: name,
+        avatar_url: generatedAvatarUrl,
         student_id: student_id || null,
         academic_email: academic_email || email,
         academic_password: academic_password || student_id || null,
@@ -91,6 +95,7 @@ export async function POST(req: NextRequest) {
         id: authData.user.id,
         email,
         full_name: name,
+        avatar_url: generatedAvatarUrl,
         role: role || "staff",
         position: position || null,
         department: department || null,
