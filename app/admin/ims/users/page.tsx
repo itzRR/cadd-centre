@@ -368,7 +368,11 @@ export default function IMSUsersPage() {
   const handleToggleDisable = async (p: Profile) => {
     if (!isAdmin) return toast.error("Only admins can disable accounts")
     if (p.id === currentUser?.id) return toast.error("You cannot disable your own account")
-    if (!(await confirmDialog(`Are you sure you want to ${p.disabled ? "enable" : "disable"} ${p.full_name}? ${!p.disabled ? "They will lose access to all dashboards immediately." : ""}`))) return
+    if (!(await confirmDialog({
+      title: p.disabled ? "Enable Account?" : "Disable Account?",
+      message: `Are you sure you want to ${p.disabled ? "enable" : "disable"} ${p.full_name}? ${!p.disabled ? "They will lose access to all dashboards immediately." : ""}`,
+      confirmText: p.disabled ? "Yes, Enable" : "Yes, Disable"
+    }))) return
     try {
       await disableUser(p.id, !p.disabled)
       setProfiles(prev => prev.map(x => x.id === p.id ? { ...x, disabled: !p.disabled } : x))

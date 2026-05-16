@@ -141,7 +141,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
                   className="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-base py-6"
                   onClick={() => setShowEnquiry(true)}
                 >
-                  <Sparkles className="h-4 w-4 mr-2" /> Enroll Now
+                  <Sparkles className="h-4 w-4 mr-2" /> Enquire Now
                 </Button>
                 <p className="text-xs text-gray-500 text-center">
                   Submit your details & our team will contact you

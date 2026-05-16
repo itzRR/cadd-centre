@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Award, Search, Plus, QrCode } from "lucide-react"
 import { getCertificates, getEnrollments, issueCertificate } from "@/lib/data"
 import { formatDateTime } from "@/lib/utils"
+import { useRouter } from "next/navigation"
 
 export default function CertificatesPage() {
   const [certificates, setCertificates] = useState<any[]>([])
@@ -20,6 +21,7 @@ export default function CertificatesPage() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [form, setForm] = useState({ enrollment_id: "", type: "course_completion" })
+  const router = useRouter()
 
   useEffect(() => {
     getCertificates().then(data => { setCertificates(data); setFiltered(data) }).finally(() => setIsLoading(false))
@@ -58,6 +60,23 @@ export default function CertificatesPage() {
     } catch (err: any) {
       setError(err.message)
     }
+  }
+
+  const handleGenerateTranscript = () => {
+    if (!form.enrollment_id) {
+      setError("Please select an enrollment first to generate a transcript.")
+      return
+    }
+    // Navigate to a dedicated print-friendly transcript page
+    window.open(`/admin/certificates/transcript/${form.enrollment_id}`, '_blank')
+  }
+
+  const handleGenerateCertificatePrint = () => {
+    if (!form.enrollment_id) {
+      setError("Please select an enrollment first to generate a print certificate.")
+      return
+    }
+    window.open(`/admin/certificates/certificate/${form.enrollment_id}`, '_blank')
   }
 
   const typeColor = (t: string) =>
@@ -108,9 +127,11 @@ export default function CertificatesPage() {
                   <option value="professional_bim">Professional BIM Certification</option>
                 </select>
               </div>
-              <div className="flex gap-3">
-                <Button type="submit">Issue Certificate</Button>
-                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>Cancel</Button>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Button type="submit" className="bg-[#e31e24] hover:bg-[#c2181d]">Issue to DB</Button>
+                <Button type="button" variant="outline" className="border-[#e31e24] text-[#e31e24] hover:bg-[#e31e24]/10" onClick={handleGenerateCertificatePrint}>Print Certificate</Button>
+                <Button type="button" variant="outline" className="border-[#e31e24] text-[#e31e24] hover:bg-[#e31e24]/10" onClick={handleGenerateTranscript}>Print Transcript</Button>
+                <Button type="button" variant="ghost" onClick={() => setShowForm(false)}>Cancel</Button>
               </div>
             </form>
           </CardContent>
