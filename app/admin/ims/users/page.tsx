@@ -720,6 +720,11 @@ export default function IMSUsersPage() {
                       className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-cyan-500" />
                   </div>
                   <div className="space-y-2">
+                    <label className="text-sm font-semibold text-gray-600">ZKTeco Device ID</label>
+                    <input value={createForm.device_id || ''} onChange={e => setCreateForm(p => ({ ...p, device_id: e.target.value }))} placeholder="Machine ID (e.g. 101)"
+                      className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-2">
                     <label className="text-sm font-semibold text-gray-600">Join Date</label>
                     <input type="date" value={createForm.join_date} onChange={e => setCreateForm(p => ({ ...p, join_date: e.target.value }))}
                       className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-2.5 text-gray-900 focus:outline-none focus:border-cyan-500" />
@@ -809,6 +814,11 @@ export default function IMSUsersPage() {
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">NIC</label>
                     <input value={editForm.nic} onChange={e => setEditForm(p => ({ ...p, nic: e.target.value }))} placeholder="National ID"
+                      className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">ZKTeco Device ID</label>
+                    <input value={editForm.device_id || ''} onChange={e => setEditForm(p => ({ ...p, device_id: e.target.value }))} placeholder="Machine ID (e.g. 101)"
                       className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-cyan-500" />
                   </div>
                   <div className="space-y-1.5">
