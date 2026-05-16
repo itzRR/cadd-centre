@@ -24,7 +24,7 @@ import { QuickGuide, type GuideStep } from "@/components/ui/quick-guide"
 import { hasPermission } from "@/lib/permissions"
 
 import {
-  getIMSStaff, updateProfileRole, createStaffUser, getMyAttendance,
+  getAllProfiles, updateProfileRole, createStaffUser, getMyAttendance,
   getHrLeaveRequests, createHrLeaveRequest, updateHrLeaveRequest, deleteHrLeaveRequest,
   getHrSalaryPayouts, createHrSalaryPayout, deleteHrSalaryPayout,
   getHrPerformanceReviews, createHrPerformanceReview, deleteHrPerformanceReview,
@@ -104,10 +104,10 @@ export default function HRDashboard() {
   const loadData = useCallback(async () => {
     setLoading(true)
     try {
-      const [e, l, p, r, u] = await Promise.all([
-        getIMSStaff(), getHrLeaveRequests(), getHrSalaryPayouts(), getHrPerformanceReviews(), getCurrentUser()
-      ])
-      setEmployees(e); setLeaves(l); setPayouts(p); setReviews(r); setCurrentUser(u)
+        const [e, l, p, r, u] = await Promise.all([
+          getAllProfiles(), getHrLeaveRequests(), getHrSalaryPayouts(), getHrPerformanceReviews(), getCurrentUser()
+        ])
+        setEmployees(e.filter(prof => prof.role !== 'student')); setLeaves(l); setPayouts(p); setReviews(r); setCurrentUser(u)
     } catch (err: any) { toast.error(err.message) }
     finally { setLoading(false) }
   }, [])
