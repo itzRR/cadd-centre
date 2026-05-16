@@ -24,6 +24,7 @@ CREATE POLICY "Anon can submit enquiries"
 DO $$ BEGIN
   DROP POLICY IF EXISTS "Staff access marketing leads" ON public.marketing_leads;
   DROP POLICY IF EXISTS "mkt_leads_staff" ON public.marketing_leads;
+  DROP POLICY IF EXISTS "Staff full access marketing leads" ON public.marketing_leads;
 EXCEPTION WHEN OTHERS THEN NULL;
 END $$;
 
@@ -57,6 +58,7 @@ CREATE POLICY "Staff access login history"
 -- ── FIX #11: Ensure ims_payments has proper write policies ──
 DO $$ BEGIN
   DROP POLICY IF EXISTS "Staff access payments" ON public.ims_payments;
+  DROP POLICY IF EXISTS "Staff full access payments" ON public.ims_payments;
 EXCEPTION WHEN OTHERS THEN NULL;
 END $$;
 
@@ -70,6 +72,7 @@ CREATE POLICY "Staff full access payments"
 -- ── FIX: Ensure lead_confirmations has proper write policies ──
 DO $$ BEGIN
   DROP POLICY IF EXISTS "Staff access lead confirmations" ON public.lead_confirmations;
+  DROP POLICY IF EXISTS "Staff full access lead confirmations" ON public.lead_confirmations;
 EXCEPTION WHEN OTHERS THEN NULL;
 END $$;
 
@@ -83,6 +86,7 @@ CREATE POLICY "Staff full access lead confirmations"
 -- ── FIX: Ensure ims_invoices has proper write policies ──
 DO $$ BEGIN
   DROP POLICY IF EXISTS "Staff access invoices" ON public.ims_invoices;
+  DROP POLICY IF EXISTS "Staff full access invoices" ON public.ims_invoices;
 EXCEPTION WHEN OTHERS THEN NULL;
 END $$;
 
@@ -96,6 +100,7 @@ CREATE POLICY "Staff full access invoices"
 -- ── FIX: Ensure ims_expenses has proper write policies ──
 DO $$ BEGIN
   DROP POLICY IF EXISTS "Staff access expenses" ON public.ims_expenses;
+  DROP POLICY IF EXISTS "Staff full access expenses" ON public.ims_expenses;
 EXCEPTION WHEN OTHERS THEN NULL;
 END $$;
 
@@ -112,6 +117,7 @@ GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO anon;
 -- ── FIX #3: Restrict lecturer attendance marking to assigned batches ──
 DO $$ BEGIN
   DROP POLICY IF EXISTS "Lecturers can manage attendance" ON public.attendance;
+  DROP POLICY IF EXISTS "Lecturers can manage assigned batch attendance" ON public.attendance;
 EXCEPTION WHEN OTHERS THEN NULL;
 END $$;
 
