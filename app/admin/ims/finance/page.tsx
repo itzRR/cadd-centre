@@ -433,6 +433,11 @@ export default function FinanceDashboard() {
                       )}
                       <item.icon className={`w-4 h-4 flex-shrink-0 ${activeTab === item.id ? 'text-gray-900' : (item as any).urgent ? 'text-yellow-300' : 'text-gray-500'}`} />
                       <span className="flex-1 text-left font-medium">{item.label}</span>
+                      {item.badge !== undefined && item.badge > 0 && (
+                        <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${activeTab === item.id ? 'bg-gray-900 text-white' : 'bg-rose-500 text-white'}`}>
+                          {item.badge}
+                        </span>
+                      )}
                     </motion.button>
                   ))}
                 </div>
