@@ -33,13 +33,22 @@ export default function CertificatePage() {
       try {
         const { data: enrollment, error: enrError } = await supabase
           .from("enrollments")
-          .select(`*, students (*), courses (*)`)
+          .select(`*, courses (*)`)
           .eq("id", enrollmentId)
           .single()
 
         if (enrError) throw enrError
 
-        setData({ enrollment })
+        // Fetch student data separately (avoids FK dependency error)
+        const { data: student, error: stdError } = await supabase
+          .from("students")
+          .select("*")
+          .eq("id", enrollment.user_id)
+          .single()
+
+        if (stdError) throw stdError
+
+        setData({ enrollment: { ...enrollment, students: student } })
       } catch (err: any) {
         setError(err.message)
       } finally {

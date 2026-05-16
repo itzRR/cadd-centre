@@ -32,11 +32,21 @@ export default function TranscriptPage() {
       try {
         const { data: enrollment, error: enrError } = await supabase
           .from("enrollments")
-          .select(`*, students (*), courses (*), batches (*)`)
+          .select(`*, courses (*), batches (*)`)
           .eq("id", enrollmentId)
           .single()
 
         if (enrError) throw enrError
+
+        // Fetch student data separately
+        const { data: student, error: stdError } = await supabase
+          .from("students")
+          .select("*")
+          .eq("id", enrollment.user_id)
+          .single()
+
+        if (stdError) throw stdError
+        enrollment.students = student
 
         const { data: modules, error: modError } = await supabase
           .from("course_modules")
