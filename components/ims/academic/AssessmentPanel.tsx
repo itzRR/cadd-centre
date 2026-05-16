@@ -18,7 +18,7 @@ export default function AssessmentPanel({ modules, enrollments, assessments, onR
   const [showGradeModal, setShowGradeModal] = useState<any>(null) // assessment
   const [creating, setCreating] = useState(false)
   const [createForm, setCreateForm] = useState({ title: '', type: 'module_test', total_marks: '100', conducted_at: '' })
-  const [grades, setGrades] = useState<Record<string, { marks: string; grade: string }>>({})
+  const [grades, setGrades] = useState<Record<string, { marks: string; grade: string; isManual?: boolean }>>({})
 
   const typeIcon = (type: string) => {
     if (type === 'practical') return <ClipboardCheck className="w-4 h-4 text-purple-500" />
@@ -63,10 +63,31 @@ export default function AssessmentPanel({ modules, enrollments, assessments, onR
   const openGrading = (assessment: any) => {
     // Find all assessments with the same title + module for this batch
     const related = assessments.filter(a => a.title === assessment.title && a.module_id === assessment.module_id)
-    setShowGradeModal({ title: assessment.title, module_id: assessment.module_id, items: related })
-    const g: Record<string, { marks: string; grade: string }> = {}
-    related.forEach(a => {
-      g[a.id] = { marks: a.marks_obtained?.toString() || '', grade: a.grade || '' }
+    
+    // Create items for ALL enrolled students, even if they joined after the assessment was created
+    const items = enrollments.map(enr => {
+      const existing = related.find(a => a.enrollment_id === enr.id)
+      return {
+        enrollment_id: enr.id,
+        assessment_id: existing?.id || null,
+        title: assessment.title,
+        module_id: assessment.module_id,
+        type: assessment.type,
+        total_marks: assessment.total_marks,
+        conducted_at: assessment.conducted_at
+      }
+    })
+
+    setShowGradeModal({ title: assessment.title, module_id: assessment.module_id, items })
+    
+    const g: Record<string, { marks: string; grade: string; isManual: boolean }> = {}
+    items.forEach(item => {
+      const existing = related.find(a => a.enrollment_id === item.enrollment_id)
+      g[item.enrollment_id] = { 
+        marks: existing?.marks_obtained?.toString() || '', 
+        grade: existing?.grade || '',
+        isManual: false
+      }
     })
     setGrades(g)
   }
@@ -74,12 +95,31 @@ export default function AssessmentPanel({ modules, enrollments, assessments, onR
   const saveGrades = async () => {
     setCreating(true)
     try {
-      const promises = Object.entries(grades).map(([id, { marks, grade }]) =>
-        updateAssessment(id, {
-          marks_obtained: parseFloat(marks) || 0,
-          grade: grade || undefined,
-        })
-      )
+      const promises = showGradeModal.items.map((item: any) => {
+        const { marks, grade } = grades[item.enrollment_id] || { marks: '', grade: '' }
+        const parsedMarks = marks === '' ? null : parseFloat(marks)
+        
+        if (item.assessment_id) {
+          // Update existing
+          return updateAssessment(item.assessment_id, {
+            marks_obtained: parsedMarks === null ? undefined : parsedMarks,
+            grade: grade || undefined,
+          })
+        } else if (parsedMarks !== null || grade !== '') {
+          // Create new for late-enrolled student
+          return createAssessment({
+            enrollment_id: item.enrollment_id,
+            module_id: item.module_id,
+            type: item.type,
+            title: item.title,
+            total_marks: item.total_marks,
+            conducted_at: item.conducted_at,
+            marks_obtained: parsedMarks === null ? undefined : parsedMarks,
+            grade: grade || undefined
+          })
+        }
+        return Promise.resolve()
+      })
       await Promise.all(promises)
       toast.success('Grades saved!')
       setShowGradeModal(null)
@@ -272,12 +312,12 @@ export default function AssessmentPanel({ modules, enrollments, assessments, onR
               <button onClick={() => setShowGradeModal(null)} className="p-1.5 hover:bg-gray-100 rounded-full"><X className="w-5 h-5 text-gray-400" /></button>
             </div>
             <div className="flex-1 overflow-y-auto p-6 space-y-3">
-              {showGradeModal.items.map((a: any) => {
-                const enrollment = enrollments.find(e => e.id === a.enrollment_id)
+              {showGradeModal.items.map((item: any) => {
+                const enrollment = enrollments.find(e => e.id === item.enrollment_id)
                 const studentName = enrollment?.students?.full_name || 'Unknown'
-                const g = grades[a.id] || { marks: '', grade: '' }
+                const g = grades[item.enrollment_id] || { marks: '', grade: '', isManual: false }
                 return (
-                  <div key={a.id} className="bg-gray-50 p-3.5 rounded-xl border border-gray-100 flex items-center gap-4">
+                  <div key={item.enrollment_id} className="bg-gray-50 p-3.5 rounded-xl border border-gray-100 flex items-center gap-4">
                     <div className="w-9 h-9 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-full flex items-center justify-center text-cyan-700 font-bold text-sm border border-cyan-100 shrink-0">
                       {studentName.charAt(0)}
                     </div>
@@ -288,23 +328,37 @@ export default function AssessmentPanel({ modules, enrollments, assessments, onR
                     <input
                       type="number"
                       min="0"
-                      max={a.total_marks}
+                      max={item.total_marks}
                       placeholder="Marks"
                       value={g.marks}
                       onChange={e => {
                         const marks = e.target.value
-                        const grade = marks ? calcGrade(parseFloat(marks), a.total_marks) : ''
-                        setGrades(prev => ({ ...prev, [a.id]: { marks, grade } }))
+                        const autoGrade = marks ? calcGrade(parseFloat(marks), item.total_marks) : ''
+                        setGrades(prev => ({
+                          ...prev,
+                          [item.enrollment_id]: { 
+                            ...g, 
+                            marks, 
+                            grade: g.isManual ? g.grade : autoGrade 
+                          }
+                        }))
                       }}
                       className="w-20 px-2 py-1.5 border rounded-lg text-sm text-center font-mono focus:outline-none focus:border-blue-500"
                     />
-                    <span className="text-xs text-gray-400">/ {a.total_marks}</span>
+                    <span className="text-xs text-gray-400">/ {item.total_marks}</span>
                     <input
                       type="text"
                       placeholder="Grade"
                       value={g.grade}
                       onChange={e => {
-                        setGrades(prev => ({ ...prev, [a.id]: { ...g, grade: e.target.value.toUpperCase() } }))
+                        setGrades(prev => ({ 
+                          ...prev, 
+                          [item.enrollment_id]: { 
+                            ...g, 
+                            grade: e.target.value.toUpperCase(),
+                            isManual: true
+                          } 
+                        }))
                       }}
                       className={`w-12 px-2 py-1.5 border rounded-lg text-sm text-center font-bold focus:outline-none focus:border-blue-500 ${
                         g.grade === 'F' ? 'text-red-600 border-red-200 bg-red-50' :

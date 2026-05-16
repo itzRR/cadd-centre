@@ -61,7 +61,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
         name: fullName.trim(),
         email: email.trim() || null,
         contact: phone.trim() || null,
-        source: "Website – Course Page",
+        source: "Website",
         course_interested: course?.title || "Unknown",
         status: "New",
         notes: education ? `Education: ${education}` : null,

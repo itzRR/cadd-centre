@@ -150,7 +150,16 @@ export default function FinanceDashboard() {
     e.preventDefault();
     if (!paymentForm.student_name.trim() || paymentForm.amount <= 0) return toast.error('Name and amount required');
     try {
-      const created = await createImsPayment({ ...paymentForm, created_by: currentUser?.id, lead_id: null, source: 'direct', payment_confirmed: true });
+      const payload = {
+        ...paymentForm,
+        course_id: paymentForm.course_id || null, // FIX UUID error for empty course_id
+        student_id: paymentForm.student_id || null,
+        created_by: currentUser?.id, 
+        lead_id: null, 
+        source: 'direct' as const, 
+        payment_confirmed: true
+      };
+      const created = await createImsPayment(payload);
       setPayments(prev => [created, ...prev]);
       if (paymentForm.invoice_id) {
         const inv = invoices.find(i => i.id === paymentForm.invoice_id);

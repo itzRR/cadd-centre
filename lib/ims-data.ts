@@ -951,20 +951,19 @@ export function generateStudentId(batchCode: string, sequenceNumber: number): st
   return `${batchCode}${String(sequenceNumber).padStart(2, '0')}`
 }
 
-/**
- * Get the next available sequence number for a batch
- */
 export async function getNextStudentSequence(batchCode: string): Promise<number> {
-  const { data } = await supabase
-    .from('profiles')
-    .select('student_id')
-    .like('student_id', `${batchCode}%`)
-    .order('student_id', { ascending: false })
-    .limit(1)
-  if (data && data.length > 0) {
-    const lastId = data[0].student_id
-    const lastSeq = parseInt(lastId.slice(-2), 10)
-    return isNaN(lastSeq) ? 1 : lastSeq + 1
+  const [{ data: seqProfiles }, { data: seqStudents }] = await Promise.all([
+    supabase.from('profiles').select('student_id').like('student_id', `${batchCode}%`).order('student_id', { ascending: false }).limit(1),
+    supabase.from('students').select('student_id').like('student_id', `${batchCode}%`).order('student_id', { ascending: false }).limit(1),
+  ])
+
+  const allIds = [...(seqProfiles || []), ...(seqStudents || [])]
+    .map(r => r.student_id)
+    .filter(Boolean)
+
+  if (allIds.length > 0) {
+    const allSeq = allIds.map(id => parseInt(id!.slice(-2), 10)).filter(n => !isNaN(n))
+    if (allSeq.length > 0) return Math.max(...allSeq) + 1
   }
   return 1
 }

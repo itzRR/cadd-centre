@@ -7,6 +7,11 @@
 -- This is needed for the public course enquiry form
 GRANT INSERT ON public.marketing_leads TO anon;
 
+DO $$ BEGIN
+  DROP POLICY IF EXISTS "Anon can submit enquiries" ON public.marketing_leads;
+EXCEPTION WHEN OTHERS THEN NULL;
+END $$;
+
 CREATE POLICY "Anon can submit enquiries"
   ON public.marketing_leads
   FOR INSERT
@@ -103,6 +108,22 @@ CREATE POLICY "Staff full access expenses"
 
 -- ── FIX: Grant anon access to marketing_leads sequences ──
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO anon;
+
+-- ── FIX #3: Restrict lecturer attendance marking to assigned batches ──
+DO $$ BEGIN
+  DROP POLICY IF EXISTS "Lecturers can manage attendance" ON public.attendance;
+EXCEPTION WHEN OTHERS THEN NULL;
+END $$;
+
+CREATE POLICY "Lecturers can manage assigned batch attendance" ON public.attendance
+  FOR ALL USING (
+    (SELECT role FROM public.profiles WHERE id = auth.uid()) = 'lecturer'
+    AND EXISTS (
+      SELECT 1 FROM public.lecturer_allocations
+      WHERE lecturer_id = auth.uid()
+      AND batch_id = public.attendance.batch_id
+    )
+  );
 
 -- ── VERIFY ──
 -- After running, test: 
