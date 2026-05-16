@@ -112,7 +112,7 @@ export async function getBatchById(id: string) {
 }
 
 export async function createBatch(batch: {
-  course_id: string; name: string; start_date: string; end_date?: string
+  course_id: string; name: string; batch_code?: string; start_date: string; end_date?: string
   schedule: string; mode: string; venue?: string; seats: number
 }) {
   const { data, error } = await supabase.from('batches').insert(batch).select().single()

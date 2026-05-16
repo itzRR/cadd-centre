@@ -170,6 +170,7 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
   const [viewMode, setViewMode] = useState<'card' | 'list'>('card')
   const [searchQuery, setSearchQuery] = useState('')
   const [courseFilter, setCourseFilter] = useState('')
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   
   const [selectedBatch, setSelectedBatch] = useState<AcademicBatch | null>(null)
   const [panelTab, setPanelTab] = useState<'overview' | 'students' | 'attendance' | 'exams'>('overview')
@@ -246,8 +247,9 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
         if (!course) throw new Error("Invalid course")
         const startDateObj = new Date(form.start_date)
         const batchCode = generateBatchCode(course.name, startDateObj, form.time_code as any, form.type_code as any)
+        const finalName = form.name.trim() || `${course.name} - ${batchCode}`
         const newBatch = await createBatch({
-          course_id: form.course_id, name: batchCode,
+          course_id: form.course_id, name: finalName, batch_code: batchCode,
           start_date: form.start_date, end_date: form.end_date || undefined,
           schedule: form.time_code === 'M' ? 'Morning' : form.time_code === 'A' ? 'Afternoon' : 'Evening',
           mode: 'classroom', seats: 30
@@ -259,12 +261,12 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
     } catch (e: any) { toast.error(e.message) }
   }
 
-  const handleDelete = async () => {
+  const confirmDelete = async () => {
     if (!editingBatch) return
-    if (!confirm("Are you sure you want to delete this batch? This will hide it from the system.")) return
     try {
       await deleteBatch(editingBatch.id)
       toast.success("Batch deleted successfully")
+      setShowDeleteConfirm(false)
       setShowModal(false)
       setEditingBatch(null)
       loadData()
@@ -398,12 +400,10 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
               <button onClick={() => { setShowModal(false); setEditingBatch(null) }} className="text-gray-400 hover:text-gray-600">×</button>
             </div>
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              {editingBatch && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Batch Name</label>
-                  <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="w-full px-3 py-2 border rounded-xl" />
-                </div>
-              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Batch Name {!editingBatch && '(Optional — auto-generated if blank)'}</label>
+                <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder={editingBatch ? '' : 'Will be auto-generated'} className="w-full px-3 py-2 border rounded-xl" />
+              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Course {!editingBatch && '*'}</label>
                 <select required={!editingBatch} value={form.course_id} onChange={e => setForm({...form, course_id: e.target.value})} className="w-full px-3 py-2 border rounded-xl bg-gray-50">
@@ -446,7 +446,7 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
               </div>
               <div className={`pt-4 flex justify-${editingBatch ? 'between' : 'end'} gap-3 border-t border-gray-100 mt-6`}>
                 {editingBatch && (
-                  <button type="button" onClick={handleDelete} className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-xl font-medium flex items-center gap-2">
+                  <button type="button" onClick={() => setShowDeleteConfirm(true)} className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-xl font-medium flex items-center gap-2">
                     <Trash2 className="w-4 h-4" /> Delete
                   </button>
                 )}
@@ -459,6 +459,30 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
           </div>
         </div>
       )}
+
+      {/* DELETE CONFIRMATION MODAL */}
+      <AnimatePresence>
+        {showDeleteConfirm && editingBatch && (
+          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
+            <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden text-center p-6 space-y-4 relative">
+              <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                <Trash2 className="w-8 h-8" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Delete Batch?</h3>
+                <p className="text-sm text-gray-500 mt-2">
+                  Are you sure you want to delete <strong>{editingBatch.name}</strong>? This will hide the batch from the active system.
+                </p>
+              </div>
+              <div className="flex gap-3 pt-4 border-t border-gray-100">
+                <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-2.5 text-gray-600 hover:bg-gray-100 rounded-xl font-medium transition-colors">Cancel</button>
+                <button onClick={confirmDelete} className="flex-1 py-2.5 bg-red-600 text-white hover:bg-red-700 rounded-xl font-bold shadow-lg shadow-red-600/20 transition-all">Yes, Delete</button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* BATCH SIDE PANEL */}
       <AnimatePresence>

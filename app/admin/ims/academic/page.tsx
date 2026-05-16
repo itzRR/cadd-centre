@@ -55,7 +55,7 @@ export default function AcademicDashboard() {
         { data: stu }, { data: cou }, { data: bat }, { data: enr }, 
         { data: attData }, cu, lecs, lcData
       ] = await Promise.all([
-        supabase.from("profiles").select("*").eq("role", "student"),
+        supabase.from("students").select("*"),
         supabase.from("courses").select("*").order("created_at", { ascending: false }),
         supabase.from("batches").select("*").eq("is_active", true).order("created_at", { ascending: false }),
         supabase.from("enrollments").select("course_id, batch_id, status"),
