@@ -212,7 +212,7 @@ export default function ITDashboardPage() {
         </div>
       </header>
 
-      <div className="flex relative max-w-[1600px] mx-auto">
+      <div className="flex relative w-full">
         {mobileMenuOpen && <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setMobileMenuOpen(false)} />}
 
         {/* Sidebar */}
