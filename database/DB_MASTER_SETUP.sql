@@ -1952,12 +1952,17 @@ COMMENT ON TABLE audit.activity_log IS 'User activity tracking for analytics';
 -- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 -- Grant usage on schemas
-GRANT USAGE ON SCHEMA public TO anon, authenticated;
-GRANT USAGE ON SCHEMA audit TO authenticated;
+GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
+GRANT USAGE ON SCHEMA audit TO authenticated, service_role;
 
 -- Grant access to all tables for authenticated users (RLS controls actual access)
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO authenticated;
 GRANT SELECT ON ALL TABLES IN SCHEMA audit TO authenticated;
+
+-- Grant access to service_role (bypasses RLS but needs explicit table access in some environments)
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO service_role;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO service_role;
+GRANT ALL PRIVILEGES ON ALL ROUTINES IN SCHEMA public TO service_role;
 
 -- Grant limited access to anon (public pages)
 GRANT SELECT ON public.courses TO anon;
@@ -1973,7 +1978,6 @@ GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA audit TO authenticated;
 
 -- Grant function execution
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO authenticated;
-
 -- ============================================================================
 -- END OF COMPLETE DATABASE ARCHITECTURE
 -- Execute order: 01_foundation.sql â†’ 02_ims_and_system.sql â†’
