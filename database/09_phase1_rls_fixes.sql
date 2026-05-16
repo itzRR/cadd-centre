@@ -131,6 +131,22 @@ CREATE POLICY "Lecturers can manage assigned batch attendance" ON public.attenda
     )
   );
 
+-- ── FIX: Ensure students table has proper access policies ──
+DO $$ BEGIN
+  DROP POLICY IF EXISTS "students_staff_read" ON public.students;
+  DROP POLICY IF EXISTS "students_staff_insert" ON public.students;
+  DROP POLICY IF EXISTS "students_staff_update" ON public.students;
+  DROP POLICY IF EXISTS "Staff full access students" ON public.students;
+EXCEPTION WHEN OTHERS THEN NULL;
+END $$;
+
+CREATE POLICY "Staff full access students"
+  ON public.students
+  FOR ALL
+  TO authenticated
+  USING (public.is_staff())
+  WITH CHECK (public.is_staff());
+
 -- ── VERIFY ──
 -- After running, test: 
 -- 1. Open course page (not logged in) → click Enroll → submit form → should work
