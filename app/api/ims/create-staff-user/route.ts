@@ -17,6 +17,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json({ error: "Server Configuration Error: SUPABASE_SERVICE_ROLE_KEY is missing. Please restart your Next.js server." }, { status: 500 })
+    }
+
     const body = await req.json()
     const {
       email, password, name, role, position, department,
