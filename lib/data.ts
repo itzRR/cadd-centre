@@ -165,9 +165,19 @@ export async function getStudents() {
 }
 
 export async function updateStudentProfile(id: string, updates: any) {
-  const { error: err1 } = await supabase.from('students').update(updates).eq('id', id)
+  const cleanUpdates = { ...updates }
+  if (cleanUpdates.nic === '') cleanUpdates.nic = null
+  if (cleanUpdates.dob === '') cleanUpdates.dob = null
+
+  const profileUpdates = {
+    full_name: cleanUpdates.full_name,
+    student_id: cleanUpdates.student_id,
+    phone: cleanUpdates.phone
+  }
+
+  const { error: err1 } = await supabase.from('students').update(cleanUpdates).eq('id', id)
   if (err1) throw err1
-  const { error: err2 } = await supabase.from('profiles').update(updates).eq('id', id)
+  const { error: err2 } = await supabase.from('profiles').update(profileUpdates).eq('id', id)
   if (err2) throw err2
 }
 
