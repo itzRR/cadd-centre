@@ -239,38 +239,6 @@ export default function StudentsView() {
       onClick: (r) => r.enrollment_id ? setShowEditModal(r) : toast.info("Student not enrolled yet")
     },
     {
-      label: "Generate Certificate",
-      icon: Award,
-      onClick: (r) => {
-        if (!r.enrollment_id || r.status !== 'completed') {
-          toast.warning("Student must complete the course first!")
-          return
-        }
-        import('jspdf').then(({ jsPDF }) => {
-          const doc = new jsPDF('landscape')
-          doc.setFillColor(240, 248, 255)
-          doc.rect(0, 0, 297, 210, 'F')
-          doc.setTextColor(40, 40, 40)
-          doc.setFontSize(32)
-          doc.text('Certificate of Completion', 148.5, 55, { align: 'center' })
-          doc.setFontSize(16)
-          doc.text('This is to certify that', 148.5, 80, { align: 'center' })
-          doc.setFontSize(40)
-          doc.setTextColor(6, 81, 237)
-          doc.text(r.student_name, 148.5, 110, { align: 'center' })
-          doc.setFontSize(16)
-          doc.setTextColor(40, 40, 40)
-          doc.text('has successfully completed the course in', 148.5, 130, { align: 'center' })
-          doc.setFontSize(24)
-          doc.text(r.course_name, 148.5, 150, { align: 'center' })
-          doc.setFontSize(12)
-          doc.text(`Date: ${new Date().toLocaleDateString()}`, 148.5, 180, { align: 'center' })
-          doc.save(`Certificate_${r.student_name.replace(/ /g, '_')}.pdf`)
-          toast.success('Certificate generated!')
-        })
-      }
-    },
-    {
       label: "Remove",
       icon: Trash2,
       variant: "danger",

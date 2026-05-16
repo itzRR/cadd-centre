@@ -3,12 +3,11 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import { supabase } from "@/lib/supabase"
-import { Printer, Image as ImageIcon, Settings, Type, Palette, Award } from "lucide-react"
+import { Printer, Image as ImageIcon, Settings, Type, Palette, Award, Database } from "lucide-react"
 
 export default function CertificatePage() {
   const params = useParams()
   const enrollmentId = params.enrollmentId as string
-  const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
@@ -28,6 +27,12 @@ export default function CertificatePage() {
     signature2Image: "",
   })
 
+  // Data Override State
+  const [dataOverrides, setDataOverrides] = useState({
+    studentName: "Loading...",
+    courseTitle: "Loading...",
+  })
+
   useEffect(() => {
     async function fetchCertificateData() {
       try {
@@ -39,7 +44,7 @@ export default function CertificatePage() {
 
         if (enrError) throw enrError
 
-        // Fetch student data separately (avoids FK dependency error)
+        // Fetch student data separately
         const { data: student, error: stdError } = await supabase
           .from("students")
           .select("*")
@@ -48,7 +53,10 @@ export default function CertificatePage() {
 
         if (stdError) throw stdError
 
-        setData({ enrollment: { ...enrollment, students: student } })
+        setDataOverrides({
+          studentName: student?.full_name || "Unknown Student",
+          courseTitle: enrollment.courses?.title || "Unknown Course"
+        })
       } catch (err: any) {
         setError(err.message)
       } finally {
@@ -71,22 +79,31 @@ export default function CertificatePage() {
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   if (error) return <div className="min-h-screen flex items-center justify-center text-red-600">Error: {error}</div>
-  if (!data) return null
-
-  const { enrollment } = data
-  const student = enrollment.students
-  const course = enrollment.courses
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row print:block font-sans">
       
       {/* ── SETTINGS SIDEBAR (HIDDEN ON PRINT) ── */}
-      <div className="w-full md:w-80 bg-white border-r border-gray-200 p-6 overflow-y-auto print:hidden shadow-lg z-10 shrink-0 h-screen sticky top-0">
+      <div className="w-full md:w-80 bg-white border-r border-gray-200 p-6 overflow-y-auto print:hidden shadow-lg z-10 shrink-0 h-screen sticky top-0 custom-scrollbar">
         <h2 className="text-xl font-black text-gray-900 mb-6 flex items-center gap-2">
           <Settings className="w-5 h-5 text-red-600" /> Certificate Editor
         </h2>
         
         <div className="space-y-6">
+          
+          {/* Data Overrides */}
+          <div className="space-y-3 border-b border-gray-100 pb-5">
+            <h3 className="text-xs font-bold text-blue-500 uppercase tracking-widest flex items-center gap-1.5"><Database className="w-3.5 h-3.5" /> Edit Data</h3>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Student Name</label>
+              <input type="text" value={dataOverrides.studentName} onChange={e => setDataOverrides(p => ({ ...p, studentName: e.target.value }))} className="w-full border rounded-lg px-3 py-2 text-sm bg-blue-50 focus:bg-white" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Course Title</label>
+              <input type="text" value={dataOverrides.courseTitle} onChange={e => setDataOverrides(p => ({ ...p, courseTitle: e.target.value }))} className="w-full border rounded-lg px-3 py-2 text-sm bg-blue-50 focus:bg-white" />
+            </div>
+          </div>
+
           <div className="space-y-3 border-b border-gray-100 pb-5">
             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1.5"><Palette className="w-3.5 h-3.5" /> Styling</h3>
             <div>
@@ -188,7 +205,7 @@ export default function CertificatePage() {
             {/* Student Name */}
             <div className="w-3/4 border-b-2 border-gray-300 pb-2 mb-6">
               <h2 className="text-4xl font-bold text-gray-900" style={{ fontFamily: "'Great Vibes', cursive, serif" }}>
-                {student?.full_name}
+                {dataOverrides.studentName}
               </h2>
             </div>
 
@@ -199,7 +216,7 @@ export default function CertificatePage() {
 
             {/* Course Title */}
             <h3 className="text-2xl font-black text-gray-900 mb-12 uppercase tracking-wide">
-              {course?.title}
+              {dataOverrides.courseTitle}
             </h3>
 
             {/* Footer Signatures */}

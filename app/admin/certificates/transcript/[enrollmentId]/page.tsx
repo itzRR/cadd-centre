@@ -3,12 +3,11 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import { supabase } from "@/lib/supabase"
-import { Printer, ShieldCheck, Image as ImageIcon, Settings, Type, Palette } from "lucide-react"
+import { Printer, ShieldCheck, Image as ImageIcon, Settings, Type, Palette, Database } from "lucide-react"
 
 export default function TranscriptPage() {
   const params = useParams()
   const enrollmentId = params.enrollmentId as string
-  const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
@@ -26,6 +25,20 @@ export default function TranscriptPage() {
     signature2Title: "CADD Centre Lanka",
     signature2Image: "",
   })
+
+  // Data Override State
+  const [dataOverrides, setDataOverrides] = useState({
+    studentName: "Loading...",
+    studentId: "Loading...",
+    nic: "N/A",
+    courseTitle: "Loading...",
+    courseLevel: "Loading...",
+    batchId: "N/A",
+    status: "Completed",
+  })
+  
+  // Module Data State
+  const [modulesData, setModulesData] = useState<any[]>([])
 
   useEffect(() => {
     async function fetchTranscript() {
@@ -46,10 +59,10 @@ export default function TranscriptPage() {
           .single()
 
         if (stdError) throw stdError
-        enrollment.students = student
 
+        // FIX: The table name is 'modules', not 'course_modules'
         const { data: modules, error: modError } = await supabase
-          .from("course_modules")
+          .from("modules")
           .select("*")
           .eq("course_id", enrollment.course_id)
           .order("order_index", { ascending: true })
@@ -63,7 +76,35 @@ export default function TranscriptPage() {
 
         if (assError) throw assError
 
-        setData({ enrollment, modules, assessments })
+        // Initialize Overrides
+        setDataOverrides({
+          studentName: student?.full_name || "Unknown",
+          studentId: student?.student_id || "Unknown",
+          nic: student?.nic || "N/A",
+          courseTitle: enrollment.courses?.title || "Unknown",
+          courseLevel: enrollment.courses?.level || "Unknown",
+          batchId: enrollment.batches?.batch_code || enrollment.batches?.name || "N/A",
+          status: enrollment.status?.toUpperCase() || "COMPLETED"
+        })
+
+        // Initialize Modules
+        const processedModules = modules.map((mod: any) => {
+          const modAssessments = assessments.filter((a: any) => a.module_id === mod.id && a.marks_obtained !== null)
+          const marksObtained = modAssessments.reduce((sum: number, a: any) => sum + (a.marks_obtained || 0), 0)
+          const marksPossible = modAssessments.reduce((sum: number, a: any) => sum + (a.total_marks || 0), 0)
+          
+          let grade = "N/A"
+          if (marksPossible > 0) {
+            const pct = (marksObtained / marksPossible) * 100
+            if (pct >= 85) grade = "Distinction"
+            else if (pct >= 75) grade = "Merit"
+            else if (pct >= 50) grade = "Pass"
+            else grade = "Fail"
+          }
+          return { ...mod, marksObtained, marksPossible, grade, hasAssessments: modAssessments.length > 0 }
+        })
+        setModulesData(processedModules)
+
       } catch (err: any) {
         setError(err.message)
       } finally {
@@ -86,32 +127,14 @@ export default function TranscriptPage() {
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   if (error) return <div className="min-h-screen flex items-center justify-center text-red-600">Error: {error}</div>
-  if (!data) return null
-
-  const { enrollment, modules, assessments } = data
-  const student = enrollment.students
-  const course = enrollment.courses
-  const batch = enrollment.batches
 
   let totalMarks = 0
   let totalPossible = 0
-
-  const moduleResults = modules.map((mod: any) => {
-    const modAssessments = assessments.filter((a: any) => a.module_id === mod.id && a.marks_obtained !== null)
-    const marksObtained = modAssessments.reduce((sum: number, a: any) => sum + (a.marks_obtained || 0), 0)
-    const marksPossible = modAssessments.reduce((sum: number, a: any) => sum + (a.total_marks || 0), 0)
-    
-    let grade = "N/A"
-    if (marksPossible > 0) {
-      totalMarks += marksObtained
-      totalPossible += marksPossible
-      const pct = (marksObtained / marksPossible) * 100
-      if (pct >= 85) grade = "Distinction"
-      else if (pct >= 75) grade = "Merit"
-      else if (pct >= 50) grade = "Pass"
-      else grade = "Fail"
+  modulesData.forEach(m => {
+    if (m.marksPossible > 0) {
+      totalMarks += m.marksObtained
+      totalPossible += m.marksPossible
     }
-    return { ...mod, marksObtained, marksPossible, grade, hasAssessments: modAssessments.length > 0 }
   })
 
   let finalGrade = "Pending"
@@ -128,12 +151,28 @@ export default function TranscriptPage() {
     <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row print:block font-sans">
       
       {/* ── SETTINGS SIDEBAR (HIDDEN ON PRINT) ── */}
-      <div className="w-full md:w-80 bg-white border-r border-gray-200 p-6 overflow-y-auto print:hidden shadow-lg z-10 shrink-0 h-screen sticky top-0">
+      <div className="w-full md:w-80 bg-white border-r border-gray-200 p-6 overflow-y-auto print:hidden shadow-lg z-10 shrink-0 h-screen sticky top-0 custom-scrollbar">
         <h2 className="text-xl font-black text-gray-900 mb-6 flex items-center gap-2">
           <Settings className="w-5 h-5 text-red-600" /> Template Editor
         </h2>
         
         <div className="space-y-6">
+
+          {/* Data Overrides */}
+          <div className="space-y-3 border-b border-gray-100 pb-5">
+            <h3 className="text-xs font-bold text-blue-500 uppercase tracking-widest flex items-center gap-1.5"><Database className="w-3.5 h-3.5" /> Edit Data</h3>
+            <div><label className="block text-xs font-semibold text-gray-700 mb-1">Student Name</label><input type="text" value={dataOverrides.studentName} onChange={e => setDataOverrides(p => ({ ...p, studentName: e.target.value }))} className="w-full border rounded-lg px-3 py-1.5 text-sm bg-blue-50 focus:bg-white" /></div>
+            <div className="grid grid-cols-2 gap-2">
+              <div><label className="block text-xs font-semibold text-gray-700 mb-1">Student ID</label><input type="text" value={dataOverrides.studentId} onChange={e => setDataOverrides(p => ({ ...p, studentId: e.target.value }))} className="w-full border rounded-lg px-3 py-1.5 text-sm bg-blue-50 focus:bg-white" /></div>
+              <div><label className="block text-xs font-semibold text-gray-700 mb-1">NIC</label><input type="text" value={dataOverrides.nic} onChange={e => setDataOverrides(p => ({ ...p, nic: e.target.value }))} className="w-full border rounded-lg px-3 py-1.5 text-sm bg-blue-50 focus:bg-white" /></div>
+            </div>
+            <div><label className="block text-xs font-semibold text-gray-700 mb-1">Course Title</label><input type="text" value={dataOverrides.courseTitle} onChange={e => setDataOverrides(p => ({ ...p, courseTitle: e.target.value }))} className="w-full border rounded-lg px-3 py-1.5 text-sm bg-blue-50 focus:bg-white" /></div>
+            <div className="grid grid-cols-2 gap-2">
+              <div><label className="block text-xs font-semibold text-gray-700 mb-1">Level</label><input type="text" value={dataOverrides.courseLevel} onChange={e => setDataOverrides(p => ({ ...p, courseLevel: e.target.value }))} className="w-full border rounded-lg px-3 py-1.5 text-sm bg-blue-50 focus:bg-white" /></div>
+              <div><label className="block text-xs font-semibold text-gray-700 mb-1">Batch</label><input type="text" value={dataOverrides.batchId} onChange={e => setDataOverrides(p => ({ ...p, batchId: e.target.value }))} className="w-full border rounded-lg px-3 py-1.5 text-sm bg-blue-50 focus:bg-white" /></div>
+            </div>
+          </div>
+
           <div className="space-y-3 border-b border-gray-100 pb-5">
             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1.5"><Palette className="w-3.5 h-3.5" /> Styling</h3>
             <div>
@@ -226,9 +265,9 @@ export default function TranscriptPage() {
                 <h2 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Student Information</h2>
                 <table className="w-full text-sm">
                   <tbody>
-                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium w-1/3">Full Name</td><td className="py-2 font-bold text-gray-900">{student?.full_name}</td></tr>
-                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium">Student ID</td><td className="py-2 font-bold text-gray-900">{student?.student_id}</td></tr>
-                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium">NIC / Passport</td><td className="py-2 font-bold text-gray-900">{student?.nic || "N/A"}</td></tr>
+                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium w-1/3">Full Name</td><td className="py-2 font-bold text-gray-900">{dataOverrides.studentName}</td></tr>
+                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium">Student ID</td><td className="py-2 font-bold text-gray-900">{dataOverrides.studentId}</td></tr>
+                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium">NIC / Passport</td><td className="py-2 font-bold text-gray-900">{dataOverrides.nic}</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -236,10 +275,10 @@ export default function TranscriptPage() {
                 <h2 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Program Information</h2>
                 <table className="w-full text-sm">
                   <tbody>
-                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium w-1/3">Course</td><td className="py-2 font-bold text-gray-900">{course?.title}</td></tr>
-                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium">Level</td><td className="py-2 font-bold text-gray-900">{course?.level}</td></tr>
-                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium">Batch</td><td className="py-2 font-bold text-gray-900">{batch?.batch_id || "N/A"}</td></tr>
-                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium">Status</td><td className="py-2 font-bold text-emerald-600 uppercase">{enrollment?.status}</td></tr>
+                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium w-1/3">Course</td><td className="py-2 font-bold text-gray-900">{dataOverrides.courseTitle}</td></tr>
+                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium">Level</td><td className="py-2 font-bold text-gray-900">{dataOverrides.courseLevel}</td></tr>
+                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium">Batch</td><td className="py-2 font-bold text-gray-900">{dataOverrides.batchId}</td></tr>
+                    <tr className="border-b border-gray-100"><td className="py-2 text-gray-500 font-medium">Status</td><td className="py-2 font-bold text-emerald-600 uppercase">{dataOverrides.status}</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -258,7 +297,7 @@ export default function TranscriptPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {moduleResults.map((mod: any, index: number) => (
+                  {modulesData.map((mod: any, index: number) => (
                     <tr key={mod.id} className={index % 2 === 0 ? "bg-white" : "bg-gray-50/50"}>
                       <td className="py-3 px-4 font-semibold text-gray-900">{mod.title}</td>
                       <td className="py-3 px-4 text-center text-gray-600">{mod.duration_hours}</td>
