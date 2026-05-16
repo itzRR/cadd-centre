@@ -295,7 +295,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
               {!userReady && (
                 <p className="text-center text-xs text-gray-400 mt-4">
                   <Link href="/auth/login" className="text-purple-600 hover:underline">Sign in</Link> or{" "}
-                  <Link href="/auth/register" className="text-purple-600 hover:underline">register</Link> to book your spot
+                  <Link href="/contact" className="text-purple-600 hover:underline">contact us</Link> to book your spot
                 </p>
               )}
             </div>

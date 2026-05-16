@@ -1,55 +1,84 @@
 "use client"
 
 import { useEffect, useState, use } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
 import {
   ArrowLeft, Clock, BookOpen, CheckCircle, Lock,
-  Layers, Award, GraduationCap,
+  Layers, Award, GraduationCap, X, User, Mail, Phone,
+  Sparkles, MessageCircle, ArrowRight,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import { FieldError } from "@/components/ui/field-error"
 import { getCourseBySlug } from "@/lib/data"
-import { enrollInCourseAction, checkEnrollmentAction } from "@/lib/actions"
-import { getCurrentUser } from "@/lib/auth"
 import { formatCurrency } from "@/lib/utils"
+import { sanitizeName, isValidName, isValidEmail, isValidSriLankanPhone, formatSriLankanPhone } from "@/lib/validation"
+import { supabase } from "@/lib/supabase"
 import type { Course } from "@/types"
 
 export default function CourseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
-  const [course, setCourse]       = useState<Course | null>(null)
+  const [course, setCourse] = useState<Course | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [isEnrolled, setIsEnrolled] = useState(false)
-  const [enrolling, setEnrolling] = useState(false)
-  const [msg, setMsg] = useState<{ type: "success" | "error" | "info"; text: string } | null>(null)
-  const [user, setUser] = useState<any>(null)
-  const router = useRouter()
+
+  // Enquiry modal state
+  const [showEnquiry, setShowEnquiry] = useState(false)
+  const [fullName, setFullName] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [education, setEducation] = useState("")
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState("")
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
-    async function load() {
-      const [c, u] = await Promise.all([getCourseBySlug(slug), getCurrentUser()])
-      setCourse(c)
-      setUser(u)
-      if (u && c) setIsEnrolled(await checkEnrollmentAction(c.id))
-      setIsLoading(false)
-    }
-    load()
+    getCourseBySlug(slug).then(c => { setCourse(c); setIsLoading(false) })
   }, [slug])
 
-  const handleEnroll = async () => {
-    if (!user) { router.push(`/auth/login?redirect=/courses/${slug}`); return }
-    setEnrolling(true)
-    const { error } = await enrollInCourseAction(course!.id)
-    if (!error) {
-      setIsEnrolled(true)
-      setMsg({ type: "success", text: "Enrolled successfully! Access your course from the student portal." })
-    } else if (error === "already_enrolled") {
-      setMsg({ type: "info", text: "You are already enrolled in this course." })
-    } else {
-      setMsg({ type: "error", text: error })
+  // Validation
+  const fieldErrors: Record<string, string> = {}
+  if (touched.fullName && !fullName.trim()) fieldErrors.fullName = "Full name is required"
+  else if (touched.fullName && fullName.trim() && !isValidName(fullName)) fieldErrors.fullName = "Name can only contain letters, spaces, and hyphens"
+  if (touched.email && email.trim() && !isValidEmail(email)) fieldErrors.email = "Please enter a valid email"
+  if (touched.phone && phone.trim() && !isValidSriLankanPhone(phone)) fieldErrors.phone = "Enter a valid number (e.g. 071 234 5678)"
+
+  const handleBlur = (field: string) => setTouched(p => ({ ...p, [field]: true }))
+
+  const handleSubmitEnquiry = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSubmitError("")
+    setTouched({ fullName: true, email: true, phone: true })
+    if (!fullName.trim() || !isValidName(fullName)) return
+    if (email.trim() && !isValidEmail(email)) return
+    if (phone.trim() && !isValidSriLankanPhone(phone)) return
+
+    setSubmitting(true)
+    try {
+      const { error } = await supabase.from("marketing_leads").insert({
+        name: fullName.trim(),
+        email: email.trim() || null,
+        contact: phone.trim() || null,
+        source: "Website – Course Page",
+        course_interested: course?.title || "Unknown",
+        status: "New",
+        notes: education ? `Education: ${education}` : null,
+      })
+      if (error) throw error
+      setSubmitSuccess(true)
+    } catch (err: any) {
+      setSubmitError(err.message || "Something went wrong. Please try again.")
+    } finally {
+      setSubmitting(false)
     }
-    setEnrolling(false)
+  }
+
+  const resetForm = () => {
+    setFullName(""); setEmail(""); setPhone(""); setEducation("")
+    setTouched({}); setSubmitError(""); setSubmitSuccess(false)
+    setShowEnquiry(false)
   }
 
   if (isLoading) return (
@@ -71,10 +100,6 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
     course.level === "Expert Certificate"   ? "bg-purple-100 text-purple-800" :
     course.level === "Master Certificate"   ? "bg-blue-100 text-blue-800" :
                                               "bg-green-100 text-green-800"
-
-  const msgStyle = msg?.type === "success" ? "bg-green-50 text-green-800 border-green-200" :
-                   msg?.type === "info"    ? "bg-blue-50 text-blue-800 border-blue-200" :
-                                             "bg-red-50 text-red-800 border-red-200"
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -111,32 +136,17 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
                 )}
               </div>
 
-              {msg && (
-                <div className={`text-sm px-3 py-2 rounded-lg mb-4 border ${msgStyle}`}>{msg.text}</div>
-              )}
-
-              {isEnrolled ? (
-                <div>
-                  <div className="flex items-center gap-2 text-green-700 bg-green-50 rounded-lg px-4 py-3 mb-3">
-                    <CheckCircle className="h-5 w-5" />
-                    <span className="font-semibold">Enrolled</span>
-                  </div>
-                  <Button asChild className="w-full bg-blue-600 hover:bg-blue-700">
-                    <Link href="/dashboard">Go to My Portal</Link>
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={handleEnroll} disabled={enrolling}>
-                    {enrolling ? "Enrolling..." : user ? "Enroll Now" : "Sign In to Enroll"}
-                  </Button>
-                  {!user && (
-                    <p className="text-xs text-gray-500 text-center flex items-center justify-center gap-1">
-                      <Lock className="h-3 w-3" /> Sign in required to enroll
-                    </p>
-                  )}
-                </div>
-              )}
+              <div className="space-y-3">
+                <Button
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-base py-6"
+                  onClick={() => setShowEnquiry(true)}
+                >
+                  <Sparkles className="h-4 w-4 mr-2" /> Enroll Now
+                </Button>
+                <p className="text-xs text-gray-500 text-center">
+                  Submit your details & our team will contact you
+                </p>
+              </div>
 
               <div className="mt-4 pt-4 border-t space-y-2 text-sm text-gray-600">
                 <div className="flex items-center gap-2"><Clock className="h-4 w-4 text-gray-400" /> {course.total_hours} total hours</div>
@@ -232,6 +242,176 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
           </div>
         </div>
       </div>
+
+      {/* ── ENQUIRY MODAL ── */}
+      <AnimatePresence>
+        {showEnquiry && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: "rgba(10,15,30,0.7)", backdropFilter: "blur(8px)" }}
+            onClick={(e) => e.target === e.currentTarget && resetForm()}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="w-full max-w-md relative"
+            >
+              {submitSuccess ? (
+                /* ── SUCCESS STATE ── */
+                <div className="rounded-2xl p-8 text-center" style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(24px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                  <div className="w-20 h-20 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto mb-6">
+                    <CheckCircle className="w-10 h-10 text-emerald-400" />
+                  </div>
+                  <h2 className="text-2xl font-black text-white mb-2">Thank You!</h2>
+                  <p className="text-white/60 mb-4">Your enquiry for <span className="text-blue-400 font-semibold">{course.title}</span> has been submitted.</p>
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-5 mb-6 text-left">
+                    <div className="flex items-center gap-2 mb-2">
+                      <MessageCircle className="w-4 h-4 text-blue-400" />
+                      <span className="text-white/80 font-semibold text-sm">What happens next?</span>
+                    </div>
+                    <p className="text-white/50 text-sm">Our team will contact you shortly with course details, fees, and batch schedules.</p>
+                  </div>
+                  <button onClick={resetForm} className="text-blue-400 font-semibold hover:text-blue-300 text-sm">Close</button>
+                </div>
+              ) : (
+                /* ── FORM ── */
+                <div className="rounded-2xl p-8 space-y-5" style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(24px)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Sparkles className="w-4 h-4 text-blue-400" />
+                        <span className="text-blue-400 text-xs font-bold uppercase tracking-widest">Course Enquiry</span>
+                      </div>
+                      <h2 className="text-2xl font-black text-white">Get Started</h2>
+                      <p className="text-white/40 text-sm">Submit details for <span className="text-blue-400 font-medium">{course.title}</span></p>
+                    </div>
+                    <button onClick={resetForm} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-colors">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {submitError && (
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
+                      {submitError}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleSubmitEnquiry} className="space-y-4">
+                    {/* Full Name */}
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-white/40 uppercase tracking-widest block">Full Name *</label>
+                      <div className="relative">
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                        <input type="text" placeholder="Your full name" value={fullName}
+                          onChange={e => setFullName(sanitizeName(e.target.value))}
+                          onBlur={() => handleBlur("fullName")}
+                          required
+                          className="w-full h-12 pl-11 pr-4 rounded-xl text-white placeholder-white/20 text-sm font-medium outline-none transition-all duration-200"
+                          style={{ background: "rgba(255,255,255,0.05)", border: fieldErrors.fullName ? "1px solid rgba(239,68,68,0.5)" : "1px solid rgba(255,255,255,0.08)" }}
+                        />
+                      </div>
+                      <FieldError message={fieldErrors.fullName} />
+                    </div>
+
+                    {/* Email */}
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-white/40 uppercase tracking-widest block">Email</label>
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                        <input type="email" placeholder="you@example.com" value={email}
+                          onChange={e => setEmail(e.target.value)}
+                          onBlur={() => handleBlur("email")}
+                          className="w-full h-12 pl-11 pr-4 rounded-xl text-white placeholder-white/20 text-sm font-medium outline-none transition-all duration-200"
+                          style={{ background: "rgba(255,255,255,0.05)", border: fieldErrors.email ? "1px solid rgba(239,68,68,0.5)" : "1px solid rgba(255,255,255,0.08)" }}
+                        />
+                      </div>
+                      <FieldError message={fieldErrors.email} />
+                    </div>
+
+                    {/* Phone & Education */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-white/40 uppercase tracking-widest block">Phone *</label>
+                        <div className="relative">
+                          <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                          <input type="tel" placeholder="071 234 5678" value={phone}
+                            onChange={e => setPhone(formatSriLankanPhone(e.target.value))}
+                            onBlur={() => handleBlur("phone")}
+                            required
+                            className="w-full h-12 pl-11 pr-4 rounded-xl text-white placeholder-white/20 text-sm font-medium outline-none transition-all duration-200"
+                            style={{ background: "rgba(255,255,255,0.05)", border: fieldErrors.phone ? "1px solid rgba(239,68,68,0.5)" : "1px solid rgba(255,255,255,0.08)" }}
+                          />
+                        </div>
+                        <FieldError message={fieldErrors.phone} />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-white/40 uppercase tracking-widest block">Education</label>
+                        <div className="relative">
+                          <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+                          <input type="text" placeholder="A/L, Diploma…" value={education}
+                            onChange={e => setEducation(e.target.value)}
+                            className="w-full h-12 pl-11 pr-4 rounded-xl text-white placeholder-white/20 text-sm font-medium outline-none transition-all duration-200"
+                            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Course (read-only) */}
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-white/40 uppercase tracking-widest block">Course</label>
+                      <div className="relative">
+                        <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-400" />
+                        <div className="w-full h-12 pl-11 pr-4 rounded-xl text-blue-400 text-sm font-semibold flex items-center"
+                          style={{ background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.2)" }}>
+                          {course.title}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Submit */}
+                    <motion.button
+                      type="submit"
+                      disabled={submitting}
+                      whileHover={{ scale: submitting ? 1 : 1.01 }}
+                      whileTap={{ scale: submitting ? 1 : 0.98 }}
+                      className="w-full rounded-xl font-bold text-white flex items-center justify-center gap-2.5 transition-all duration-200 relative overflow-hidden"
+                      style={{
+                        height: "52px",
+                        background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+                        boxShadow: "0 8px 32px rgba(37,99,235,0.35), 0 2px 8px rgba(37,99,235,0.2)",
+                      }}
+                    >
+                      {submitting ? (
+                        <>
+                          <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                            className="w-5 h-5 rounded-full border-2 border-white/30 border-t-white" />
+                          <span>Submitting…</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Submit Enquiry</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </>
+                      )}
+                    </motion.button>
+                  </form>
+
+                  <p className="text-center text-white/30 text-sm">
+                    Already a student?{" "}
+                    <Link href="/auth/login" className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">Sign in</Link>
+                  </p>
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

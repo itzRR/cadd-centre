@@ -56,7 +56,7 @@ export default function HomePage() {
                 <Link href="/courses">Explore Programmes <ArrowRight className="ml-2 h-5 w-5" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="border-gray-200 text-gray-700 bg-white hover:bg-gray-50 hover:text-blue-600 rounded-full px-8 h-14 text-base font-bold transition-all duration-300 hover:scale-105 shadow-sm">
-                <Link href="/auth/register">Talk to an Advisor</Link>
+                <Link href="/contact">Talk to an Advisor</Link>
               </Button>
             </motion.div>
 
@@ -312,8 +312,8 @@ export default function HomePage() {
               <h2 className="text-4xl md:text-6xl font-black text-white mb-8 leading-tight">Ready to Elevate Your Career?</h2>
               <p className="text-xl text-blue-100 mb-12 font-medium">Join thousands of successful alumni. Start your journey towards mastery today.</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/auth/register" className="inline-flex items-center justify-center bg-white text-blue-700 hover:bg-gray-50 rounded-full px-10 h-16 text-lg font-bold transition-all duration-300 hover:scale-105 shadow-xl">
-                  Enroll Now
+                <Link href="/courses" className="inline-flex items-center justify-center bg-white text-blue-700 hover:bg-gray-50 rounded-full px-10 h-16 text-lg font-bold transition-all duration-300 hover:scale-105 shadow-xl">
+                  Explore Courses
                 </Link>
                 <Link href="/contact" className="inline-flex items-center justify-center border border-white/30 text-white hover:bg-white/10 rounded-full px-10 h-16 text-lg font-bold backdrop-blur-md transition-all duration-300 hover:scale-105">
                   Talk to an Advisor

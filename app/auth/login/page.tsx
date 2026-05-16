@@ -267,9 +267,9 @@ export default function LoginPage() {
 
               {/* Footer link */}
               <p className="text-center text-white/30 text-sm">
-                Don&apos;t have an account?{" "}
-                <Link href="/auth/register" className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">
-                  Create one
+                New student?{" "}
+                <Link href="/contact" className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">
+                  Contact us to enroll
                 </Link>
               </p>
             </div>
