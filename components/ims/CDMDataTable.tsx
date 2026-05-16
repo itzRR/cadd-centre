@@ -391,7 +391,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
                                 <button
                                   key={ai}
                                   onClick={() => action.onClick(row)}
-                                  className={`p-1.5 rounded-lg transition-all ${colors[action.variant || "default"]}`}
+                                  className={`p-1.5 rounded-lg transition-all whitespace-nowrap ${colors[action.variant || "default"]}`}
                                   title={action.label}
                                 >
                                   {Icon ? <Icon className="w-4 h-4" /> : <span className="text-xs font-medium">{action.label}</span>}
@@ -415,7 +415,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
-                                    className={`absolute right-0 z-20 bg-white border border-gray-200 rounded-xl shadow-lg py-1 min-w-[140px] ${i >= Math.max(0, paginated.length - 2) && paginated.length > 2 ? 'bottom-8 origin-bottom-right' : 'top-8 origin-top-right'}`}
+                                    className={`absolute right-0 z-20 bg-white border border-gray-200 rounded-xl shadow-lg py-1 min-w-max ${i >= Math.max(0, paginated.length - 2) && paginated.length > 2 ? 'bottom-8 origin-bottom-right' : 'top-8 origin-top-right'}`}
                                   >
                                     {actions.filter(a => !a.show || a.show(row)).map((action, ai) => {
                                       const Icon = action.icon
@@ -429,9 +429,9 @@ export default function CDMDataTable<T extends Record<string, any>>({
                                         <button
                                           key={ai}
                                           onClick={() => { action.onClick(row); setOpenActionRow(null) }}
-                                          className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium transition-all ${colors[action.variant || "default"]}`}
+                                          className={`w-full flex items-center gap-2 px-3 py-2 text-sm font-medium transition-all whitespace-nowrap ${colors[action.variant || "default"]}`}
                                         >
-                                          {Icon && <Icon className="w-4 h-4" />}
+                                          {Icon && <Icon className="w-4 h-4 flex-shrink-0" />}
                                           {action.label}
                                         </button>
                                       )
