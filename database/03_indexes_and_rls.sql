@@ -207,13 +207,13 @@ ALTER TABLE public.file_uploads ENABLE ROW LEVEL SECURITY;
 -- 10. RLS POLICIES
 -- ────────────────────────────────────────────────────────────────────────────
 
--- Helper: check if current user is admin/super_admin/branch_manager
+-- Helper: check if current user is admin/super_admin
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS BOOLEAN AS $$
   SELECT EXISTS (
     SELECT 1 FROM public.profiles
     WHERE id = auth.uid()
-    AND role IN ('admin','super_admin','branch_manager')
+    AND role IN ('admin','super_admin')
     AND disabled = FALSE
   );
 $$ LANGUAGE sql SECURITY DEFINER STABLE;
@@ -224,7 +224,7 @@ RETURNS BOOLEAN AS $$
   SELECT EXISTS (
     SELECT 1 FROM public.profiles
     WHERE id = auth.uid()
-    AND role NOT IN ('student','guest','parent_guardian')
+    AND role NOT IN ('student')
     AND disabled = FALSE
   );
 $$ LANGUAGE sql SECURITY DEFINER STABLE;

@@ -1,4 +1,4 @@
-﻿-- ============================================================================
+-- ============================================================================
 -- CADD CENTRE LANKA — DB_MASTER_SETUP.sql
 -- COMPLETE UNIFIED DATABASE SETUP SCRIPT
 -- Generated: 2026-05-16
@@ -887,9 +887,31 @@ CREATE TABLE audit.activity_log (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+-- Helper: check if current user is admin/super_admin
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE id = auth.uid()
+    AND role IN ('admin','super_admin')
+    AND disabled = FALSE
+  );
+$$ LANGUAGE sql SECURITY DEFINER STABLE;
+
+-- Helper: check if current user is staff (any non-student role)
+CREATE OR REPLACE FUNCTION public.is_staff()
+RETURNS BOOLEAN AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE id = auth.uid()
+    AND role NOT IN ('student')
+    AND disabled = FALSE
+  );
+$$ LANGUAGE sql SECURITY DEFINER STABLE;
+
+-- â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• 
 -- 7. FUTURE-READY TABLES
--- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+-- â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• 
 
 -- Notifications
 CREATE TABLE public.notifications (
