@@ -24,6 +24,7 @@ import {
   getImsExpenses, createImsExpense, deleteImsExpense,
   getLeadConfirmations,
 } from "@/lib/ims-data"
+import { getCourses } from "@/lib/data"
 import { getCurrentUser, signOut } from "@/lib/auth"
 import type { ImsPayment, ImsInvoice, ImsExpense, ImsInvoiceItem, Profile, LeadConfirmation } from '@/types';
 import SriLankaCalendar from "@/components/ims/SriLankaCalendar"
@@ -51,6 +52,7 @@ export default function FinanceDashboard() {
   const [showLoadingAnimation, setShowLoadingAnimation] = useState(true);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [courses, setCourses] = useState<any[]>([]);
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
@@ -71,11 +73,11 @@ export default function FinanceDashboard() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const [p, inv, exp, u, lc] = await Promise.all([
+      const [p, inv, exp, u, lc, cList] = await Promise.all([
         getImsPayments(), getImsInvoices(), getImsExpenses(), getCurrentUser(),
-        getLeadConfirmations('marketing_confirmed'),
+        getLeadConfirmations('marketing_confirmed'), getCourses(true)
       ]);
-      setPayments(p); setInvoices(inv); setExpenses(exp); setCurrentUser(u); setLeadConfirmations(lc);
+      setPayments(p); setInvoices(inv); setExpenses(exp); setCurrentUser(u); setLeadConfirmations(lc); setCourses(cList);
     } catch (e: any) { toast.error(e.message) }
     finally { setLoading(false) }
   }, []);
@@ -754,7 +756,7 @@ export default function FinanceDashboard() {
                 <button onClick={() => setShowPaymentModal(false)} className="text-gray-500 hover:text-gray-900"><X className="w-6 h-6" /></button>
               </div>
               <form onSubmit={handleSavePayment} className="space-y-3">
-                {[['Student Name *', 'student_name', 'text', true], ['Student ID', 'student_id', 'text', false], ['Course ID', 'course_id', 'text', false]].map(([label, key, type, req]) => (
+                {[['Student Name *', 'student_name', 'text', true], ['Student ID', 'student_id', 'text', false]].map(([label, key, type, req]) => (
                   <div key={key as string}>
                     <label className="block text-gray-600 text-sm mb-1">{label as string}</label>
                     <input type={type as string} required={req as boolean} value={(paymentForm as any)[key as string]}
@@ -762,6 +764,19 @@ export default function FinanceDashboard() {
                       className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500" />
                   </div>
                 ))}
+                <div>
+                  <label className="block text-gray-600 text-sm mb-1">Course</label>
+                  <select
+                    value={paymentForm.course_id || ''}
+                    onChange={e => setPaymentForm(p => ({ ...p, course_id: e.target.value }))}
+                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="">-- Select Course (Optional) --</option>
+                    {courses.map(c => (
+                      <option key={c.id} value={c.id}>{c.title}</option>
+                    ))}
+                  </select>
+                </div>
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">Amount (LKR) *</label>
                   <input type="number" required value={paymentForm.amount} onChange={e => setPaymentForm(p => ({ ...p, amount: Number(e.target.value) }))}
