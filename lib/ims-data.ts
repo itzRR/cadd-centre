@@ -8,11 +8,12 @@ import type {
   ImsLoginHistory, ImsSystemCommand, IMSDashboardStats, UserRole,
   ImsAcademicStudent, Lecturer, LeadConfirmation, LeadConfirmationStage
 } from '@/types'
+import { STAFF_ROLES } from '@/types'
 
 // ── PROFILES / STAFF ─────────────────────────────────────────
 
 export async function getIMSStaff(): Promise<Profile[]> {
-  const imsRoles = ['admin','super_admin','academic_head','academic_officer','finance_head','finance_officer','marketing_head','marketing_officer','hr_head','hr_officer','staff']
+  const imsRoles = STAFF_ROLES;
   const { data, error } = await supabase
     .from('profiles')
     .select('*')

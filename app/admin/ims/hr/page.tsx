@@ -663,6 +663,12 @@ export default function HRDashboard() {
               actions={isHead ? [
                 {
                   label: 'Edit', icon: Edit, variant: 'default' as const,
+                  show: (emp: any) => {
+                    if (['admin', 'super_admin'].includes(emp.role)) {
+                      return ['admin', 'super_admin'].includes(currentUser?.role || '');
+                    }
+                    return true;
+                  },
                   onClick: (emp: any) => {
                     setEditingEmp(emp); 
                     setUserForm({
@@ -681,6 +687,12 @@ export default function HRDashboard() {
                 },
                 {
                   label: 'Toggle', icon: Power, variant: 'warning' as const,
+                  show: (emp: any) => {
+                    if (['admin', 'super_admin'].includes(emp.role)) {
+                      return ['admin', 'super_admin'].includes(currentUser?.role || '');
+                    }
+                    return true;
+                  },
                   onClick: (emp: any) => handleToggleDisable(emp)
                 },
               ] as CDMAction[] : []}
