@@ -252,7 +252,7 @@ export default function ITDashboardPage() {
                     {[
                       { title: "Total Users", value: totalUsers, icon: Users, color: "text-blue-600", bg: "bg-blue-50", trend: "+3 this week" },
                       { title: "Active Sessions", value: onlineNow, icon: Activity, color: "text-green-600", bg: "bg-green-50", trend: "Live" },
-                      { title: "Avg Latency", value: "42ms", icon: Wifi, color: "text-purple-600", bg: "bg-purple-50", trend: "Optimal" },
+                      { title: "Avg Latency", value: `${Math.floor((latencyDb + latencyAuth + latencyStorage + latencyEdge) / 4)}ms`, icon: Wifi, color: "text-purple-600", bg: "bg-purple-50", trend: "Optimal" },
                       { title: "Failed Logins", value: socFailedLogins, icon: AlertTriangle, color: "text-amber-600", bg: "bg-amber-50", trend: "Normal limits" },
                     ].map((kpi, i) => (
                       <div key={i} className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
