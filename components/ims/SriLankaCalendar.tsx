@@ -12,6 +12,7 @@ import {
   updateWorkCalendarEvent, deleteWorkCalendarEvent,
   type WorkCalendarEvent,
 } from "@/lib/ims-data"
+import { WeatherSvg, type WeatherState } from "../WeatherSvg"
 
 // Sri Lanka public holidays 2025-2026 (key = YYYY-MM-DD)
 const SL_HOLIDAYS: Record<string, string> = {
@@ -47,11 +48,15 @@ interface WeatherInfo {
   icon: string
 }
 
-function WeatherIcon({ icon, size = 16 }: { icon: string; size?: number }) {
-  if (icon.includes("01")) return <Sun size={size} className="text-yellow-400" />
-  if (icon.includes("02") || icon.includes("03") || icon.includes("04")) return <Cloud size={size} className="text-gray-400" />
-  if (icon.includes("09") || icon.includes("10") || icon.includes("11")) return <CloudRain size={size} className="text-red-400" />
-  return <Wind size={size} className="text-gray-400" />
+function getAnimatedWeatherState(icon: string): { state: WeatherState, night?: boolean } {
+  if (icon.includes("01")) return icon.includes("n") ? { state: "clear-night" } : { state: "sunny" }
+  if (icon.includes("02") || icon.includes("03")) return { state: "partlycloudy", night: icon.includes("n") }
+  if (icon.includes("04")) return { state: "cloudy" }
+  if (icon.includes("09") || icon.includes("10")) return { state: "rainy" }
+  if (icon.includes("11")) return { state: "lightning-rainy" }
+  if (icon.includes("13")) return { state: "snowy" }
+  if (icon.includes("50")) return { state: "fog" }
+  return { state: "sunny" }
 }
 
 function getWeatherBackground(icon?: string) {
@@ -196,7 +201,12 @@ export default function SriLankaCalendar({ accentColor = "blue" }: { accentColor
         <div className="flex items-center gap-3 flex-wrap">
           {weather && (
             <div className="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-xl text-sm shadow-sm">
-              <WeatherIcon icon={weather.icon} />
+              <div className="w-10 h-10 flex items-center justify-center -my-2 drop-shadow-md">
+                {(() => {
+                  const ws = getAnimatedWeatherState(weather.icon);
+                  return <WeatherSvg state={ws.state} night={ws.night} width="100%" height="100%" />;
+                })()}
+              </div>
               <span className="font-bold text-gray-800">{weather.temp}°C</span>
               <span className="text-gray-500 capitalize hidden sm:block">{weather.desc}</span>
               <span className="text-red-500 font-medium text-xs hidden md:block">· Kandy</span>

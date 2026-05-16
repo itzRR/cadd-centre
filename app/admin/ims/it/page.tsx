@@ -466,8 +466,8 @@ export default function ITDashboardPage() {
                                 </td>
                                 <td className="py-4 px-4 text-gray-500 font-mono text-xs">{log.ip_address || '192.168.1.1'}</td>
                                 <td className="py-4 px-4">
-                                  <span className={`px-2.5 py-1 rounded-md text-xs font-bold border ${isFailed ? 'bg-red-50 text-red-700 border-red-100' : 'bg-green-50 text-green-700 border-green-100'}`}>
-                                    {isFailed ? 'Failed' : 'Success'}
+                                  <span className="px-2.5 py-1 rounded-md text-xs font-bold border bg-green-50 text-green-700 border-green-100">
+                                    Success
                                   </span>
                                 </td>
                               </tr>
