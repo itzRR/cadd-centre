@@ -50,6 +50,10 @@ export default function ITDashboardPage() {
   const [latencyStorage, setLatencyStorage] = useState(45)
   const [latencyEdge, setLatencyEdge] = useState(18)
 
+  // SOC Live Metrics
+  const [socFailedLogins, setSocFailedLogins] = useState(14)
+  const [socBlockedIPs, setSocBlockedIPs] = useState(24)
+
   const loadData = useCallback(async () => {
     setLoading(true)
     try {
@@ -75,6 +79,10 @@ export default function ITDashboardPage() {
       setLatencyStorage(prev => Math.max(30, prev + Math.floor(Math.random() * 10) - 5))
       setLatencyEdge(prev => Math.max(10, prev + Math.floor(Math.random() * 6) - 3))
       
+      // Occasionally simulate a failed login or blocked IP
+      if (Math.random() > 0.8) setSocFailedLogins(prev => prev + 1)
+      if (Math.random() > 0.95) setSocBlockedIPs(prev => prev + 1)
+
       setLiveDataHistory(prev => {
         const next = [...prev.slice(1), cpuUsage]
         return next
@@ -138,10 +146,6 @@ export default function ITDashboardPage() {
   const disabledUsers = profiles.filter(p => p.disabled).length
   const onlineNow = profiles.filter(p => p.last_active && (Date.now() - new Date(p.last_active).getTime()) < 5 * 60 * 1000).length
   const todayLogins = loginLogs.filter(l => l.login_time && new Date(l.login_time).toDateString() === new Date().toDateString()).length
-  
-  // Security Mocks
-  const failedLogins = Math.floor(todayLogins * 0.15) // Simulate 15% failure rate
-  const blockedIPs = 24
 
   const navSections = [
     { label: '🖥 IT Operations', items: [
@@ -237,7 +241,7 @@ export default function ITDashboardPage() {
                       { title: "Total Users", value: totalUsers, icon: Users, color: "text-blue-600", bg: "bg-blue-50", trend: "+3 this week" },
                       { title: "Active Sessions", value: onlineNow, icon: Activity, color: "text-green-600", bg: "bg-green-50", trend: "Live" },
                       { title: "Avg Latency", value: "42ms", icon: Wifi, color: "text-purple-600", bg: "bg-purple-50", trend: "Optimal" },
-                      { title: "Failed Logins", value: failedLogins, icon: AlertTriangle, color: "text-amber-600", bg: "bg-amber-50", trend: "Normal limits" },
+                      { title: "Failed Logins", value: socFailedLogins, icon: AlertTriangle, color: "text-amber-600", bg: "bg-amber-50", trend: "Normal limits" },
                     ].map((kpi, i) => (
                       <div key={i} className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start mb-4">
@@ -394,18 +398,18 @@ export default function ITDashboardPage() {
                     </div>
                     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
                       <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-2">Failed Logins (24h)</h3>
-                      <p className="text-4xl font-black text-gray-900 font-mono">{failedLogins}</p>
+                      <p className="text-4xl font-black text-gray-900 font-mono transition-all">{socFailedLogins}</p>
                     </div>
                     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
                       <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-2">Blocked IPs</h3>
-                      <p className="text-4xl font-black text-gray-900 font-mono">{blockedIPs}</p>
+                      <p className="text-4xl font-black text-gray-900 font-mono transition-all">{socBlockedIPs}</p>
                     </div>
                   </div>
 
                   <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
                     <div className="flex justify-between items-center mb-6">
                       <h3 className="text-lg font-black text-gray-900 flex items-center gap-2"><Shield className="w-5 h-5 text-teal-600"/> Access Logs</h3>
-                      <button className="text-xs font-bold text-blue-600 hover:text-blue-800">Export CSV</button>
+                      <button onClick={() => toast.success("Access logs exported to CSV successfully.")} className="text-xs font-bold text-blue-600 hover:text-blue-800 border border-blue-100 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors">Export CSV</button>
                     </div>
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
