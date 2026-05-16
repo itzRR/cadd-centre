@@ -57,15 +57,15 @@ function WeatherIcon({ icon, size = 16 }: { icon: string; size?: number }) {
 function getWeatherBackground(icon?: string) {
   if (!icon) return "bg-white border-gray-200"
   // Sunny / Clear
-  if (icon.includes("01")) return "bg-gradient-to-br from-sky-50 via-white to-amber-50 border-sky-100"
+  if (icon.includes("01")) return "bg-gradient-to-br from-yellow-100 via-orange-100 to-amber-200 border-amber-300"
   // Partly Cloudy
-  if (icon.includes("02") || icon.includes("03")) return "bg-gradient-to-br from-slate-50 via-white to-sky-50 border-slate-200"
+  if (icon.includes("02") || icon.includes("03")) return "bg-gradient-to-br from-sky-100 via-blue-50 to-slate-200 border-blue-300"
   // Overcast / Cloudy
-  if (icon.includes("04")) return "bg-gradient-to-br from-gray-100 to-slate-100 border-gray-300"
+  if (icon.includes("04")) return "bg-gradient-to-br from-slate-200 to-gray-300 border-gray-400"
   // Rain / Showers
-  if (icon.includes("09") || icon.includes("10")) return "bg-gradient-to-br from-blue-100 to-slate-200 border-blue-200"
+  if (icon.includes("09") || icon.includes("10")) return "bg-gradient-to-br from-blue-200 via-indigo-200 to-slate-300 border-indigo-300"
   // Thunderstorm / Heavy Rain
-  if (icon.includes("11")) return "bg-gradient-to-br from-slate-200 to-slate-300 border-slate-400"
+  if (icon.includes("11")) return "bg-gradient-to-br from-slate-300 to-gray-400 border-slate-500"
   // Default
   return "bg-white border-gray-200"
 }

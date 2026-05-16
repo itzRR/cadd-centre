@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import {
   Monitor, Cpu, Users, Shield, Activity, HardDrive, Clock,
   RefreshCw, Wifi, Database, Server, BarChart3, Lock, AlertTriangle,
-  LogOut, Menu, X, User, CalendarDays, FileText, Terminal, Network
+  LogOut, Menu, X, User, CalendarDays, FileText, Terminal, Network, Calendar
 } from "lucide-react"
 import { getAllProfiles, getLoginHistory, getSystemCommands } from "@/lib/ims-data"
 import { getCurrentUser, signOut } from "@/lib/auth"
@@ -25,6 +25,7 @@ export default function ITDashboardPage() {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loginLogs, setLoginLogs] = useState<ImsLoginHistory[]>([])
   const [commands, setCommands] = useState<ImsSystemCommand[]>([])
+  const [storageData, setStorageData] = useState<{ totalSizeBytes: number, bucketSizes: Record<string, number> } | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("overview")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -57,10 +58,12 @@ export default function ITDashboardPage() {
   const loadData = useCallback(async () => {
     setLoading(true)
     try {
-      const [p, l, c, u] = await Promise.all([
-        getAllProfiles(), getLoginHistory(), getSystemCommands(), getCurrentUser()
+      const [p, l, c, u, s] = await Promise.all([
+        getAllProfiles(), getLoginHistory(), getSystemCommands(), getCurrentUser(),
+        fetch('/api/ims/storage').then(r => r.json()).catch(() => null)
       ])
       setProfiles(p); setLoginLogs(l); setCommands(c); setCurrentUser(u)
+      if (s?.success) setStorageData(s)
     } catch (e: any) { toast.error(e.message) }
     finally { setLoading(false) }
   }, [])
@@ -140,6 +143,14 @@ export default function ITDashboardPage() {
     )
   }
 
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
+
   // Stats
   const totalUsers = profiles.length
   const activeUsers = profiles.filter(p => !p.disabled).length
@@ -157,6 +168,7 @@ export default function ITDashboardPage() {
     ]},
     { label: '📋 My Work', items: [
       { id: 'tasks', label: 'Tasks', icon: FileText },
+      { id: 'calendar', label: 'Calendar', icon: Calendar },
       { id: 'leave-requests', label: 'My Leaves', icon: CalendarDays },
       { id: 'attendance', label: 'My Attendance', icon: Clock },
       { id: 'profile', label: 'My Profile', icon: User },
@@ -366,21 +378,45 @@ export default function ITDashboardPage() {
 
                     {/* Storage Breakdown */}
                     <div className="md:col-span-2 bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-                      <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-2"><HardDrive className="w-5 h-5 text-gray-600"/> Storage Allocation (250GB Total)</h3>
+                      <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-2"><HardDrive className="w-5 h-5 text-gray-600"/> Live Storage Allocation (Supabase)</h3>
                       
-                      <div className="w-full h-8 flex rounded-xl overflow-hidden mb-4 shadow-inner">
-                        <div className="bg-blue-500 h-full" style={{ width: '45%' }} title="Student Data (112GB)" />
-                        <div className="bg-indigo-500 h-full" style={{ width: '25%' }} title="Course Materials (62GB)" />
-                        <div className="bg-emerald-500 h-full" style={{ width: '15%' }} title="System Logs (37GB)" />
-                        <div className="bg-gray-200 h-full" style={{ width: '15%' }} title="Free Space (39GB)" />
-                      </div>
-                      
-                      <div className="flex flex-wrap gap-6 justify-center mt-6">
-                        <div className="flex items-center gap-2"><div className="w-3 h-3 rounded bg-blue-500" /><span className="text-sm font-bold text-gray-600">Student Data (45%)</span></div>
-                        <div className="flex items-center gap-2"><div className="w-3 h-3 rounded bg-indigo-500" /><span className="text-sm font-bold text-gray-600">Course Materials (25%)</span></div>
-                        <div className="flex items-center gap-2"><div className="w-3 h-3 rounded bg-emerald-500" /><span className="text-sm font-bold text-gray-600">Logs & Backups (15%)</span></div>
-                        <div className="flex items-center gap-2"><div className="w-3 h-3 rounded bg-gray-200" /><span className="text-sm font-bold text-gray-600">Available (15%)</span></div>
-                      </div>
+                      {storageData ? (
+                        <>
+                          <div className="flex justify-between items-end mb-2">
+                            <span className="text-sm font-bold text-gray-500">Total Usage Across All Buckets</span>
+                            <span className="text-xl font-black text-gray-900 font-mono">{formatBytes(storageData.totalSizeBytes)}</span>
+                          </div>
+                          <div className="w-full h-8 flex rounded-xl overflow-hidden mb-4 shadow-inner bg-gray-100">
+                            {Object.entries(storageData.bucketSizes).length > 0 ? Object.entries(storageData.bucketSizes).map(([bucket, size], i) => {
+                              const colors = ['bg-blue-500', 'bg-indigo-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500', 'bg-red-500']
+                              const pct = storageData.totalSizeBytes > 0 ? (size / storageData.totalSizeBytes) * 100 : 0
+                              return (
+                                <motion.div key={bucket} className={`${colors[i % colors.length]} h-full`} initial={{ width: 0 }} animate={{ width: `${pct}%` }} title={`${bucket} (${formatBytes(size)})`} />
+                              )
+                            }) : (
+                              <div className="w-full h-full flex items-center justify-center text-xs text-gray-400 font-bold">No active objects stored</div>
+                            )}
+                          </div>
+                          
+                          <div className="flex flex-wrap gap-6 justify-center mt-6">
+                            {Object.entries(storageData.bucketSizes).map(([bucket, size], i) => {
+                              const colors = ['bg-blue-500', 'bg-indigo-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500', 'bg-red-500']
+                              const pct = storageData.totalSizeBytes > 0 ? (size / storageData.totalSizeBytes) * 100 : 0
+                              return (
+                                <div key={bucket} className="flex items-center gap-2">
+                                  <div className={`w-3 h-3 rounded ${colors[i % colors.length]}`} />
+                                  <span className="text-sm font-bold text-gray-600 capitalize">{bucket} ({pct.toFixed(1)}%)</span>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center py-8">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-2"></div>
+                          <p className="text-xs text-gray-500 font-bold tracking-widest uppercase">Fetching Storage Data...</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
