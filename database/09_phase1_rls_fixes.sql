@@ -147,6 +147,10 @@ CREATE POLICY "Staff full access students"
   USING (public.is_staff())
   WITH CHECK (public.is_staff());
 
+-- Grant explicit table permissions to authenticated role
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.students TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.students TO service_role;
+
 -- ── VERIFY ──
 -- After running, test: 
 -- 1. Open course page (not logged in) → click Enroll → submit form → should work
