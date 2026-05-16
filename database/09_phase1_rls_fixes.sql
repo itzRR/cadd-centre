@@ -151,6 +151,12 @@ CREATE POLICY "Staff full access students"
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.students TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.students TO service_role;
 
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.enrollments TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.enrollments TO service_role;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.attendance TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.attendance TO service_role;
+
 -- ── VERIFY ──
 -- After running, test: 
 -- 1. Open course page (not logged in) → click Enroll → submit form → should work

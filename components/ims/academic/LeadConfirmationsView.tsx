@@ -47,7 +47,7 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
     try {
       const [data, bat, cou] = await Promise.all([
         getLeadConfirmations('finance_confirmed'),
-        getBatches(false),
+        getBatches(true),
         getCourses(true),
       ])
       setConfirmations(data)
@@ -85,7 +85,7 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
     }
     try {
       const batch = batches.find((b: any) => b.id === batchId)
-      const batchCode = batch?.name?.split(' - ').pop() || batch?.name || 'GEN'
+      const batchCode = batch?.batch_code || batch?.name || 'GEN'
       const seq = await getNextStudentSequence(batchCode)
       const studentId = generateStudentId(batchCode, seq)
       // Academic email and password are based on the FINAL student ID
