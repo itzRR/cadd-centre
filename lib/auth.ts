@@ -74,7 +74,7 @@ export async function signIn(
     // First, check the PROFILES table (staff members)
     const { data: profile } = await supabase
       .from('profiles')
-      .select('full_name, role, position, department, access_level, disabled, created_at, last_active')
+      .select('full_name, role, position, department, access_level, disabled, disabled_reason, created_at, last_active')
       .eq('id', data.user.id)
       .single()
 
@@ -82,7 +82,7 @@ export async function signIn(
     if (profile) {
       if (profile.disabled) {
         await supabase.auth.signOut()
-        return { user: null, error: 'Your account has been disabled. Contact an administrator.' }
+        return { user: null, error: profile.disabled_reason ? `Account Disabled: ${profile.disabled_reason}` : 'Your account has been disabled. Contact an administrator.' }
       }
 
       // Try to fetch permissions
@@ -144,14 +144,14 @@ export async function signIn(
     // Not in profiles → check STUDENTS table
     const { data: student } = await supabase
       .from('students')
-      .select('full_name, student_id, academic_email, disabled, status, created_at, last_active')
+      .select('full_name, student_id, academic_email, disabled, disabled_reason, status, created_at, last_active')
       .eq('id', data.user.id)
       .single()
 
     if (student) {
       if (student.disabled) {
         await supabase.auth.signOut()
-        return { user: null, error: 'Your account has been disabled. Contact an administrator.' }
+        return { user: null, error: student.disabled_reason ? `Account Disabled: ${student.disabled_reason}` : 'Your account has been disabled. Contact an administrator.' }
       }
 
       // Update last_active on students table

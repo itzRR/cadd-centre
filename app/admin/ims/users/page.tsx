@@ -368,17 +368,32 @@ export default function IMSUsersPage() {
     } catch (e: any) { toast.error(e.message) }
   }
 
-  const handleToggleDisable = async (p: Profile) => {
+  const handleToggleDisable = async (p: any) => {
     if (!isAdmin) return toast.error("Only admins can disable accounts")
     if (p.id === currentUser?.id) return toast.error("You cannot disable your own account")
-    if (!(await confirmDialog({
-      title: p.disabled ? "Enable Account?" : "Disable Account?",
-      message: `Are you sure you want to ${p.disabled ? "enable" : "disable"} ${p.full_name}? ${!p.disabled ? "They will lose access to all dashboards immediately." : ""}`,
-      confirmText: p.disabled ? "Yes, Enable" : "Yes, Disable"
-    }))) return
+    
+    let reason = ""
+    if (!p.disabled) {
+      if (!(await confirmDialog({
+        title: "Disable Account?",
+        message: `Are you sure you want to disable ${p.full_name}? They will lose access to all dashboards immediately.`,
+        confirmText: "Yes, Disable"
+      }))) return
+      
+      const input = window.prompt("Optional: Enter a reason for disabling this account (the user will see this).")
+      if (input === null) return // user cancelled the prompt
+      reason = input.trim()
+    } else {
+      if (!(await confirmDialog({
+        title: "Enable Account?",
+        message: `Are you sure you want to enable ${p.full_name}?`,
+        confirmText: "Yes, Enable"
+      }))) return
+    }
+
     try {
-      await disableUser(p.id, !p.disabled)
-      setProfiles(prev => prev.map(x => x.id === p.id ? { ...x, disabled: !p.disabled } : x))
+      await disableUser(p.id, !p.disabled, reason)
+      setProfiles(prev => prev.map(x => x.id === p.id ? { ...x, disabled: !p.disabled, disabled_reason: reason || null } : x))
       toast.success(`Account ${p.disabled ? "enabled" : "disabled"} successfully`)
     } catch (e: any) { toast.error(e.message) }
   }

@@ -546,11 +546,19 @@ export async function updateSystemCommandStatus(id: string, status: 'delivered' 
   if (error) throw error
 }
 
-export async function disableUser(userId: string, disabled: boolean): Promise<void> {
+export async function disableUser(userId: string, disabled: boolean, reason?: string): Promise<void> {
   const { error } = await supabase
     .from('profiles')
-    .update({ disabled, updated_at: new Date().toISOString() })
+    .update({ disabled, disabled_reason: reason || null, updated_at: new Date().toISOString() })
     .eq('id', userId)
+  if (error) throw error
+}
+
+export async function disableStudent(studentId: string, disabled: boolean, reason?: string): Promise<void> {
+  const { error } = await supabase
+    .from('students')
+    .update({ disabled, disabled_reason: reason || null, updated_at: new Date().toISOString() })
+    .eq('id', studentId)
   if (error) throw error
 }
 

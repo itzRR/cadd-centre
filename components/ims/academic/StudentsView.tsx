@@ -8,6 +8,8 @@ import CDMDataTable, { CDMColumn, CDMAction } from "@/components/ims/CDMDataTabl
 import { getStudents, getEnrollments, getCourses, getBatches, enrollStudent, deleteEnrollment, updateEnrollmentStatus, updateStudentProfile } from "@/lib/data"
 import { getCurrentUser } from "@/lib/auth"
 import AcademicLeadConfirmationsView from "@/components/ims/academic/LeadConfirmationsView"
+import { disableStudent } from "@/lib/ims-data"
+import { ShieldOff, ShieldCheck } from "lucide-react"
 
 // Only academic_head and admins can manage students. academic_officer is READ ONLY here.
 const MANAGE_ROLES = ['admin', 'super_admin', 'academic_head']
@@ -185,6 +187,30 @@ export default function StudentsView() {
     }
   }
 
+  const handleToggleDisableStudent = async (r: any) => {
+    if (!canManage) return toast.error("Only admins can disable students")
+    
+    let reason = ""
+    if (!r.disabled) {
+      const input = window.prompt(`Optional: Enter a reason for disabling ${r.student_name}'s account. They will see this reason when they try to log in.`)
+      if (input === null) return // cancelled
+      reason = input.trim()
+    } else {
+      if (!window.confirm(`Are you sure you want to enable ${r.student_name}'s account?`)) return
+    }
+
+    setSaving(true)
+    try {
+      await disableStudent(r.id, !r.disabled, reason)
+      setStudents(prev => prev.map(x => x.id === r.id ? { ...x, disabled: !r.disabled, disabled_reason: reason || null } : x))
+      toast.success(`Account ${r.disabled ? "enabled" : "disabled"} successfully`)
+    } catch (e: any) {
+      toast.error(e.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
   const filteredBatchesForForm = enrollForm.course_id
     ? batches.filter((b: any) => b.course_id === enrollForm.course_id)
     : batches
@@ -208,17 +234,22 @@ export default function StudentsView() {
     {
       key: "status",
       label: "Status",
-      render: (val) => (
-        <span className={`px-2 py-1 rounded-md text-xs font-medium ${
-          val === 'confirmed' ? 'bg-emerald-100 text-emerald-700' :
-          val === 'completed' ? 'bg-red-100 text-red-700' :
-          val === 'cancelled' ? 'bg-red-100 text-red-700' :
-          val === 'pending' ? 'bg-amber-100 text-amber-700' :
-          'bg-gray-100 text-gray-700'
-        }`}>
-          {val}
-        </span>
-      )
+      render: (val, r) => {
+        if (r.disabled) {
+          return <span className="px-2 py-1 rounded-md text-xs font-medium bg-red-100 text-red-700 flex items-center w-max gap-1"><ShieldOff className="w-3 h-3"/> Disabled</span>
+        }
+        return (
+          <span className={`px-2 py-1 rounded-md text-xs font-medium ${
+            val === 'confirmed' ? 'bg-emerald-100 text-emerald-700' :
+            val === 'completed' ? 'bg-red-100 text-red-700' :
+            val === 'cancelled' ? 'bg-red-100 text-red-700' :
+            val === 'pending' ? 'bg-amber-100 text-amber-700' :
+            'bg-gray-100 text-gray-700'
+          }`}>
+            {val}
+          </span>
+        )
+      }
     },
     {
       key: "created_at",
@@ -237,6 +268,11 @@ export default function StudentsView() {
       label: "Edit Status",
       icon: Edit,
       onClick: (r) => r.enrollment_id ? setShowEditModal(r) : toast.info("Student not enrolled yet")
+    },
+    {
+      label: (r) => r.disabled ? "Enable Account" : "Disable Account",
+      icon: (r) => r.disabled ? ShieldCheck : ShieldOff,
+      onClick: (r) => handleToggleDisableStudent(r)
     },
     {
       label: "Remove",
