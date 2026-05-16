@@ -1,0 +1,271 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+
+@theme {
+    /* Base and backgrounds */
+    --color-ocean-base: #EAF3FB;             /* primary background - soft blueish white */
+    --color-sky-shell: #F5F9FC;              /* secondary background - even lighter, airy feel */
+    --color-deep-sky: #1B3A57;               /* deep background - grounded and rich blue */
+    --color-midnight-blue: #13293D;          /* dark base - smooth professional tone */
+    --color-blue-black: #0A1A2F;             /* ultra-dark tone - elegant depth */
+
+    /* Accents and highlights */
+    --color-soft-ice: #F0F6FA;               /* subtle contrast background - clean and modern */
+    --color-muted-cyan: #A9CDE8;             /* soft accent - uplifting yet calm */
+    --color-sky-gray: #6A8CA3;               /* calm contrast - for icons, secondary accents */
+
+    /* Texts */
+    --color-clean-white: #FFFFFF;            /* main text on dark backgrounds */
+    --color-deep-navy: #14202E;              /* main text on light backgrounds */
+    --color-muted-slate: #8CA0B3;            /* secondary text - readable and calm */
+
+    /* CTA / buttons */
+    --color-action-blue: #2D7DD2;            /* button base - bold blue for strong CTAs */
+    --color-blue-hover: #1C5FA8;             /* button hover - darker blue for interaction */
+
+    /* Effects */
+    --color-glass-overlay: rgba(255, 255, 255, 0.06);  /* card overlay effect */
+    --color-border-hint: rgba(0, 0, 0, 0.08);          /* subtle borders / outlines */
+
+    --animate-marquee: marquee 30s linear infinite;
+    @keyframes marquee {
+      to { transform: translateX(-50%); }
+    }
+}
+
+
+
+
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+
+  /* Backgrounds */
+  --background: #EAF3FB; /* ocean base */
+  --foreground: #14202E; /* deep navy (text on light) */
+
+  --card: #F5F9FC; /* sky shell */
+  --card-foreground: #14202E;
+
+  --popover: #F0F6FA; /* soft ice */
+  --popover-foreground: #14202E;
+
+  /* Primary actions */
+  --primary: #2D7DD2; /* action blue */
+  --primary-foreground: #FFFFFF; /* clean white */
+
+  /* Secondary accents */
+  --secondary: #A9CDE8; /* muted cyan */
+  --secondary-foreground: #14202E;
+
+  --muted: #F0F6FA; /* soft ice */
+  --muted-foreground: #8CA0B3; /* muted slate */
+
+  --accent: #6A8CA3; /* sky gray */
+  --accent-foreground: #FFFFFF;
+
+  --destructive: #D9534F; /* fallback red */
+  --destructive-foreground: #FFFFFF;
+
+  /* Borders & Inputs */
+  --border: rgba(0, 0, 0, 0.08); /* border hint */
+  --input: rgba(0, 0, 0, 0.08);
+  --ring: #2D7DD2; /* action blue */
+
+  /* Charts (mapped creatively) */
+  --chart-1: #2D7DD2;
+  --chart-2: #1C5FA8;
+  --chart-3: #A9CDE8;
+  --chart-4: #6A8CA3;
+  --chart-5: #8CA0B3;
+
+  /* Sidebar */
+  --sidebar: #F5F9FC; /* sky shell */
+  --sidebar-foreground: #14202E;
+  --sidebar-primary: #2D7DD2;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #A9CDE8;
+  --sidebar-accent-foreground: #14202E;
+  --sidebar-border: rgba(0, 0, 0, 0.08);
+  --sidebar-ring: #2D7DD2;
+}
+
+.dark {
+  --background: #13293D; /* midnight blue */
+  --foreground: #FFFFFF; /* clean white */
+
+  --card: #1B3A57; /* deep sky */
+  --card-foreground: #FFFFFF;
+
+  --popover: #1B3A57;
+  --popover-foreground: #FFFFFF;
+
+  --primary: #2D7DD2; /* action blue */
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #6A8CA3; /* sky gray */
+  --secondary-foreground: #FFFFFF;
+
+  --muted: #0A1A2F; /* blue black */
+  --muted-foreground: #8CA0B3;
+
+  --accent: #A9CDE8; /* muted cyan */
+  --accent-foreground: #0A1A2F;
+
+  --destructive: #D9534F; /* fallback red */
+  --destructive-foreground: #FFFFFF;
+
+  --border: rgba(255, 255, 255, 0.06); /* glass overlay */
+  --input: rgba(255, 255, 255, 0.06);
+  --ring: #2D7DD2;
+
+  --chart-1: #A9CDE8;
+  --chart-2: #6A8CA3;
+  --chart-3: #2D7DD2;
+  --chart-4: #1C5FA8;
+  --chart-5: #8CA0B3;
+
+  --sidebar: #13293D; /* midnight blue */
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #2D7DD2;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #6A8CA3;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-ring: #2D7DD2;
+}
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Legacy IMS Dashboard Classes — Light Educational Theme */
+  .glass-card {
+    @apply bg-white border border-gray-200 rounded-2xl shadow-sm;
+  }
+
+  .glass-button {
+    @apply bg-blue-600 text-white rounded-xl px-4 py-2 transition;
+  }
+
+  .glass-button:hover {
+    background-color: #1d4ed8;
+  }
+
+  .glass-strong {
+    @apply bg-blue-700 text-white;
+  }
+
+  /* Converted to light theme */
+  .dark-dept-bg {
+    background-color: #f8fafc;
+    min-height: 100vh;
+    color: #1e293b;
+  }
+
+  .dark-glass-card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+    color: #1e293b;
+    color-scheme: light;
+  }
+
+  .dark-glass-strong {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    color: #1e293b;
+    color-scheme: light;
+  }
+
+  .neon-glow {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  .neon-glow:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .hover-lift {
+    transition: transform 0.2s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+
+  .blue-gradient-text {
+    background: linear-gradient(to right, #003B6D, #6699CC);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .deep-blue-bg {
+    @apply bg-[#EBEDF3];
+  }
+
+  /* Fix select options in light theme */
+  .dark-glass-card select option,
+  .dark-glass-strong select option,
+  select option {
+    background-color: #ffffff;
+    color: #1e293b;
+  }
+
+  input[type="date"], input[type="time"], input[type="month"] {
+    color-scheme: light;
+  }
+}
+

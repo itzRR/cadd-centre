@@ -1,0 +1,86 @@
+-- ============================================================================
+-- CADD CENTRE LANKA — MASTER DATABASE SCRIPT
+-- Complete Enterprise-Grade PostgreSQL Architecture
+-- ============================================================================
+--
+-- EXECUTION ORDER:
+-- 1. 01_foundation.sql    → Extensions, schemas, enums, core tables
+-- 2. 02_ims_and_system.sql → IMS tables, audit, future-ready tables
+-- 3. 03_indexes_and_rls.sql → Performance indexes, RLS policies
+-- 4. 04a_functions_triggers.sql → Functions, stored procedures, triggers
+-- 5. 04b_views_seed.sql   → Views, seed data, comments, grants
+--
+-- To execute all at once via psql:
+--   \i database/01_foundation.sql
+--   \i database/02_ims_and_system.sql
+--   \i database/03_indexes_and_rls.sql
+--   \i database/04a_functions_triggers.sql
+--   \i database/04b_views_seed.sql
+--
+-- ============================================================================
+-- ARCHITECTURE SUMMARY
+-- ============================================================================
+--
+-- TOTAL TABLES: 42 (public) + 2 (audit)
+-- TOTAL ENUMS: 30
+-- TOTAL INDEXES: 80+
+-- TOTAL RLS POLICIES: 50+
+-- TOTAL FUNCTIONS: 15
+-- TOTAL TRIGGERS: 30+
+-- TOTAL VIEWS: 9
+--
+-- MODULES COVERED:
+--   ✓ Authentication & Profiles (Supabase Auth integration)
+--   ✓ Multi-Branch / Multi-Campus Support
+--   ✓ Department Structure
+--   ✓ Course Catalog with Modules
+--   ✓ Batch Management (CENTRAL ENTITY)
+--   ✓ Lecturer Allocations
+--   ✓ Student Enrollments
+--   ✓ Attendance Tracking
+--   ✓ Module Progress
+--   ✓ Assessments & Grading
+--   ✓ Academic Records
+--   ✓ Certificate Issuance & Verification
+--   ✓ Learning Resources
+--   ✓ Events & Registrations
+--   ✓ Contact Messages
+--   ✓ Student Leads (ASMS)
+--   ✓ Marketing Leads & Campaigns (IMS)
+--   ✓ Lead-to-Student Pipeline (3-stage confirmation)
+--   ✓ IMS Payments & Invoices
+--   ✓ IMS Expenses
+--   ✓ HR Leave Management
+--   ✓ HR Salary Payouts
+--   ✓ HR Performance Reviews
+--   ✓ HR Roster / Shift Management
+--   ✓ Operational Tasks
+--   ✓ Meeting Minute Trackers
+--   ✓ Staff Attendance (Clock-in/out)
+--   ✓ Login History (Security Audit)
+--   ✓ System Commands (Admin Controls)
+--   ✓ Work Calendar
+--   ✓ IMS Academic Students
+--   ✓ IMS Academic Results
+--   ✓ IMS Lecturers Directory
+--   ✓ Notifications
+--   ✓ System Settings
+--   ✓ Feature Flags
+--   ✓ File Uploads
+--   ✓ Grading Rules
+--   ✓ Academic Calendar
+--   ✓ Scholarships
+--   ✓ Timetable Slots
+--   ✓ Immutable Audit Trail
+--   ✓ Activity Logging
+--
+-- ROLES SUPPORTED:
+--   student, lecturer, coordinator, academic_manager, admin,
+--   super_admin, branch_manager,
+--   academic_head, academic_officer, academic_staff,
+--   marketing_head, marketing_officer, marketing_staff,
+--   finance_head, finance_officer, hr_head, hr_officer, staff,
+--   parent_guardian, receptionist, library_staff,
+--   examination_officer, support_staff, guest
+--
+-- ============================================================================
