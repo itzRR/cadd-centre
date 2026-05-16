@@ -156,15 +156,9 @@ export function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <>
-                <Button variant="ghost" asChild size="sm"
-                  className="text-gray-700 hover:bg-gray-100">
-                  <Link href="/auth/login">Sign In</Link>
-                </Button>
-                <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
-                  <Link href="/auth/register">Register</Link>
-                </Button>
-              </>
+              <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
+                <Link href="/auth/login">Sign In</Link>
+              </Button>
             )}
           </div>
 
@@ -197,10 +191,7 @@ export function Navbar() {
                   <button onClick={handleLogout} className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50">Sign Out</button>
                 </>
               ) : (
-                <>
                   <Link href="/auth/login" className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50" onClick={() => setIsOpen(false)}>Sign In</Link>
-                  <Link href="/auth/register" className="block px-3 py-2 rounded-lg text-sm font-medium text-blue-700 hover:bg-blue-50" onClick={() => setIsOpen(false)}>Register</Link>
-                </>
               )}
             </div>
           </div>
