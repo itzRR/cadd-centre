@@ -299,11 +299,20 @@ export default function AssessmentPanel({ modules, enrollments, assessments, onR
                       className="w-20 px-2 py-1.5 border rounded-lg text-sm text-center font-mono focus:outline-none focus:border-blue-500"
                     />
                     <span className="text-xs text-gray-400">/ {a.total_marks}</span>
-                    <span className={`w-8 text-center font-bold text-xs ${
-                      g.grade === 'F' ? 'text-red-600' :
-                      g.grade.startsWith('A') ? 'text-emerald-600' :
-                      g.grade.startsWith('B') ? 'text-blue-600' : 'text-amber-600'
-                    }`}>{g.grade || '-'}</span>
+                    <input
+                      type="text"
+                      placeholder="Grade"
+                      value={g.grade}
+                      onChange={e => {
+                        setGrades(prev => ({ ...prev, [a.id]: { ...g, grade: e.target.value.toUpperCase() } }))
+                      }}
+                      className={`w-12 px-2 py-1.5 border rounded-lg text-sm text-center font-bold focus:outline-none focus:border-blue-500 ${
+                        g.grade === 'F' ? 'text-red-600 border-red-200 bg-red-50' :
+                        g.grade.startsWith('A') ? 'text-emerald-600 border-emerald-200 bg-emerald-50' :
+                        g.grade.startsWith('B') ? 'text-blue-600 border-blue-200 bg-blue-50' : 
+                        g.grade ? 'text-amber-600 border-amber-200 bg-amber-50' : ''
+                      }`}
+                    />
                   </div>
                 )
               })}

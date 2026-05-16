@@ -114,7 +114,29 @@ export default function LeadPipelineView({ leads, staff, currentUser, onRefresh 
         {STATUSES.map(status => {
           const colLeads = filteredLeads.filter(l => l.status === status)
           return (
-            <div key={status} className="flex-shrink-0 w-[320px] snap-center flex flex-col h-[calc(100vh-280px)]">
+            <div 
+              key={status} 
+              className="flex-shrink-0 w-[320px] snap-center flex flex-col h-[calc(100vh-280px)]"
+              onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('bg-gray-50', 'rounded-2xl') }}
+              onDragLeave={(e) => { e.currentTarget.classList.remove('bg-gray-50', 'rounded-2xl') }}
+              onDrop={async (e) => {
+                e.preventDefault()
+                e.currentTarget.classList.remove('bg-gray-50', 'rounded-2xl')
+                const leadId = e.dataTransfer.getData("leadId")
+                if (!leadId) return
+                
+                // If it's already in this status, do nothing
+                const lead = leads.find(l => l.id === leadId)
+                if (lead?.status === status) return
+
+                try {
+                  const { error } = await supabase.from("marketing_leads").update({ status, updated_at: new Date().toISOString() }).eq("id", leadId)
+                  if (error) throw error
+                  toast.success(`Lead moved to ${status}`)
+                  onRefresh()
+                } catch (err: any) { toast.error(err.message) }
+              }}
+            >
               <div className="flex items-center justify-between mb-4 px-2">
                 <h3 className="font-bold text-gray-700 flex items-center gap-2">
                   {status} <span className="bg-gray-200 text-gray-600 text-xs px-2 py-0.5 rounded-full">{colLeads.length}</span>
@@ -122,7 +144,13 @@ export default function LeadPipelineView({ leads, staff, currentUser, onRefresh 
               </div>
               <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
                 {colLeads.map(lead => (
-                  <motion.div key={lead.id} layoutId={lead.id} className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow group relative">
+                  <motion.div 
+                    key={lead.id} 
+                    layoutId={lead.id} 
+                    draggable
+                    onDragStart={(e: any) => { e.dataTransfer.setData("leadId", lead.id) }}
+                    className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow group relative cursor-grab active:cursor-grabbing"
+                  >
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-bold text-gray-900 text-sm truncate pr-8">{lead.name}</h4>
                       <div className="absolute top-4 right-4 flex opacity-0 group-hover:opacity-100 transition-opacity gap-1">
@@ -157,7 +185,7 @@ export default function LeadPipelineView({ leads, staff, currentUser, onRefresh 
                   </motion.div>
                 ))}
                 {colLeads.length === 0 && (
-                  <div className="border-2 border-dashed border-gray-200 rounded-xl h-24 flex items-center justify-center text-sm text-gray-400">Drop here</div>
+                  <div className="border-2 border-dashed border-gray-200 rounded-xl h-24 flex items-center justify-center text-sm text-gray-400 pointer-events-none">Drop here</div>
                 )}
               </div>
             </div>
