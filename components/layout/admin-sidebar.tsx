@@ -8,7 +8,7 @@ import {
   Home, MessageSquare, GraduationCap, CalendarDays, ClipboardList,
   Award, FileText, FolderOpen, UserCheck, BarChart3, Layers, PhoneCall,
   Building2, TrendingUp, DollarSign, UserCog, ListTodo, Calendar,
-  Terminal, ChevronDown, Megaphone, ShieldCheck, User, X, Briefcase
+  Terminal, ChevronDown, Megaphone, ShieldCheck, User, X, Briefcase, Monitor
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { signOut } from "@/lib/auth"
@@ -62,6 +62,14 @@ const departmentGroups: NavGroup[] = [
     permission: "ims_hr",
     items: [
       { name: "HR Ops",        href: "/admin/ims/hr",        icon: UserCog },
+    ],
+  },
+  {
+    label: "IT",
+    icon: Monitor,
+    permission: "ims_it",
+    items: [
+      { name: "IT Ops",        href: "/admin/ims/it",        icon: Monitor },
     ],
   },
 ]

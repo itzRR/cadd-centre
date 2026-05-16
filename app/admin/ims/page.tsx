@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import {
   Users, TrendingUp, DollarSign, UserCog, ListTodo,
   Megaphone, GraduationCap, Building2, AlertCircle,
-  CheckCircle, Calendar, Terminal, Menu, LogOut, ArrowRight, Home
+  CheckCircle, Calendar, Terminal, Menu, LogOut, ArrowRight, Home, Monitor
 } from "lucide-react"
 import { QuickGuide, type GuideStep } from "@/components/ui/quick-guide"
 
@@ -99,6 +99,16 @@ export default function IMSDashboardPage() {
       stat: stats ? `${stats.pendingLeaves} pending leaves` : "-",
       badge: stats?.pendingLeaves ? `${stats.pendingLeaves} pending` : "All clear",
       badgeColor: stats?.pendingLeaves ? "bg-orange-500/20 text-orange-700 border-orange-500/20" : "bg-purple-100 text-purple-600 border-purple-200",
+    },
+    {
+      title: "IT Department",
+      href: "/admin/ims/it",
+      icon: Monitor,
+      gradient: "from-blue-500 to-indigo-500",
+      description: "Systems, networks & security",
+      stat: "Operational",
+      badge: "System",
+      badgeColor: "bg-blue-100 text-blue-600 border-blue-200",
     },
     {
       title: "Staff Users",

@@ -17,6 +17,7 @@ export type Permission =
   | 'ims_tasks'
   | 'ims_roster'
   | 'ims_control_panel'
+  | 'ims_it'
   | 'asms_full'
   | 'task_delete'
 
@@ -37,14 +38,15 @@ export const PERMISSION_DEFS: PermissionDef[] = [
   { key: 'ims_tasks',        label: 'Tasks',             description: 'Access ops tasks & minute trackers',     group: 'Tasks' },
   { key: 'ims_roster',       label: 'Roster',            description: 'Access the staff roster',                group: 'Tasks' },
   { key: 'ims_control_panel',label: 'Control Panel',    description: 'Access system control panel',            group: 'IMS' },
+  { key: 'ims_it',           label: 'IT Ops',           description: 'Access IT operations and systems',       group: 'IMS' },
   { key: 'asms_full',        label: 'Full ASMS Access',  description: 'Access all ASMS academic sections',      group: 'ASMS' },
   { key: 'task_delete',      label: 'Delete Tasks',      description: 'Can delete tasks and trackers',          group: 'Tasks' },
 ]
 
 // Base permissions each role automatically has (no need to grant them)
 export const ROLE_BASE_PERMISSIONS: Record<UserRole, Permission[]> = {
-  super_admin:      ['ims_overview','ims_marketing','ims_academic','ims_finance','ims_hr','ims_users','ims_tasks','ims_roster','ims_control_panel','asms_full','task_delete'],
-  admin:            ['ims_overview','ims_marketing','ims_academic','ims_finance','ims_hr','ims_users','ims_tasks','ims_roster','ims_control_panel','asms_full','task_delete'],
+  super_admin:      ['ims_overview','ims_marketing','ims_academic','ims_finance','ims_hr','ims_users','ims_tasks','ims_roster','ims_control_panel','ims_it','asms_full','task_delete'],
+  admin:            ['ims_overview','ims_marketing','ims_academic','ims_finance','ims_hr','ims_users','ims_tasks','ims_roster','ims_control_panel','ims_it','asms_full','task_delete'],
   academic_head:    ['ims_academic','ims_tasks','ims_roster','ims_overview'],
   academic_officer: ['ims_academic','ims_tasks','ims_roster'],
   marketing_head:   ['ims_marketing','ims_tasks','ims_roster','ims_overview'],
@@ -53,6 +55,8 @@ export const ROLE_BASE_PERMISSIONS: Record<UserRole, Permission[]> = {
   finance_officer:  ['ims_finance','ims_tasks','ims_roster'],
   hr_head:          ['ims_hr','ims_tasks','ims_roster','ims_overview'],
   hr_officer:       ['ims_hr','ims_tasks','ims_roster'],
+  it_head:          ['ims_it','ims_tasks','ims_roster','ims_overview','ims_control_panel'],
+  it_officer:       ['ims_it','ims_tasks','ims_roster'],
   staff:            ['ims_tasks','ims_roster'],
   lecturer:         ['ims_academic'],
   student:          [],
@@ -97,6 +101,7 @@ export const PATH_PERMISSION_MAP: Array<{ pathPrefix: string; permission: Permis
   { pathPrefix: '/admin/ims/users',         permission: 'ims_users' },
   { pathPrefix: '/admin/ims/finance',       permission: 'ims_finance' },
   { pathPrefix: '/admin/ims/hr',            permission: 'ims_hr' },
+  { pathPrefix: '/admin/ims/it',            permission: 'ims_it' },
   { pathPrefix: '/admin/ims/marketing',     permission: 'ims_marketing' },
   { pathPrefix: '/admin/ims/academic',      permission: 'ims_academic' },
   { pathPrefix: '/admin/ims/tasks',         permission: 'ims_tasks' },

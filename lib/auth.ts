@@ -99,7 +99,7 @@ export async function signIn(
       }
 
       // Log login history for IMS users (fire and forget)
-      const imsRoles = ['admin','super_admin','academic_head','academic_officer','finance_head','finance_officer','marketing_head','marketing_officer','hr_head','hr_officer','staff','lecturer']
+      const imsRoles = ['admin','super_admin','academic_head','academic_officer','finance_head','finance_officer','marketing_head','marketing_officer','hr_head','hr_officer','it_head','it_officer','staff','lecturer']
       if (imsRoles.includes(profile.role)) {
         let ipAddress: string | null = null
         try {
@@ -277,7 +277,7 @@ export async function isAdmin(): Promise<boolean> {
 }
 
 export function isIMSRole(role: UserRole): boolean {
-  const imsRoles: UserRole[] = ['super_admin','admin','academic_head','academic_officer','finance_head','finance_officer','marketing_head','marketing_officer','hr_head','hr_officer','staff','lecturer']
+  const imsRoles: UserRole[] = ['super_admin','admin','academic_head','academic_officer','finance_head','finance_officer','marketing_head','marketing_officer','hr_head','hr_officer','it_head','it_officer','staff','lecturer']
   return imsRoles.includes(role)
 }
 
@@ -305,6 +305,8 @@ export function getDefaultRoute(role: UserRole): string {
     case 'finance_officer': return '/admin/ims/finance'
     case 'hr_head':
     case 'hr_officer': return '/admin/ims/hr'
+    case 'it_head':
+    case 'it_officer': return '/admin/ims/it'
     case 'staff': return '/admin/ims/dashboard'
     case 'lecturer': return '/admin/ims/academic'
     default: return '/dashboard'

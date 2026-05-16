@@ -37,6 +37,7 @@ const IMS_ROLES: UserRole[] = [
   "finance_head", "finance_officer",
   "marketing_head", "marketing_officer",
   "hr_head", "hr_officer",
+  "it_head", "it_officer",
   "staff", "lecturer",
 ]
 const DEPARTMENTS = ["Academic", "Marketing", "Finance", "HR", "IT", "Operations"]
@@ -54,6 +55,8 @@ const ROLE_COLORS: Record<string, string> = {
   finance_officer:   "bg-green-50 text-green-600 border-green-200",
   hr_head:           "bg-orange-100 text-orange-700 border-orange-200",
   hr_officer:        "bg-orange-50 text-orange-600 border-orange-200",
+  it_head:           "bg-blue-100 text-blue-700 border-blue-200",
+  it_officer:        "bg-blue-50 text-blue-600 border-blue-200",
   staff:             "bg-gray-100 text-gray-600 border-gray-300",
   student:           "bg-cyan-100 text-cyan-700 border-cyan-200",
   lecturer:          "bg-yellow-100 text-yellow-700 border-yellow-200",

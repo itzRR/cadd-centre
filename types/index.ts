@@ -14,13 +14,14 @@ export type StaffRole =
   | 'finance_head' | 'finance_officer'
   | 'marketing_head' | 'marketing_officer'
   | 'hr_head' | 'hr_officer'
+  | 'it_head' | 'it_officer'
   | 'staff'
 // Unified
 export type UserRole = SystemRole | StaffRole
 
-export const STAFF_ROLES: StaffRole[] = ['super_admin','admin','academic_head','academic_officer','finance_head','finance_officer','marketing_head','marketing_officer','hr_head','hr_officer','staff']
+export const STAFF_ROLES: StaffRole[] = ['super_admin','admin','academic_head','academic_officer','finance_head','finance_officer','marketing_head','marketing_officer','hr_head','hr_officer','it_head','it_officer','staff']
 export const ADMIN_ROLES: UserRole[] = ['admin','super_admin']
-export const ALL_ROLES: UserRole[] = ['admin','super_admin','student','lecturer','academic_head','academic_officer','finance_head','finance_officer','marketing_head','marketing_officer','hr_head','hr_officer','staff']
+export const ALL_ROLES: UserRole[] = ['admin','super_admin','student','lecturer','academic_head','academic_officer','finance_head','finance_officer','marketing_head','marketing_officer','hr_head','hr_officer','it_head','it_officer','staff']
 
 // ── PERMISSIONS ─────────────────────────────────────────────
 export type Permission =
@@ -33,6 +34,7 @@ export type Permission =
   | 'ims_tasks'
   | 'ims_roster'
   | 'ims_control_panel'
+  | 'ims_it'
   | 'asms_full'
   | 'task_delete'
 
