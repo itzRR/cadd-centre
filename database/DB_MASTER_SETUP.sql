@@ -1809,7 +1809,7 @@ WHERE e.deleted_at IS NULL AND e.status IN ('confirmed', 'completed');
 -- IMS Dashboard stats view
 CREATE OR REPLACE VIEW public.v_ims_dashboard AS
 SELECT
-  (SELECT COUNT(*) FROM public.profiles WHERE role NOT IN ('student','guest','parent_guardian') AND disabled = FALSE) AS total_staff,
+  (SELECT COUNT(*) FROM public.profiles WHERE role NOT IN ('student') AND disabled = FALSE) AS total_staff,
   (SELECT COUNT(*) FROM public.profiles WHERE role = 'student' AND disabled = FALSE) AS total_students,
   (SELECT COUNT(*) FROM public.marketing_leads WHERE status NOT IN ('Converted','Lost')) AS active_leads,
   (SELECT COUNT(*) FROM public.marketing_leads WHERE status = 'Converted') AS converted_leads,

@@ -22,7 +22,7 @@ RETURNS BOOLEAN AS $$
   SELECT EXISTS (
     SELECT 1 FROM public.profiles
     WHERE id = auth.uid()
-    AND role NOT IN ('student','guest','parent_guardian')
+    AND role NOT IN ('student')
     AND disabled = FALSE
   );
 $$ LANGUAGE sql SECURITY DEFINER STABLE;
