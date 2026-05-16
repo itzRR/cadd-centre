@@ -2,13 +2,12 @@
 
 import type React from "react"
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { Eye, EyeOff, Mail, Lock, User, Phone, BookOpen, ArrowRight, Sparkles, GraduationCap, Award, CheckCircle2 } from "lucide-react"
+import { Mail, User, Phone, BookOpen, ArrowRight, Sparkles, GraduationCap, Award, CheckCircle2, MessageCircle } from "lucide-react"
 import { FieldError } from "@/components/ui/field-error"
-import { signUp } from "@/lib/auth"
-import { sanitizeName, isValidName, isValidEmail, isValidSriLankanPhone, formatSriLankanPhone, getPasswordStrength } from "@/lib/validation"
+import { sanitizeName, isValidName, isValidEmail, isValidSriLankanPhone, formatSriLankanPhone } from "@/lib/validation"
+import { supabase } from "@/lib/supabase"
 
 const perks = [
   { icon: GraduationCap, text: "Courses from industry experts" },
@@ -16,20 +15,19 @@ const perks = [
   { icon: CheckCircle2,  text: "Lifetime access to materials" },
 ]
 
+const COURSES = ["AutoCAD", "SolidWorks", "3ds Max", "Revit", "CATIA", "BIM (Full Course)", "Navisworks", "Photoshop", "Other"]
+
 export default function RegisterPage() {
   const [fullName, setFullName]           = useState("")
   const [email, setEmail]                 = useState("")
   const [phone, setPhone]                 = useState("")
   const [education, setEducation]         = useState("")
-  const [password, setPassword]           = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [showPassword, setShowPassword]   = useState(false)
+  const [courseInterested, setCourseInterested] = useState("AutoCAD")
   const [isLoading, setIsLoading]         = useState(false)
   const [error, setError]                 = useState("")
-  const [success, setSuccess]             = useState("")
+  const [success, setSuccess]             = useState(false)
   const [touched, setTouched]             = useState<Record<string, boolean>>({})
   const [focusedField, setFocusedField]   = useState<string | null>(null)
-  const router = useRouter()
 
   // Real-time field errors
   const fieldErrors: Record<string, string> = {}
@@ -39,16 +37,9 @@ export default function RegisterPage() {
     fieldErrors.fullName = "Full name is required"
   if (touched.email && email.trim() && !isValidEmail(email))
     fieldErrors.email = "Please enter a valid email (e.g. name@example.com)"
-  if (touched.email && !email.trim())
-    fieldErrors.email = "Email is required"
   if (touched.phone && phone.trim() && !isValidSriLankanPhone(phone))
     fieldErrors.phone = "Enter a valid Sri Lankan number (e.g. 071 234 5678)"
-  if (touched.password && password && password.length < 8)
-    fieldErrors.password = "Password must be at least 8 characters"
-  if (touched.confirmPassword && confirmPassword && confirmPassword !== password)
-    fieldErrors.confirmPassword = "Passwords do not match"
 
-  const passwordStrength = password ? getPasswordStrength(password) : null
   const handleBlur  = (field: string) => setTouched(p => ({ ...p, [field]: true }))
   const handleFocus = (field: string) => setFocusedField(field)
   const handleBlurField = (field: string) => { handleBlur(field); setFocusedField(null) }
@@ -58,22 +49,31 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError(""); setSuccess("")
-    setTouched({ fullName: true, email: true, phone: true, password: true, confirmPassword: true })
+    setError("")
+    setTouched({ fullName: true, email: true, phone: true })
     if (!fullName.trim())                               { setError("Full name is required"); return }
     if (!isValidName(fullName))                         { setError("Name can only contain letters, spaces, and hyphens"); return }
-    if (!isValidEmail(email))                           { setError("Please enter a valid email address"); return }
+    if (email.trim() && !isValidEmail(email))           { setError("Please enter a valid email address"); return }
     if (phone.trim() && !isValidSriLankanPhone(phone))  { setError("Please enter a valid Sri Lankan phone number"); return }
-    if (password.length < 8)                            { setError("Password must be at least 8 characters"); return }
-    if (password !== confirmPassword)                   { setError("Passwords do not match"); return }
 
     setIsLoading(true)
-    const { user, error: authError } = await signUp(email, password, fullName)
-    setIsLoading(false)
-    if (authError) { setError(authError); return }
-    if (user) {
-      setSuccess("Account created! Please check your email to verify, then sign in.")
-      setTimeout(() => router.push("/auth/login"), 3000)
+    try {
+      // Submit as marketing lead with source = "Website"
+      const { error: insertError } = await supabase.from("marketing_leads").insert({
+        name: fullName.trim(),
+        email: email.trim() || null,
+        contact: phone.trim() || null,
+        source: "Website",
+        course_interested: courseInterested,
+        status: "New",
+        notes: education ? `Education: ${education}` : null,
+      })
+      if (insertError) throw insertError
+      setSuccess(true)
+    } catch (err: any) {
+      setError(err.message || "Something went wrong. Please try again.")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -92,6 +92,44 @@ export default function RegisterPage() {
   })
 
   const inputCls = "w-full h-12 pl-11 pr-4 rounded-xl text-white placeholder-white/20 text-sm font-medium outline-none transition-all duration-200"
+
+  // SUCCESS STATE
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0d1635 50%, #0a1628 100%)" }}>
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          <motion.div animate={{ x: [0, 40, 0], y: [0, -30, 0], scale: [1, 1.1, 1] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[-15%] left-[-10%] w-[55%] h-[55%] rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)", filter: "blur(40px)" }} />
+        </div>
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+          className="relative z-10 text-center max-w-md mx-auto p-8">
+          <div className="w-20 h-20 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 className="w-10 h-10 text-emerald-400" />
+          </div>
+          <h2 className="text-3xl font-black text-white mb-3">Thank You!</h2>
+          <p className="text-white/60 text-lg mb-4">Your enquiry has been submitted successfully.</p>
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">
+            <div className="flex items-center gap-3 mb-3">
+              <MessageCircle className="w-5 h-5 text-blue-400" />
+              <span className="text-white/90 font-semibold">What happens next?</span>
+            </div>
+            <p className="text-white/50 text-sm leading-relaxed">
+              Our team at <span className="text-blue-400 font-semibold">CADD Centre Lanka</span> will contact you shortly with course details, fees, and enrollment options.
+            </p>
+            <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+              <p className="text-blue-300 text-sm font-medium">📞 Contact us directly:</p>
+              <p className="text-white/70 text-sm mt-1">+94 XX XXX XXXX</p>
+            </div>
+          </div>
+          <Link href="/" className="text-blue-400 font-semibold hover:text-blue-300 transition-colors text-sm">
+            ← Back to Home
+          </Link>
+        </motion.div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen flex overflow-hidden" style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0d1635 50%, #0a1628 100%)" }}>
@@ -121,16 +159,16 @@ export default function RegisterPage() {
           <div>
             <div className="flex items-center gap-2 mb-6">
               <div className="w-6 h-0.5 bg-blue-400" />
-              <span className="text-blue-400 text-xs font-bold uppercase tracking-[0.3em]">Join CADD Centre</span>
+              <span className="text-blue-400 text-xs font-bold uppercase tracking-[0.3em]">Begin Your Journey</span>
             </div>
             <h2 className="text-5xl font-black text-white leading-[1.1] tracking-tight">
-              Start Your
+              Enquire
               <span className="block bg-gradient-to-r from-blue-400 to-sky-300 bg-clip-text text-transparent">
-                Journey Now
+                About Courses
               </span>
             </h2>
             <p className="text-white/50 text-lg mt-5 leading-relaxed max-w-sm">
-              Create your free account and get instant access to hundreds of professional CAD courses.
+              Submit your details and our team will reach out with course information, fees, and batch schedules.
             </p>
           </div>
           <div className="space-y-4">
@@ -176,26 +214,19 @@ export default function RegisterPage() {
                   <div className="w-8 h-8 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
                     <Sparkles className="w-4 h-4 text-blue-400" />
                   </div>
-                  <span className="text-blue-400 text-xs font-bold uppercase tracking-widest">Free access</span>
+                  <span className="text-blue-400 text-xs font-bold uppercase tracking-widest">Course Enquiry</span>
                 </div>
-                <h2 className="text-3xl font-black text-white tracking-tight">Create Account</h2>
-                <p className="text-white/40 text-sm">Join thousands of learners today</p>
+                <h2 className="text-3xl font-black text-white tracking-tight">Get Started</h2>
+                <p className="text-white/40 text-sm">Submit your details & we'll contact you</p>
               </div>
 
-              {/* Error / Success */}
+              {/* Error */}
               <AnimatePresence>
                 {error && (
                   <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
                     className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
                     <div className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
                     {error}
-                  </motion.div>
-                )}
-                {success && (
-                  <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm">
-                    <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                    {success}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -218,29 +249,29 @@ export default function RegisterPage() {
 
                 {/* Email */}
                 <div className="space-y-1">
-                  <label htmlFor="email" className="text-xs font-bold text-white/40 uppercase tracking-widest block">Email *</label>
+                  <label htmlFor="email" className="text-xs font-bold text-white/40 uppercase tracking-widest block">Email</label>
                   <div className="relative">
                     <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${focusedField === "email" ? "text-blue-400" : "text-white/20"}`} />
                     <input id="email" type="email" placeholder="you@example.com" value={email}
                       onChange={e => setEmail(e.target.value)}
                       onFocus={() => handleFocus("email")}
                       onBlur={() => handleBlurField("email")}
-                      className={inputCls} style={inputStyle("email", !!fieldErrors.email)} required />
+                      className={inputCls} style={inputStyle("email", !!fieldErrors.email)} />
                   </div>
                   <FieldError message={fieldErrors.email} />
                 </div>
 
-                {/* Phone & Education row */}
+                {/* Phone & Course row */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <label htmlFor="phone" className="text-xs font-bold text-white/40 uppercase tracking-widest block">Phone</label>
+                    <label htmlFor="phone" className="text-xs font-bold text-white/40 uppercase tracking-widest block">Phone *</label>
                     <div className="relative">
                       <Phone className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${focusedField === "phone" ? "text-blue-400" : "text-white/20"}`} />
                       <input id="phone" type="tel" placeholder="071 234 5678" value={phone}
                         onChange={e => handlePhoneChange(e.target.value)}
                         onFocus={() => handleFocus("phone")}
                         onBlur={() => handleBlurField("phone")}
-                        className={inputCls} style={inputStyle("phone", !!fieldErrors.phone)} />
+                        className={inputCls} style={inputStyle("phone", !!fieldErrors.phone)} required />
                     </div>
                     <FieldError message={fieldErrors.phone} />
                   </div>
@@ -257,46 +288,19 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                {/* Password */}
+                {/* Course Interested */}
                 <div className="space-y-1">
-                  <label htmlFor="password" className="text-xs font-bold text-white/40 uppercase tracking-widest block">Password *</label>
+                  <label htmlFor="courseInterested" className="text-xs font-bold text-white/40 uppercase tracking-widest block">Course Interested *</label>
                   <div className="relative">
-                    <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${focusedField === "password" ? "text-blue-400" : "text-white/20"}`} />
-                    <input id="password" type={showPassword ? "text" : "password"} placeholder="Min 8 characters" value={password}
-                      onChange={e => setPassword(e.target.value)}
-                      onFocus={() => handleFocus("password")}
-                      onBlur={() => handleBlurField("password")}
-                      className={inputCls + " pr-12"} style={inputStyle("password", !!fieldErrors.password)} required />
-                    <button type="button" onClick={() => setShowPassword(!showPassword)} tabIndex={-1}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center text-white/60 hover:text-white transition-colors rounded-lg">
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
+                    <GraduationCap className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${focusedField === "courseInterested" ? "text-blue-400" : "text-white/20"}`} />
+                    <select id="courseInterested" value={courseInterested}
+                      onChange={e => setCourseInterested(e.target.value)}
+                      onFocus={() => handleFocus("courseInterested")}
+                      onBlur={() => setFocusedField(null)}
+                      className={inputCls + " appearance-none cursor-pointer"} style={inputStyle("courseInterested")}>
+                      {COURSES.map(c => <option key={c} value={c} style={{ background: "#1a1a2e", color: "#fff" }}>{c}</option>)}
+                    </select>
                   </div>
-                  <FieldError message={fieldErrors.password} />
-                  {/* Strength meter */}
-                  {passwordStrength && password.length >= 1 && (
-                    <div className="flex items-center gap-2 pt-1">
-                      <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
-                        <motion.div initial={{ width: 0 }} animate={{ width: `${(passwordStrength.score / 5) * 100}%` }}
-                          className={`h-full rounded-full ${passwordStrength.score <= 1 ? "bg-red-500" : passwordStrength.score <= 2 ? "bg-yellow-500" : passwordStrength.score <= 3 ? "bg-blue-500" : "bg-emerald-500"}`} />
-                      </div>
-                      <span className={`text-xs font-bold ${passwordStrength.color}`}>{passwordStrength.label}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Confirm Password */}
-                <div className="space-y-1">
-                  <label htmlFor="confirmPassword" className="text-xs font-bold text-white/40 uppercase tracking-widest block">Confirm Password *</label>
-                  <div className="relative">
-                    <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${focusedField === "confirmPassword" ? "text-blue-400" : "text-white/20"}`} />
-                    <input id="confirmPassword" type="password" placeholder="••••••••" value={confirmPassword}
-                      onChange={e => setConfirmPassword(e.target.value)}
-                      onFocus={() => handleFocus("confirmPassword")}
-                      onBlur={() => handleBlurField("confirmPassword")}
-                      className={inputCls} style={inputStyle("confirmPassword", !!fieldErrors.confirmPassword)} required />
-                  </div>
-                  <FieldError message={fieldErrors.confirmPassword} />
                 </div>
 
                 {/* Submit */}
@@ -321,11 +325,11 @@ export default function RegisterPage() {
                     <>
                       <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                         className="w-5 h-5 rounded-full border-2 border-white/30 border-t-white" />
-                      <span>Creating account…</span>
+                      <span>Submitting…</span>
                     </>
                   ) : (
                     <>
-                      <span>Create Account</span>
+                      <span>Submit Enquiry</span>
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -333,7 +337,7 @@ export default function RegisterPage() {
               </form>
 
               <p className="text-center text-white/30 text-sm">
-                Already have an account?{" "}
+                Already a student?{" "}
                 <Link href="/auth/login" className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">
                   Sign in
                 </Link>

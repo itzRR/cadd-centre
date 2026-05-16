@@ -193,27 +193,32 @@ export async function toggleUserActive(userId: string, isActive: boolean) {
 // ── ENROLLMENTS ──────────────────────────────────────────────────────────────
 
 export async function enrollStudent(userId: string, courseId: string, batchId: string | null, amountPaid: number) {
-  // Generate student_id if needed
-  if (batchId) {
-    const { data: profile } = await supabase.from('profiles').select('student_id').eq('id', userId).single()
-    if (profile && !profile.student_id) {
-      const { data: batch } = await supabase.from('batches').select('name').eq('id', batchId).single()
-      if (batch) {
-        const batchCode = batch.name.split(' - ').pop() || 'GEN'
-        const { data: seqData } = await supabase.from('profiles')
-          .select('student_id').like('student_id', `${batchCode}%`)
-          .order('student_id', { ascending: false }).limit(1)
-        
-        let seq = 1
-        if (seqData && seqData.length > 0 && seqData[0].student_id) {
-          const lastSeqStr = seqData[0].student_id.replace(batchCode, '')
-          const lastSeq = parseInt(lastSeqStr, 10)
-          if (!isNaN(lastSeq)) seq = lastSeq + 1
-        }
-        
-        const newStudentId = `${batchCode}${String(seq).padStart(2, '0')}`
-        await supabase.from('profiles').update({ student_id: newStudentId }).eq('id', userId)
-      }
+  // Check BOTH profiles and students tables for existing student_id
+  const { data: profile } = await supabase.from('profiles').select('student_id').eq('id', userId).single()
+  const { data: studentRec } = await supabase.from('students').select('student_id').eq('id', userId).maybeSingle()
+  const existingStudentId = profile?.student_id || studentRec?.student_id
+
+  // Only generate a new student_id if the student doesn't already have one
+  if (!existingStudentId && batchId) {
+    const { data: batch } = await supabase.from('batches').select('name').eq('id', batchId).single()
+    if (batch) {
+      const batchCode = batch.name.split(' - ').pop() || 'GEN'
+      // Check both profiles and students tables for sequence
+      const [{ data: seqProfiles }, { data: seqStudents }] = await Promise.all([
+        supabase.from('profiles').select('student_id').like('student_id', `${batchCode}%`).order('student_id', { ascending: false }).limit(1),
+        supabase.from('students').select('student_id').like('student_id', `${batchCode}%`).order('student_id', { ascending: false }).limit(1),
+      ])
+      
+      let seq = 1
+      const allSeq = [...(seqProfiles || []), ...(seqStudents || [])]
+        .map(r => parseInt((r.student_id || '').slice(-2), 10))
+        .filter(n => !isNaN(n))
+      if (allSeq.length > 0) seq = Math.max(...allSeq) + 1
+      
+      const newStudentId = `${batchCode}${String(seq).padStart(2, '0')}`
+      await supabase.from('profiles').update({ student_id: newStudentId }).eq('id', userId)
+      // Also update students table if exists
+      await supabase.from('students').update({ student_id: newStudentId }).eq('id', userId)
     }
   }
 
@@ -320,6 +325,29 @@ export async function markAttendance(records: {
   enrollment_id: string; batch_id: string; date: string
   status: string; marked_by: string; notes?: string
 }[]) {
+  // Verify the lecturer is assigned to this batch
+  if (records.length > 0) {
+    const batchId = records[0].batch_id
+    const lecturerId = records[0].marked_by
+
+    // Check if marker is admin/academic (bypass restriction) or assigned lecturer
+    const { data: markerProfile } = await supabase.from('profiles').select('role').eq('id', lecturerId).single()
+    const bypassRoles = ['admin', 'super_admin', 'academic_head', 'academic_officer']
+    const isBypassed = markerProfile && bypassRoles.includes(markerProfile.role)
+
+    if (!isBypassed) {
+      const { data: allocation } = await supabase
+        .from('lecturer_allocations')
+        .select('id')
+        .eq('batch_id', batchId)
+        .eq('lecturer_id', lecturerId)
+        .maybeSingle()
+      if (!allocation) {
+        throw new Error('You are not assigned to this batch. Only the allocated lecturer can mark attendance.')
+      }
+    }
+  }
+
   const { data, error } = await supabase.from('attendance').upsert(records, {
     onConflict: 'enrollment_id,date'
   }).select()

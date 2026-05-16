@@ -15,7 +15,7 @@ const ROLE_ALLOWED_PATHS: Record<string, string[]> = {
   finance_officer:  ['/admin/ims/finance',   '/admin/ims/tasks', '/admin/ims/roster'],
   hr_head:          ['/admin/ims/hr',        '/admin/ims/tasks', '/admin/ims/roster', '/admin/ims/dashboard'],
   hr_officer:       ['/admin/ims/hr',        '/admin/ims/tasks', '/admin/ims/roster'],
-  staff:            ['/admin/ims/tasks',      '/admin/ims/roster', '/admin/ims/dashboard'],
+  staff:            ['/admin/ims/tasks',      '/admin/ims/roster', '/admin/ims/dashboard', '/admin/ims/it'],
   lecturer:         ['/admin/ims/academic'],
 }
 

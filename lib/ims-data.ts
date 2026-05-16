@@ -225,10 +225,14 @@ export async function deleteMarketingCampaign(id: string): Promise<void> {
 export async function getImsPayments(): Promise<ImsPayment[]> {
   const { data, error } = await supabase
     .from('ims_payments')
-    .select('*')
+    .select('*, courses:course_id(title)')
     .order('created_at', { ascending: false })
   if (error) throw error
-  return data || []
+  // Flatten the course title into the payment object for display
+  return (data || []).map((p: any) => ({
+    ...p,
+    course_name: p.courses?.title || p.course_id || '—',
+  }))
 }
 
 export async function createImsPayment(payment: Omit<ImsPayment, 'id' | 'created_at'>): Promise<ImsPayment> {

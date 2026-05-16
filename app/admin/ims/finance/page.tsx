@@ -351,7 +351,7 @@ export default function FinanceDashboard() {
             accentGradient="from-blue-500 to-violet-500"
             steps={financeGuideSteps}
           />
-          {['admin', 'super_admin', 'branch_manager'].includes(currentUser?.role) && <button onClick={() => router.push('/admin/ims')} className="text-gray-600 hover:text-gray-900 px-3 py-2 border border-gray-200 rounded-xl text-sm font-medium">Back to Admin</button>}
+          {['admin', 'super_admin'].includes(currentUser?.role) && <button onClick={() => router.push('/admin/ims')} className="text-gray-600 hover:text-gray-900 px-3 py-2 border border-gray-200 rounded-xl text-sm font-medium">Back to Admin</button>}
           <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
             onClick={handleLogout}
             className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl border border-gray-200 hover:bg-red-500/30 text-sm md:text-base">
@@ -545,8 +545,8 @@ export default function FinanceDashboard() {
                   )
                 },
                 {
-                  key: 'course_id', label: 'Course',
-                  render: (val: string) => <span className="text-gray-600">{val || '—'}</span>
+                  key: 'course_name', label: 'Course',
+                  render: (val: string, row: any) => <span className="text-gray-700 text-xs font-medium">{val || row?.course_id || '—'}</span>
                 },
                 {
                   key: 'amount', label: 'Amount', sortable: true,
@@ -589,7 +589,7 @@ export default function FinanceDashboard() {
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold text-gray-900">Invoices</h2>
                 <motion.button whileHover={{ scale: 1.05 }} onClick={() => setShowInvoiceModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-violet-600 text-gray-900 rounded-xl font-semibold">
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-violet-600 text-white rounded-xl font-semibold">
                   <Plus className="w-4 h-4" /> New Invoice
                 </motion.button>
               </div>
@@ -774,7 +774,7 @@ export default function FinanceDashboard() {
                 ))}
                 <div className="flex gap-3 pt-2">
                   <button type="button" onClick={() => setShowPaymentModal(false)} className="flex-1 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl border border-gray-200">Cancel</button>
-                  <button type="submit" className="flex-1 py-2 bg-gradient-to-r from-blue-500 to-violet-600 text-gray-900 rounded-xl font-semibold">Save</button>
+                  <button type="submit" className="flex-1 py-2 bg-gradient-to-r from-blue-500 to-violet-600 text-white rounded-xl font-semibold">Save</button>
                 </div>
               </form>
             </motion.div>
