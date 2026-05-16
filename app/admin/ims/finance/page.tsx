@@ -557,7 +557,10 @@ export default function FinanceDashboard() {
                 },
                 {
                   key: 'course_name', label: 'Course',
-                  render: (val: string, row: any) => <span className="text-gray-700 text-xs font-medium">{val || row?.course_id || '—'}</span>
+                  render: (val: string, row: any) => {
+                    const matchedCourse = courses.find(c => c.id === row?.course_id);
+                    return <span className="text-gray-700 text-xs font-medium">{val || matchedCourse?.title || row?.course_id || '—'}</span>
+                  }
                 },
                 {
                   key: 'amount', label: 'Amount', sortable: true,
@@ -818,7 +821,7 @@ export default function FinanceDashboard() {
                 <button onClick={() => setShowInvoiceModal(false)} className="text-gray-500 hover:text-gray-900"><X className="w-6 h-6" /></button>
               </div>
               <form onSubmit={handleSaveInvoice} className="space-y-3">
-                {[['Student Name *', 'student_name', true], ['Student ID', 'student_id', false], ['Course Name', 'course_name', false]].map(([label, key, req]) => (
+                {[['Student Name *', 'student_name', true], ['Student ID', 'student_id', false]].map(([label, key, req]) => (
                   <div key={key as string}>
                     <label className="block text-gray-600 text-sm mb-1">{label as string}</label>
                     <input required={req as boolean} value={(invoiceForm as any)[key as string]}
@@ -826,6 +829,19 @@ export default function FinanceDashboard() {
                       className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500" />
                   </div>
                 ))}
+                <div>
+                  <label className="block text-gray-600 text-sm mb-1">Course Name</label>
+                  <select
+                    value={invoiceForm.course_name}
+                    onChange={e => setInvoiceForm(p => ({ ...p, course_name: e.target.value }))}
+                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="">-- Select Course (Optional) --</option>
+                    {courses.map(c => (
+                      <option key={c.id} value={c.title}>{c.title}</option>
+                    ))}
+                  </select>
+                </div>
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">Due Date</label>
                   <input type="date" value={invoiceForm.due_date} onChange={e => setInvoiceForm(p => ({ ...p, due_date: e.target.value }))}

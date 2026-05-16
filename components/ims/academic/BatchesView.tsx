@@ -246,9 +246,8 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
         if (!course) throw new Error("Invalid course")
         const startDateObj = new Date(form.start_date)
         const batchCode = generateBatchCode(course.name, startDateObj, form.time_code as any, form.type_code as any)
-        const finalName = form.name.trim() || `${course.name} - ${batchCode}`
         const newBatch = await createBatch({
-          course_id: form.course_id, name: finalName,
+          course_id: form.course_id, name: batchCode,
           start_date: form.start_date, end_date: form.end_date || undefined,
           schedule: form.time_code === 'M' ? 'Morning' : form.time_code === 'A' ? 'Afternoon' : 'Evening',
           mode: 'classroom', seats: 30
@@ -385,10 +384,12 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
               <button onClick={() => { setShowModal(false); setEditingBatch(null) }} className="text-gray-400 hover:text-gray-600">×</button>
             </div>
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Batch Name {!editingBatch && '(Optional — auto-generated if blank)'}</label>
-                <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder={editingBatch ? '' : 'Will be auto-generated'} className="w-full px-3 py-2 border rounded-xl" />
-              </div>
+              {editingBatch && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Batch Name</label>
+                  <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="w-full px-3 py-2 border rounded-xl" />
+                </div>
+              )}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Course {!editingBatch && '*'}</label>
                 <select required={!editingBatch} value={form.course_id} onChange={e => setForm({...form, course_id: e.target.value})} className="w-full px-3 py-2 border rounded-xl bg-gray-50">
