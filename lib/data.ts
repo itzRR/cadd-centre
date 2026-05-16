@@ -164,6 +164,13 @@ export async function getStudents() {
   return data || []
 }
 
+export async function updateStudentProfile(id: string, updates: any) {
+  const { error: err1 } = await supabase.from('students').update(updates).eq('id', id)
+  if (err1) throw err1
+  const { error: err2 } = await supabase.from('profiles').update(updates).eq('id', id)
+  if (err2) throw err2
+}
+
 export async function getLecturersProfiles() {
   const { data, error } = await supabase
     .from('profiles').select('*').eq('role', 'lecturer')

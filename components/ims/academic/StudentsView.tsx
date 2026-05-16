@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { Edit, Trash2, Plus, UserPlus, AlertTriangle, Search, Filter, CheckCircle, Users, Award, User } from "lucide-react"
 import { motion } from "framer-motion"
 import CDMDataTable, { CDMColumn, CDMAction } from "@/components/ims/CDMDataTable"
-import { getStudents, getEnrollments, getCourses, getBatches, enrollStudent, deleteEnrollment, updateEnrollmentStatus } from "@/lib/data"
+import { getStudents, getEnrollments, getCourses, getBatches, enrollStudent, deleteEnrollment, updateEnrollmentStatus, updateStudentProfile } from "@/lib/data"
 import { getCurrentUser } from "@/lib/auth"
 import AcademicLeadConfirmationsView from "@/components/ims/academic/LeadConfirmationsView"
 
@@ -25,6 +25,8 @@ export default function StudentsView() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<any>(null)
   const [showEditModal, setShowEditModal] = useState<any>(null)
   const [showProfileModal, setShowProfileModal] = useState<any>(null)
+  const [isEditingProfile, setIsEditingProfile] = useState(false)
+  const [profileForm, setProfileForm] = useState<any>({})
   const [enrollForm, setEnrollForm] = useState({ student_id: '', course_id: '', batch_id: '', amount: '0' })
   const [saving, setSaving] = useState(false)
   
@@ -118,6 +120,56 @@ export default function StudentsView() {
     }
   }
 
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSaving(true)
+    try {
+      const updates = {
+        full_name: profileForm.full_name,
+        student_id: profileForm.student_id,
+        phone: profileForm.phone,
+        personal_email: profileForm.personal_email,
+        academic_email: profileForm.academic_email,
+        academic_password: profileForm.academic_password,
+        nic: profileForm.nic,
+        dob: profileForm.dob
+      }
+      
+      await updateStudentProfile(showProfileModal._original.id, updates)
+      
+      toast.success("Profile updated successfully")
+      setIsEditingProfile(false)
+      
+      const newOriginal = { ...showProfileModal._original, ...updates }
+      setShowProfileModal({
+        ...showProfileModal,
+        _original: newOriginal,
+        student_name: updates.full_name,
+        student_id: updates.student_id
+      })
+      loadData()
+    } catch (e: any) {
+      toast.error(e.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const openProfileModal = (r: any) => {
+    setShowProfileModal(r)
+    setIsEditingProfile(false)
+    setProfileForm({
+      full_name: r._original?.full_name || '',
+      student_id: r._original?.student_id || '',
+      phone: r._original?.phone || '',
+      personal_email: r._original?.personal_email || r._original?.email || '',
+      academic_email: r._original?.academic_email || '',
+      academic_password: r._original?.academic_password || '',
+      nic: r._original?.nic || '',
+      dob: r._original?.dob || ''
+    })
+  }
+
   const handleStatusChange = async (newStatus: string) => {
     if (!showEditModal?.enrollment_id) return
     setSaving(true)
@@ -179,7 +231,7 @@ export default function StudentsView() {
     {
       label: "View Profile",
       icon: User,
-      onClick: (r) => setShowProfileModal(r)
+      onClick: (r) => openProfileModal(r)
     },
     {
       label: "Edit Status",
@@ -428,54 +480,113 @@ export default function StudentsView() {
           {/* PROFILE MODAL */}
           {showProfileModal && (
             <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm">
-              <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+              <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
+                <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50 flex-shrink-0">
                   <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
                       <User className="w-4 h-4" />
                     </div>
                     Student Profile
                   </h3>
-                  <button onClick={() => setShowProfileModal(null)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
-                </div>
-                <div className="p-6 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="col-span-2">
-                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Full Name</label>
-                      <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.full_name || 'N/A'}</div>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Student ID</label>
-                      <div className="font-mono font-medium text-blue-600 bg-blue-50 px-3 py-2 rounded-xl border border-blue-100">{showProfileModal._original?.student_id || 'N/A'}</div>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Phone Number</label>
-                      <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.phone || 'N/A'}</div>
-                    </div>
-                    <div className="col-span-2">
-                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Personal Email</label>
-                      <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.personal_email || showProfileModal._original?.email || 'N/A'}</div>
-                    </div>
-                    <div className="col-span-2">
-                      <label className="block text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5"/> Academic Email</label>
-                      <div className="font-medium text-gray-900 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100">{showProfileModal._original?.academic_email || 'N/A'}</div>
-                    </div>
-                    <div className="col-span-2">
-                      <label className="block text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5"/> Academic Password</label>
-                      <div className="font-mono font-medium text-gray-900 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100">{showProfileModal._original?.academic_password || 'N/A'}</div>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">NIC</label>
-                      <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.nic || 'N/A'}</div>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Date of Birth</label>
-                      <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.dob || 'N/A'}</div>
-                    </div>
+                  <div className="flex items-center gap-2">
+                    {canManage && !isEditingProfile && (
+                      <button onClick={() => setIsEditingProfile(true)} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-sm font-bold transition-all">
+                        <Edit className="w-3.5 h-3.5" /> Edit
+                      </button>
+                    )}
+                    <button onClick={() => setShowProfileModal(null)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
                   </div>
                 </div>
-                <div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-end">
-                  <button onClick={() => setShowProfileModal(null)} className="px-5 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-xl font-medium shadow-sm transition-all">Close</button>
+                
+                <div className="flex-1 overflow-y-auto p-6">
+                  {isEditingProfile ? (
+                    <form id="edit-profile-form" onSubmit={handleUpdateProfile} className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="col-span-2">
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Full Name</label>
+                          <input required value={profileForm.full_name} onChange={e => setProfileForm({...profileForm, full_name: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Student ID</label>
+                          <input required value={profileForm.student_id} onChange={e => setProfileForm({...profileForm, student_id: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none font-mono" />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Phone Number</label>
+                          <input value={profileForm.phone} onChange={e => setProfileForm({...profileForm, phone: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                        </div>
+                        <div className="col-span-2">
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Personal Email</label>
+                          <input type="email" value={profileForm.personal_email} onChange={e => setProfileForm({...profileForm, personal_email: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                        </div>
+                        <div className="col-span-2">
+                          <label className="block text-xs font-bold text-emerald-700 uppercase tracking-wider mb-1 flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5"/> Academic Email</label>
+                          <input type="email" value={profileForm.academic_email} onChange={e => setProfileForm({...profileForm, academic_email: e.target.value})} className="w-full px-3 py-2 border border-emerald-300 bg-emerald-50 rounded-xl focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none" />
+                        </div>
+                        <div className="col-span-2">
+                          <label className="block text-xs font-bold text-emerald-700 uppercase tracking-wider mb-1 flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5"/> Academic Password</label>
+                          <input value={profileForm.academic_password} onChange={e => setProfileForm({...profileForm, academic_password: e.target.value})} className="w-full px-3 py-2 border border-emerald-300 bg-emerald-50 rounded-xl focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none font-mono" />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">NIC</label>
+                          <input value={profileForm.nic} onChange={e => setProfileForm({...profileForm, nic: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Date of Birth</label>
+                          <input type="date" value={profileForm.dob} onChange={e => setProfileForm({...profileForm, dob: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                        </div>
+                      </div>
+                    </form>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="col-span-2">
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Full Name</label>
+                          <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.full_name || 'N/A'}</div>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Student ID</label>
+                          <div className="font-mono font-medium text-blue-600 bg-blue-50 px-3 py-2 rounded-xl border border-blue-100">{showProfileModal._original?.student_id || 'N/A'}</div>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Phone Number</label>
+                          <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.phone || 'N/A'}</div>
+                        </div>
+                        <div className="col-span-2">
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Personal Email</label>
+                          <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.personal_email || showProfileModal._original?.email || 'N/A'}</div>
+                        </div>
+                        <div className="col-span-2">
+                          <label className="block text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5"/> Academic Email</label>
+                          <div className="font-medium text-gray-900 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100">{showProfileModal._original?.academic_email || 'N/A'}</div>
+                        </div>
+                        <div className="col-span-2">
+                          <label className="block text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5"/> Academic Password</label>
+                          <div className="font-mono font-medium text-gray-900 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100">{showProfileModal._original?.academic_password || 'N/A'}</div>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">NIC</label>
+                          <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.nic || 'N/A'}</div>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Date of Birth</label>
+                          <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.dob || 'N/A'}</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3 flex-shrink-0">
+                  {isEditingProfile ? (
+                    <>
+                      <button onClick={() => setIsEditingProfile(false)} disabled={saving} className="px-5 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-xl font-medium shadow-sm transition-all disabled:opacity-50">Cancel</button>
+                      <button form="edit-profile-form" type="submit" disabled={saving} className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-sm shadow-blue-500/30 transition-all disabled:opacity-50">
+                        {saving ? 'Saving...' : 'Save Changes'}
+                      </button>
+                    </>
+                  ) : (
+                    <button onClick={() => setShowProfileModal(null)} className="px-5 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-xl font-medium shadow-sm transition-all">Close</button>
+                  )}
                 </div>
               </div>
             </div>
