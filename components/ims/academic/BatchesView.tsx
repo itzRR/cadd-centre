@@ -185,7 +185,7 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
   const loadData = async () => {
     setLoading(true)
     try {
-      const [data, enrs] = await Promise.all([getBatches(false), getEnrollments()])
+      const [data, enrs] = await Promise.all([getBatches(true), getEnrollments()])
       setEnrollments(enrs)
       const mapped = data.map((b: any) => {
         const lecturerAlloc = b.lecturer_allocations?.[0]
