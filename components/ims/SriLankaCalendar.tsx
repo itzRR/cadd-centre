@@ -200,16 +200,20 @@ export default function SriLankaCalendar({ accentColor = "blue" }: { accentColor
         </div>
         <div className="flex items-center gap-3 flex-wrap">
           {weather && (
-            <div className="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-xl text-sm shadow-sm">
-              <div className="w-10 h-10 flex items-center justify-center -my-2 drop-shadow-md">
+            <div className="flex items-center gap-3 bg-white border border-gray-200 pl-2 pr-5 py-2 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 to-slate-100 border border-blue-100/50 shadow-inner overflow-hidden">
                 {(() => {
                   const ws = getAnimatedWeatherState(weather.icon);
-                  return <WeatherSvg state={ws.state} night={ws.night} width="100%" height="100%" />;
+                  return <WeatherSvg state={ws.state} night={ws.night} width="140%" height="140%" className="drop-shadow-sm translate-y-[10%]" />;
                 })()}
               </div>
-              <span className="font-bold text-gray-800">{weather.temp}°C</span>
-              <span className="text-gray-500 capitalize hidden sm:block">{weather.desc}</span>
-              <span className="text-red-500 font-medium text-xs hidden md:block">· Kandy</span>
+              <div className="flex flex-col justify-center">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-black text-gray-900 text-base leading-none">{weather.temp}°C</span>
+                  <span className="text-red-500 font-bold text-[10px] hidden md:block uppercase tracking-wider leading-none">• Kandy</span>
+                </div>
+                <span className="text-gray-500 font-medium text-xs capitalize mt-1 leading-none">{weather.desc}</span>
+              </div>
             </div>
           )}
           <button onClick={() => openAdd()} className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-red-600 to-cyan-500 hover:from-red-500 hover:to-cyan-400 text-white font-bold rounded-xl shadow-lg transition-all">
