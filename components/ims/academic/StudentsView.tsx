@@ -270,9 +270,16 @@ export default function StudentsView() {
       onClick: (r) => r.enrollment_id ? setShowEditModal(r) : toast.info("Student not enrolled yet")
     },
     {
-      label: (r) => r.disabled ? "Enable Account" : "Disable Account",
-      icon: (r) => r.disabled ? ShieldCheck : ShieldOff,
-      onClick: (r) => handleToggleDisableStudent(r)
+      label: "Disable Account",
+      icon: ShieldOff,
+      show: (r: any) => !r.disabled,
+      onClick: (r: any) => handleToggleDisableStudent(r)
+    },
+    {
+      label: "Enable Account",
+      icon: ShieldCheck,
+      show: (r: any) => !!r.disabled,
+      onClick: (r: any) => handleToggleDisableStudent(r)
     },
     {
       label: "Remove",

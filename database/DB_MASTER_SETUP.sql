@@ -214,6 +214,7 @@ CREATE TABLE public.profiles (
   employee_status         public.employee_status DEFAULT 'Active',
   -- Status
   disabled                BOOLEAN NOT NULL DEFAULT FALSE,
+    disabled_reason         TEXT,
   is_active               BOOLEAN NOT NULL DEFAULT TRUE,
   last_active             TIMESTAMPTZ,
   -- Soft delete
@@ -2350,6 +2351,7 @@ CREATE TABLE IF NOT EXISTS public.students (
   branch_id         UUID REFERENCES public.branches(id) ON DELETE SET NULL,
   -- Timestamps
   disabled          BOOLEAN NOT NULL DEFAULT FALSE,
+    disabled_reason         TEXT,
   is_active         BOOLEAN NOT NULL DEFAULT TRUE,
   last_active       TIMESTAMPTZ,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
