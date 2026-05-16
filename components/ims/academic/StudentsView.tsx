@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { toast } from "sonner"
-import { Edit, Trash2, Plus, UserPlus, AlertTriangle, Search, Filter, CheckCircle, Users } from "lucide-react"
+import { Edit, Trash2, Plus, UserPlus, AlertTriangle, Search, Filter, CheckCircle, Users, Award } from "lucide-react"
 import { motion } from "framer-motion"
 import CDMDataTable, { CDMColumn, CDMAction } from "@/components/ims/CDMDataTable"
 import { getStudents, getEnrollments, getCourses, getBatches, enrollStudent, deleteEnrollment, updateEnrollmentStatus } from "@/lib/data"
