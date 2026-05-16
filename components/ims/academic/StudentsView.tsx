@@ -36,6 +36,9 @@ export default function StudentsView() {
   const [batchFilter, setBatchFilter] = useState('')
   const [yearFilter, setYearFilter] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
+  
+  const [showDisablePrompt, setShowDisablePrompt] = useState<{ id: string, name: string } | null>(null)
+  const [disableReason, setDisableReason] = useState("")
 
   useEffect(() => { loadData() }, [])
 
@@ -190,20 +193,35 @@ export default function StudentsView() {
   const handleToggleDisableStudent = async (r: any) => {
     if (!canManage) return toast.error("Only admins can disable students")
     
-    let reason = ""
     if (!r.disabled) {
-      const input = window.prompt(`Optional: Enter a reason for disabling ${r.student_name}'s account. They will see this reason when they try to log in.`)
-      if (input === null) return // cancelled
-      reason = input.trim()
+      setShowDisablePrompt({ id: r.id, name: r.student_name })
+      setDisableReason("")
+      return
     } else {
       if (!window.confirm(`Are you sure you want to enable ${r.student_name}'s account?`)) return
     }
 
     setSaving(true)
     try {
-      await disableStudent(r.id, !r.disabled, reason)
-      setStudents(prev => prev.map(x => x.id === r.id ? { ...x, disabled: !r.disabled, disabled_reason: reason || null } : x))
-      toast.success(`Account ${r.disabled ? "enabled" : "disabled"} successfully`)
+      await disableStudent(r.id, false, "")
+      setStudents(prev => prev.map(x => x.id === r.id ? { ...x, disabled: false, disabled_reason: null } : x))
+      toast.success(`Account enabled successfully`)
+    } catch (e: any) {
+      toast.error(e.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const submitDisableStudent = async () => {
+    if (!showDisablePrompt) return
+    const { id, name } = showDisablePrompt
+    setSaving(true)
+    try {
+      await disableStudent(id, true, disableReason)
+      setStudents(prev => prev.map(x => x.id === id ? { ...x, disabled: true, disabled_reason: disableReason || null } : x))
+      toast.success(`Account for ${name} disabled successfully`)
+      setShowDisablePrompt(null)
     } catch (e: any) {
       toast.error(e.message)
     } finally {
@@ -619,6 +637,45 @@ export default function StudentsView() {
                     <button onClick={() => setShowDeleteConfirm(null)} className="flex-1 px-4 py-2.5 text-gray-600 hover:bg-gray-100 rounded-xl font-medium">Cancel</button>
                     <button onClick={handleDelete} disabled={saving} className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 disabled:opacity-50">
                       {saving ? 'Removing...' : 'Remove'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Disable Account Prompt Modal */}
+          {showDisablePrompt && (
+            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
+              <div className="bg-[#0b1120] border border-gray-800 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+                <div className="p-6">
+                  <div className="flex items-center gap-3 text-red-500 mb-4">
+                    <div className="p-2 bg-red-500/10 rounded-xl">
+                      <ShieldOff className="w-6 h-6" />
+                    </div>
+                    <h2 className="text-xl font-bold text-white">Disable Student</h2>
+                  </div>
+                  <p className="text-sm text-gray-400 mb-6">
+                    Are you sure you want to disable <strong>{showDisablePrompt.name}</strong>? They will lose access to all dashboards immediately.
+                  </p>
+                  
+                  <div className="space-y-2 mb-6">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Reason (Optional)</label>
+                    <textarea
+                      value={disableReason}
+                      onChange={e => setDisableReason(e.target.value)}
+                      placeholder="e.g., Code of conduct violation, Payment issue..."
+                      className="w-full bg-gray-900/50 border border-gray-800 rounded-xl p-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 min-h-[100px] resize-none"
+                    />
+                    <p className="text-[10px] text-gray-500">The student will see this message when they try to log in.</p>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button onClick={() => setShowDisablePrompt(null)} className="flex-1 py-2.5 bg-transparent border border-gray-800 hover:bg-gray-800 text-gray-300 rounded-xl font-bold transition-colors">
+                      Cancel
+                    </button>
+                    <button onClick={submitDisableStudent} disabled={saving} className="flex-1 py-2.5 bg-red-600/90 hover:bg-red-500 text-white rounded-xl font-bold shadow-[0_0_15px_rgba(220,38,38,0.3)] transition-all disabled:opacity-50">
+                      {saving ? 'Disabling...' : 'Disable Student'}
                     </button>
                   </div>
                 </div>

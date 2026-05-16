@@ -194,6 +194,9 @@ export default function IMSUsersPage() {
   const [filterDept, setFilterDept] = useState("all")
   const [filterStatus, setFilterStatus] = useState("all")
   const [currentUser, setCurrentUser] = useState<any>(null)
+  
+  const [showDisablePrompt, setShowDisablePrompt] = useState<{ id: string, name: string } | null>(null)
+  const [disableReason, setDisableReason] = useState("")
 
   // Create user modal
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -372,17 +375,10 @@ export default function IMSUsersPage() {
     if (!isAdmin) return toast.error("Only admins can disable accounts")
     if (p.id === currentUser?.id) return toast.error("You cannot disable your own account")
     
-    let reason = ""
     if (!p.disabled) {
-      if (!(await confirmDialog({
-        title: "Disable Account?",
-        message: `Are you sure you want to disable ${p.full_name}? They will lose access to all dashboards immediately.`,
-        confirmText: "Yes, Disable"
-      }))) return
-      
-      const input = window.prompt("Optional: Enter a reason for disabling this account (the user will see this).")
-      if (input === null) return // user cancelled the prompt
-      reason = input.trim()
+      setShowDisablePrompt({ id: p.id, name: p.full_name })
+      setDisableReason("")
+      return
     } else {
       if (!(await confirmDialog({
         title: "Enable Account?",
@@ -392,9 +388,20 @@ export default function IMSUsersPage() {
     }
 
     try {
-      await disableUser(p.id, !p.disabled, reason)
-      setProfiles(prev => prev.map(x => x.id === p.id ? { ...x, disabled: !p.disabled, disabled_reason: reason || null } : x))
-      toast.success(`Account ${p.disabled ? "enabled" : "disabled"} successfully`)
+      await disableUser(p.id, false, "")
+      setProfiles(prev => prev.map(x => x.id === p.id ? { ...x, disabled: false, disabled_reason: null } : x))
+      toast.success(`Account enabled successfully`)
+    } catch (e: any) { toast.error(e.message) }
+  }
+
+  const submitDisable = async () => {
+    if (!showDisablePrompt) return
+    const { id, name } = showDisablePrompt
+    try {
+      await disableUser(id, true, disableReason)
+      setProfiles(prev => prev.map(x => x.id === id ? { ...x, disabled: true, disabled_reason: disableReason || null } : x))
+      toast.success(`Account for ${name} disabled successfully`)
+      setShowDisablePrompt(null)
     } catch (e: any) { toast.error(e.message) }
   }
 
@@ -1053,6 +1060,45 @@ export default function IMSUsersPage() {
                 </button>
                 <button onClick={handleEditSave} className="flex-1 py-3 bg-gradient-to-r from-cyan-500 to-red-500 hover:from-cyan-400 hover:to-red-400 text-gray-900 rounded-xl font-bold shadow-lg transition-all">
                   Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Disable Account Prompt Modal */}
+      {showDisablePrompt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
+          <div className="bg-[#0b1120] border border-gray-800 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-6">
+              <div className="flex items-center gap-3 text-red-500 mb-4">
+                <div className="p-2 bg-red-500/10 rounded-xl">
+                  <ShieldOff className="w-6 h-6" />
+                </div>
+                <h2 className="text-xl font-bold text-white">Disable Account</h2>
+              </div>
+              <p className="text-sm text-gray-400 mb-6">
+                Are you sure you want to disable <strong>{showDisablePrompt.name}</strong>? They will lose access to all dashboards immediately.
+              </p>
+              
+              <div className="space-y-2 mb-6">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Reason (Optional)</label>
+                <textarea
+                  value={disableReason}
+                  onChange={e => setDisableReason(e.target.value)}
+                  placeholder="e.g., Contract ended, Security review..."
+                  className="w-full bg-gray-900/50 border border-gray-800 rounded-xl p-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 min-h-[100px] resize-none"
+                />
+                <p className="text-[10px] text-gray-500">The user will see this message when they try to log in.</p>
+              </div>
+
+              <div className="flex gap-3">
+                <button onClick={() => setShowDisablePrompt(null)} className="flex-1 py-2.5 bg-transparent border border-gray-800 hover:bg-gray-800 text-gray-300 rounded-xl font-bold transition-colors">
+                  Cancel
+                </button>
+                <button onClick={submitDisable} className="flex-1 py-2.5 bg-red-600/90 hover:bg-red-500 text-white rounded-xl font-bold shadow-[0_0_15px_rgba(220,38,38,0.3)] transition-all">
+                  Disable User
                 </button>
               </div>
             </div>
