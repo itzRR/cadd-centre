@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useState, useEffect, useCallback } from "react"
 import { toast } from "sonner"
@@ -52,6 +52,22 @@ function WeatherIcon({ icon, size = 16 }: { icon: string; size?: number }) {
   if (icon.includes("02") || icon.includes("03") || icon.includes("04")) return <Cloud size={size} className="text-gray-400" />
   if (icon.includes("09") || icon.includes("10") || icon.includes("11")) return <CloudRain size={size} className="text-red-400" />
   return <Wind size={size} className="text-gray-400" />
+}
+
+function getWeatherBackground(icon?: string) {
+  if (!icon) return "bg-white border-gray-200"
+  // Sunny / Clear
+  if (icon.includes("01")) return "bg-gradient-to-br from-sky-50 via-white to-amber-50 border-sky-100"
+  // Partly Cloudy
+  if (icon.includes("02") || icon.includes("03")) return "bg-gradient-to-br from-slate-50 via-white to-sky-50 border-slate-200"
+  // Overcast / Cloudy
+  if (icon.includes("04")) return "bg-gradient-to-br from-gray-100 to-slate-100 border-gray-300"
+  // Rain / Showers
+  if (icon.includes("09") || icon.includes("10")) return "bg-gradient-to-br from-blue-100 to-slate-200 border-blue-200"
+  // Thunderstorm / Heavy Rain
+  if (icon.includes("11")) return "bg-gradient-to-br from-slate-200 to-slate-300 border-slate-400"
+  // Default
+  return "bg-white border-gray-200"
 }
 
 export default function SriLankaCalendar({ accentColor = "blue" }: { accentColor?: string }) {
@@ -194,14 +210,14 @@ export default function SriLankaCalendar({ accentColor = "blue" }: { accentColor
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Calendar Grid */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+        <div className={`lg:col-span-2 rounded-2xl border overflow-hidden shadow-sm transition-all duration-1000 ${getWeatherBackground(weather?.icon)}`}>
           {/* Month Navigation */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <button onClick={() => setCurrentMonth(m => subMonths(m, 1))} className="p-2 hover:bg-gray-200 rounded-xl transition-colors text-gray-600 hover:text-gray-900">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-black/5 bg-black/5 backdrop-blur-sm">
+            <button onClick={() => setCurrentMonth(m => subMonths(m, 1))} className="p-2 hover:bg-black/10 rounded-xl transition-colors text-gray-700 hover:text-gray-900">
               <ChevronLeft className="h-5 w-5" />
             </button>
             <h2 className="font-bold text-gray-900 text-lg">{format(currentMonth, "MMMM yyyy")}</h2>
-            <button onClick={() => setCurrentMonth(m => addMonths(m, 1))} className="p-2 hover:bg-gray-200 rounded-xl transition-colors text-gray-600 hover:text-gray-900">
+            <button onClick={() => setCurrentMonth(m => addMonths(m, 1))} className="p-2 hover:bg-black/10 rounded-xl transition-colors text-gray-700 hover:text-gray-900">
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>

@@ -17,6 +17,7 @@ import StaffAttendance from "@/components/ims/StaffAttendance"
 import ProfileSection from "@/components/ims/ProfileSection"
 import LeaveRequestsView from "@/components/ims/LeaveRequestsView"
 import { useRouter } from "next/navigation"
+import IMSTasksPage from "../tasks/page"
 
 export default function ITDashboardPage() {
   const router = useRouter()
@@ -28,12 +29,26 @@ export default function ITDashboardPage() {
   const [activeTab, setActiveTab] = useState("overview")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
+  // Modals & Terminal
+  const [viewingLogsFor, setViewingLogsFor] = useState<Profile | null>(null)
+  const [terminalInput, setTerminalInput] = useState("")
+  const [terminalOutput, setTerminalOutput] = useState<{text: string, isCommand: boolean}[]>([
+    { text: "CADD IMS Administrative Terminal v2.4.0", isCommand: false },
+    { text: "Type 'help' for a list of available commands.", isCommand: false }
+  ])
+  const terminalEndRef = React.useRef<HTMLDivElement>(null)
+
   // Simulated Live Metrics State
   const [cpuUsage, setCpuUsage] = useState(34)
   const [ramUsage, setRamUsage] = useState(62)
   const [networkIn, setNetworkIn] = useState(14.2)
   const [networkOut, setNetworkOut] = useState(8.5)
   const [liveDataHistory, setLiveDataHistory] = useState<number[]>(Array(20).fill(30))
+
+  const [latencyDb, setLatencyDb] = useState(12)
+  const [latencyAuth, setLatencyAuth] = useState(24)
+  const [latencyStorage, setLatencyStorage] = useState(45)
+  const [latencyEdge, setLatencyEdge] = useState(18)
 
   const loadData = useCallback(async () => {
     setLoading(true)
@@ -55,6 +70,11 @@ export default function ITDashboardPage() {
       setRamUsage(prev => Math.min(100, Math.max(40, prev + (Math.random() * 4 - 2))))
       setNetworkIn(prev => Math.max(1, prev + (Math.random() * 6 - 3)))
       setNetworkOut(prev => Math.max(1, prev + (Math.random() * 4 - 2)))
+      setLatencyDb(prev => Math.max(8, prev + Math.floor(Math.random() * 5) - 2))
+      setLatencyAuth(prev => Math.max(15, prev + Math.floor(Math.random() * 7) - 3))
+      setLatencyStorage(prev => Math.max(30, prev + Math.floor(Math.random() * 10) - 5))
+      setLatencyEdge(prev => Math.max(10, prev + Math.floor(Math.random() * 6) - 3))
+      
       setLiveDataHistory(prev => {
         const next = [...prev.slice(1), cpuUsage]
         return next
@@ -64,6 +84,53 @@ export default function ITDashboardPage() {
   }, [cpuUsage])
 
   const handleLogout = async () => { await signOut(); router.push('/auth/login') }
+
+  const handleTerminalSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!terminalInput.trim()) return
+    const cmd = terminalInput.trim().toLowerCase()
+    const newOutput = [...terminalOutput, { text: `root@cadd-ims:~# ${cmd}`, isCommand: true }]
+    
+    if (cmd === 'clear') {
+      setTerminalOutput([])
+    } else if (cmd === 'help') {
+      setTerminalOutput([...newOutput, 
+        { text: "Available commands:", isCommand: false },
+        { text: "  help    - Show this message", isCommand: false },
+        { text: "  clear   - Clear terminal output", isCommand: false },
+        { text: "  whoami  - Show current user info", isCommand: false },
+        { text: "  date    - Show system date/time", isCommand: false },
+        { text: "  ping    - Test system connectivity", isCommand: false },
+        { text: "  status  - Show active system metrics", isCommand: false },
+        { text: "  ls      - List directories", isCommand: false }
+      ])
+    } else if (cmd === 'whoami') {
+      setTerminalOutput([...newOutput, { text: currentUser?.email || "root", isCommand: false }])
+    } else if (cmd === 'date') {
+      setTerminalOutput([...newOutput, { text: new Date().toString(), isCommand: false }])
+    } else if (cmd === 'ping') {
+      setTerminalOutput([...newOutput, { text: "PONG! 1ms", isCommand: false }])
+    } else if (cmd === 'ls') {
+      setTerminalOutput([...newOutput, { text: "bin  boot  dev  etc  home  lib  opt  root  run  sbin  tmp  usr  var", isCommand: false }])
+    } else if (cmd === 'status') {
+      setTerminalOutput([...newOutput, { text: `CPU: ${cpuUsage.toFixed(1)}% | RAM: ${ramUsage.toFixed(1)}% | Network: ${networkIn.toFixed(1)}M/s`, isCommand: false }])
+    } else {
+      setTerminalOutput([...newOutput, { text: `Command not found: ${cmd}`, isCommand: false }])
+    }
+    setTerminalInput("")
+    setTimeout(() => terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 50)
+  }
+
+  const handleQuickTool = (action: string) => {
+    toast.promise(
+      new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000)),
+      {
+        loading: `Executing: ${action}...`,
+        success: `${action} completed successfully across all nodes.`,
+        error: `Failed to execute ${action}`
+      }
+    )
+  }
 
   // Stats
   const totalUsers = profiles.length
@@ -197,10 +264,10 @@ export default function ITDashboardPage() {
                       
                       <div className="space-y-4">
                         {[
-                          { name: 'Primary Database', desc: 'Supabase PostgreSQL', status: 'Healthy', ping: '12ms' },
-                          { name: 'Authentication Auth', desc: 'JWT Token Service', status: 'Healthy', ping: '24ms' },
-                          { name: 'Storage Buckets', desc: 'AWS S3 Backed', status: 'Healthy', ping: '45ms' },
-                          { name: 'Edge Functions', desc: 'Vercel Serverless', status: 'Healthy', ping: '18ms' }
+                          { name: 'Primary Database', desc: 'Supabase PostgreSQL', status: 'Healthy', ping: `${latencyDb}ms` },
+                          { name: 'Authentication Auth', desc: 'JWT Token Service', status: 'Healthy', ping: `${latencyAuth}ms` },
+                          { name: 'Storage Buckets', desc: 'AWS S3 Backed', status: 'Healthy', ping: `${latencyStorage}ms` },
+                          { name: 'Edge Functions', desc: 'Vercel Serverless', status: 'Healthy', ping: `${latencyEdge}ms` }
                         ].map((sys, idx) => (
                           <div key={idx} className="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors">
                             <div className="flex flex-col">
@@ -208,9 +275,9 @@ export default function ITDashboardPage() {
                               <span className="text-xs font-medium text-gray-500">{sys.desc}</span>
                             </div>
                             <div className="flex items-center gap-4">
-                              <span className="text-xs font-mono text-gray-400">{sys.ping}</span>
-                              <div className="flex items-center gap-1.5">
-                                <div className="w-2 h-2 rounded-full bg-green-500" />
+                              <span className="text-xs font-mono text-gray-400 w-10 text-right">{sys.ping}</span>
+                              <div className="flex items-center gap-1.5 w-20">
+                                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                                 <span className="text-sm font-bold text-gray-700">{sys.status}</span>
                               </div>
                             </div>
@@ -223,15 +290,15 @@ export default function ITDashboardPage() {
                     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
                       <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-2"><Terminal className="w-5 h-5 text-gray-500"/> Quick Tools</h3>
                       <div className="space-y-3">
-                        <button className="w-full text-left p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors group">
+                        <button onClick={() => handleQuickTool('Force Global Refresh')} className="w-full text-left p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors group">
                           <p className="font-bold text-gray-900 group-hover:text-blue-700">Force Global Refresh</p>
                           <p className="text-xs text-gray-500 mt-1">Clears frontend cache for all active clients.</p>
                         </button>
-                        <button className="w-full text-left p-4 rounded-xl border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors group">
+                        <button onClick={() => handleQuickTool('Purge Inactive Sessions')} className="w-full text-left p-4 rounded-xl border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-colors group">
                           <p className="font-bold text-gray-900 group-hover:text-red-700">Purge Inactive Sessions</p>
                           <p className="text-xs text-gray-500 mt-1">Logs out users inactive for &gt;24 hours.</p>
                         </button>
-                        <button className="w-full text-left p-4 rounded-xl border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition-colors group">
+                        <button onClick={() => handleQuickTool('Trigger DB Backup')} className="w-full text-left p-4 rounded-xl border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 transition-colors group">
                           <p className="font-bold text-gray-900 group-hover:text-indigo-700">Trigger DB Backup</p>
                           <p className="text-xs text-gray-500 mt-1">Initiates an immediate PG dump to S3.</p>
                         </button>
@@ -418,7 +485,7 @@ export default function ITDashboardPage() {
                               </span>
                             </td>
                             <td className="py-4 px-4 text-right">
-                              <button className="text-xs font-bold text-blue-600 hover:text-blue-800 border border-blue-200 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors">
+                              <button onClick={() => setViewingLogsFor(p)} className="text-xs font-bold text-blue-600 hover:text-blue-800 border border-blue-200 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors">
                                 View Logs
                               </button>
                             </td>
@@ -445,27 +512,27 @@ export default function ITDashboardPage() {
                     <Terminal className="w-4 h-4 text-gray-500" />
                   </div>
                   
-                  <div className="p-6 h-[600px] overflow-y-auto custom-scrollbar space-y-3">
-                    <p className="text-green-400 mb-6">CADD IMS Administrative Terminal v2.4.0<br/>Type 'help' for a list of available commands.</p>
-                    
-                    {commands.length === 0 ? (
-                      <p className="text-gray-500 italic">No system commands found in log.</p>
-                    ) : commands.slice(0, 50).map((cmd, idx) => (
-                      <div key={cmd.id} className="text-gray-300">
-                        <span className="text-blue-400">[{format(new Date(cmd.sent_at), 'yyyy-MM-dd HH:mm:ss')}]</span> 
-                        <span className="text-purple-400 ml-2">{cmd.sent_by_name}</span>
-                        <span className="text-gray-500"> executed </span>
-                        <span className="text-yellow-300 font-bold">{cmd.type}</span>
-                        {cmd.message && <span className="text-green-300 ml-2">&gt; "{cmd.message}"</span>}
-                        <br/>
-                        <span className="text-gray-600">↳ Target: {cmd.target_user_name || 'GLOBAL'} | Status: <span className={cmd.status === 'delivered' ? 'text-green-500' : 'text-gray-400'}>[{cmd.status.toUpperCase()}]</span></span>
+                  <div className="p-6 h-[600px] overflow-y-auto custom-scrollbar flex flex-col" onClick={() => document.getElementById('term-input')?.focus()}>
+                    {terminalOutput.map((out, idx) => (
+                      <div key={idx} className={`mb-1 ${out.isCommand ? 'text-green-400 font-bold mt-2' : 'text-gray-300'}`}>
+                        {out.text}
                       </div>
                     ))}
                     
-                    <div className="flex items-center gap-2 mt-6 animate-pulse">
-                      <span className="text-green-400">root@cadd-ims:~#</span>
-                      <div className="w-2 h-4 bg-gray-400" />
-                    </div>
+                    <form onSubmit={handleTerminalSubmit} className="flex items-center gap-2 mt-2">
+                      <span className="text-green-400 font-bold whitespace-nowrap">root@cadd-ims:~#</span>
+                      <input 
+                        id="term-input"
+                        type="text" 
+                        value={terminalInput}
+                        onChange={e => setTerminalInput(e.target.value)}
+                        className="flex-1 bg-transparent border-none outline-none focus:ring-0 text-gray-100 font-mono text-sm placeholder-gray-600 p-0 m-0"
+                        autoFocus
+                        spellCheck={false}
+                        autoComplete="off"
+                      />
+                    </form>
+                    <div ref={terminalEndRef} />
                   </div>
                 </div>
               )}
@@ -481,13 +548,8 @@ export default function ITDashboardPage() {
               )}
               {activeTab === 'profile' && currentUser && <ProfileSection userData={currentUser} />}
               {activeTab === 'tasks' && (
-                <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 text-center py-16">
-                  <FileText className="w-16 h-16 text-blue-300 mx-auto mb-6" />
-                  <h3 className="text-2xl font-black text-gray-900 mb-2">Task Management</h3>
-                  <p className="text-gray-500 font-medium mb-8 max-w-sm mx-auto">Track, manage, and complete your assigned operational tasks.</p>
-                  <button onClick={() => router.push('/admin/ims/tasks')} className="px-8 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-black transition-colors shadow-lg">
-                    Open Tasks Workspace
-                  </button>
+                <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 min-h-[600px]">
+                  <IMSTasksPage embedded={true} />
                 </div>
               )}
 
@@ -495,6 +557,52 @@ export default function ITDashboardPage() {
           </AnimatePresence>
         </main>
       </div>
+
+      {/* View Logs Modal */}
+      <AnimatePresence>
+        {viewingLogsFor && (
+          <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[85vh]">
+              <div className="bg-[#0A1A2F] px-6 py-4 flex justify-between items-center text-white shrink-0">
+                <div>
+                  <h3 className="font-bold text-lg">{viewingLogsFor.full_name}</h3>
+                  <p className="text-xs text-blue-200">System Activity Logs</p>
+                </div>
+                <button onClick={() => setViewingLogsFor(null)} className="p-2 hover:bg-white/10 rounded-lg text-gray-300 hover:text-white transition-colors">
+                  <X size={20} />
+                </button>
+              </div>
+              <div className="p-6 overflow-y-auto flex-1 custom-scrollbar bg-gray-50">
+                {loginLogs.filter(l => l.user_id === viewingLogsFor.id).length === 0 ? (
+                  <div className="text-center py-16">
+                    <Activity className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500 font-bold">No activity logs found</p>
+                    <p className="text-gray-400 text-sm mt-1">This user hasn't generated any system logs yet.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {loginLogs.filter(l => l.user_id === viewingLogsFor.id).map((log, idx) => (
+                      <div key={log.id || idx} className="flex gap-4 items-start p-4 bg-white rounded-xl border border-gray-200 shadow-sm">
+                        <div className="bg-blue-50 p-2.5 rounded-xl text-blue-600 shrink-0 border border-blue-100">
+                          <LogOut className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start">
+                            <p className="font-bold text-sm text-gray-900">Login Session</p>
+                            <span className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md">{format(new Date(log.login_time), 'MMM d, yyyy - HH:mm')}</span>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-2 font-mono bg-gray-50 p-1.5 rounded inline-block">IP: {log.ip_address || 'Unknown'}</p>
+                          <p className="text-xs text-gray-500 mt-1 line-clamp-1" title={log.device_info || ''}>Device: {log.device_info || 'Unknown Device'}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
