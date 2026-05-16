@@ -131,6 +131,13 @@ export async function updateBatch(id: string, updates: Partial<{
   return data
 }
 
+export async function deleteBatch(id: string) {
+  const { error } = await supabase
+    .from('batches').update({ is_active: false, deleted_at: new Date().toISOString() })
+    .eq('id', id)
+  if (error) throw error
+}
+
 // ── LECTURER ALLOCATIONS ──────────────────────────────────────────────────────
 
 export async function allocateLecturer(batchId: string, lecturerId: string, moduleId?: string) {

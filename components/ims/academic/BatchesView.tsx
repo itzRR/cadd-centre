@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react"
 import { toast } from "sonner"
-import { CalendarDays, Plus, Users, ChevronRight, X, User, BookOpen, LayoutGrid, List, Search, Edit, UserPlus, CheckCircle, XCircle, Clock } from "lucide-react"
+import { CalendarDays, Plus, Users, ChevronRight, X, User, BookOpen, LayoutGrid, List, Search, Edit, UserPlus, CheckCircle, XCircle, Clock, Trash2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-import { getBatches, createBatch, updateBatch, getEnrollments, allocateLecturer, getModulesByCourse, getAssessmentsByBatch } from "@/lib/data"
+import { getBatches, createBatch, updateBatch, deleteBatch, getEnrollments, allocateLecturer, getModulesByCourse, getAssessmentsByBatch } from "@/lib/data"
 import { generateBatchCode } from "@/lib/ims-data"
 import { supabase } from "@/lib/supabase"
 import AssessmentPanel from "@/components/ims/academic/AssessmentPanel"
@@ -259,6 +259,20 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
     } catch (e: any) { toast.error(e.message) }
   }
 
+  const handleDelete = async () => {
+    if (!editingBatch) return
+    if (!confirm("Are you sure you want to delete this batch? This will hide it from the system.")) return
+    try {
+      await deleteBatch(editingBatch.id)
+      toast.success("Batch deleted successfully")
+      setShowModal(false)
+      setEditingBatch(null)
+      loadData()
+    } catch (e: any) {
+      toast.error(e.message)
+    }
+  }
+
   // Filter batches
   const filtered = batches.filter(b => {
     if (searchQuery) {
@@ -430,9 +444,16 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
                   {lecturers.map(l => <option key={l.id} value={l.id}>{l.full_name}</option>)}
                 </select>
               </div>
-              <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 mt-6">
-                <button type="button" onClick={() => { setShowModal(false); setEditingBatch(null) }} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl font-medium">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700">{editingBatch ? 'Save Changes' : 'Create Batch'}</button>
+              <div className={`pt-4 flex justify-${editingBatch ? 'between' : 'end'} gap-3 border-t border-gray-100 mt-6`}>
+                {editingBatch && (
+                  <button type="button" onClick={handleDelete} className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-xl font-medium flex items-center gap-2">
+                    <Trash2 className="w-4 h-4" /> Delete
+                  </button>
+                )}
+                <div className="flex gap-3">
+                  <button type="button" onClick={() => { setShowModal(false); setEditingBatch(null) }} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl font-medium">Cancel</button>
+                  <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700">{editingBatch ? 'Save Changes' : 'Create Batch'}</button>
+                </div>
               </div>
             </form>
           </div>
