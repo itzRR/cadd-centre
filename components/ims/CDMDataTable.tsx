@@ -288,7 +288,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
       {showColumnMenu && <div className="fixed inset-0 z-10" onClick={() => setShowColumnMenu(false)} />}
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className={`overflow-x-auto ${actions && actions.length > 2 ? 'min-h-[240px]' : ''}`}>
         <table className="w-full text-sm">
           <thead className={`bg-gray-50/80 ${stickyHeader ? "sticky top-0 z-10" : ""}`}>
             <tr>
@@ -415,7 +415,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
-                                    className="absolute right-0 top-8 z-20 bg-white border border-gray-200 rounded-xl shadow-lg py-1 min-w-[140px]"
+                                    className={`absolute right-0 z-20 bg-white border border-gray-200 rounded-xl shadow-lg py-1 min-w-[140px] ${i >= Math.max(0, paginated.length - 2) && paginated.length > 2 ? 'bottom-8 origin-bottom-right' : 'top-8 origin-top-right'}`}
                                   >
                                     {actions.filter(a => !a.show || a.show(row)).map((action, ai) => {
                                       const Icon = action.icon
