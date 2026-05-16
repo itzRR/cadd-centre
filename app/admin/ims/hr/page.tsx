@@ -17,7 +17,7 @@ import {
   Users, DollarSign, Star, CalendarDays, Plus,
   Edit, Trash2, X, Search, CheckCircle,
   Download, Clock, Menu, LogOut, Briefcase, FileText, XCircle, Power, User, Calendar,
-  Phone, CreditCard, UserCheck, RefreshCw, ShieldPlus,
+  Phone, CreditCard, UserCheck, RefreshCw, ShieldPlus, ShieldOff,
   Building2, GraduationCap, Megaphone, Terminal, ExternalLink
 } from "lucide-react"
 import { QuickGuide, type GuideStep } from "@/components/ui/quick-guide"
@@ -87,7 +87,7 @@ export default function HRDashboard() {
     work_schedule: [] as { startTime: string, durationHours: number }[],
     office_assets: [] as { item: string, serialNo?: string, issuedDate?: string }[],
     permissions: [] as Permission[],
-    phone: "", nic: "", epf_number: "", join_date: "",
+    phone: "", nic: "", device_id: "", epf_number: "", join_date: "",
     contract_type: "Full-time", monthly_salary: "" as string,
     employee_status: "Active",
   }
@@ -209,11 +209,34 @@ export default function HRDashboard() {
   }
 
   // ── Employee Management ──
+  const [showDisablePrompt, setShowDisablePrompt] = useState<{ id: string, name: string } | null>(null)
+  const [disableReason, setDisableReason] = useState("")
+
   const handleToggleDisable = async (emp: Profile) => {
+    if (!emp.disabled) {
+      setShowDisablePrompt({ id: emp.id, name: emp.full_name || emp.email || "User" })
+      setDisableReason("")
+      return
+    } else {
+      if (!(await confirmDialog("Are you sure you want to enable this account?"))) return
+      try {
+        await updateProfileRole(emp.id, { disabled: false, disabled_reason: null })
+        setEmployees(prev => prev.map(e => e.id === emp.id ? { ...e, disabled: false, disabled_reason: null } : e))
+        toast.success("Account enabled")
+      } catch (e: any) { toast.error(e.message) }
+    }
+  }
+
+  const submitDisable = async () => {
+    if (!showDisablePrompt) return
+    if (!disableReason.trim()) return toast.error("Please provide a reason")
+    
     try {
-      await updateProfileRole(emp.id, { disabled: !emp.disabled })
-      setEmployees(prev => prev.map(e => e.id === emp.id ? { ...e, disabled: !e.disabled } : e))
-      toast.success(emp.disabled ? "Account enabled" : "Account disabled")
+      await updateProfileRole(showDisablePrompt.id, { disabled: true, disabled_reason: disableReason })
+      setEmployees(prev => prev.map(e => e.id === showDisablePrompt.id ? { ...e, disabled: true, disabled_reason: disableReason } : e))
+      toast.success("Account disabled successfully")
+      setShowDisablePrompt(null)
+      setDisableReason("")
     } catch (e: any) { toast.error(e.message) }
   }
 
@@ -251,6 +274,7 @@ export default function HRDashboard() {
           office_assets: userForm.office_assets, full_name: userForm.name,
           permissions: userForm.permissions, phone: userForm.phone,
           nic: userForm.nic, join_date: userForm.join_date || undefined,
+          device_id: userForm.device_id || null,
           epf_number: userForm.epf_number || undefined,
           contract_type: userForm.contract_type, employee_status: userForm.employee_status,
           monthly_salary: userForm.monthly_salary ? parseFloat(userForm.monthly_salary) : undefined,
@@ -264,6 +288,7 @@ export default function HRDashboard() {
           access_level: userForm.access_level, work_schedule: userForm.work_schedule,
           office_assets: userForm.office_assets, permissions: userForm.permissions,
           phone: userForm.phone || undefined, nic: userForm.nic || undefined,
+          device_id: userForm.device_id || undefined,
           join_date: userForm.join_date || undefined, contract_type: userForm.contract_type || 'Full-time',
           epf_number: userForm.epf_number || undefined,
           monthly_salary: userForm.monthly_salary ? parseFloat(userForm.monthly_salary) : undefined,
@@ -644,7 +669,7 @@ export default function HRDashboard() {
                       email: emp.email, password: "", name: emp.full_name || "",
                       role: emp.role as UserRole, position: emp.position || "", department: emp.department || "HR", access_level: emp.access_level || 1,
                       work_schedule: emp.work_schedule || [], office_assets: emp.office_assets || [], permissions: emp.permissions || [],
-                      phone: emp.phone || "", nic: emp.nic || "", epf_number: (emp as any).epf_number || "", join_date: emp.join_date || "",
+                      phone: emp.phone || "", nic: emp.nic || "", device_id: emp.device_id || "", epf_number: (emp as any).epf_number || "", join_date: emp.join_date || "",
                       contract_type: emp.contract_type || "Full-time",
                       monthly_salary: emp.monthly_salary != null ? String(emp.monthly_salary) : "",
                       employee_status: emp.employee_status || "Active",
@@ -889,6 +914,11 @@ export default function HRDashboard() {
                     <div>
                       <label className="block text-gray-600 text-xs font-bold uppercase mb-1">NIC</label>
                       <input value={userForm.nic} onChange={e => setUserForm(p => ({ ...p, nic: e.target.value }))} placeholder="National ID"
+                        className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-500" />
+                    </div>
+                    <div>
+                      <label className="block text-gray-600 text-xs font-bold uppercase mb-1">ZKTeco Device ID</label>
+                      <input value={userForm.device_id || ''} onChange={e => setUserForm(p => ({ ...p, device_id: e.target.value }))} placeholder="Machine ID (e.g. 101)"
                         className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-500" />
                     </div>
                     <div>
@@ -1243,6 +1273,43 @@ export default function HRDashboard() {
               </form>
             </motion.div>
           </motion.div>
+        )}
+        {showDisablePrompt && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
+            <div className="bg-[#0b1120] border border-gray-800 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+              <div className="p-6">
+                <div className="flex items-center gap-3 text-red-500 mb-4">
+                  <div className="p-2 bg-red-500/10 rounded-xl">
+                    <ShieldOff className="w-6 h-6" />
+                  </div>
+                  <h2 className="text-xl font-bold text-white">Disable Account</h2>
+                </div>
+                <p className="text-sm text-gray-400 mb-6">
+                  Are you sure you want to disable <strong>{showDisablePrompt.name}</strong>? They will lose access to all dashboards immediately.
+                </p>
+                
+                <div className="space-y-2 mb-6">
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Reason (Optional)</label>
+                  <textarea
+                    value={disableReason}
+                    onChange={e => setDisableReason(e.target.value)}
+                    placeholder="e.g., Contract ended, Security review..."
+                    className="w-full bg-gray-900/50 border border-gray-800 rounded-xl p-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 min-h-[100px] resize-none"
+                  />
+                  <p className="text-[10px] text-gray-500">The user will see this message when they try to log in.</p>
+                </div>
+
+                <div className="flex gap-3">
+                  <button onClick={() => setShowDisablePrompt(null)} className="flex-1 py-2.5 bg-transparent border border-gray-800 hover:bg-gray-800 text-gray-300 rounded-xl font-bold transition-colors">
+                    Cancel
+                  </button>
+                  <button onClick={submitDisable} className="flex-1 py-2.5 bg-red-600/90 hover:bg-red-500 text-white rounded-xl font-bold shadow-[0_0_15px_rgba(220,38,38,0.3)] transition-all">
+                    Disable User
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </AnimatePresence>
 

@@ -41,6 +41,7 @@ export async function updateProfileRole(id: string, updates: Partial<{
   work_schedule: { startTime: string, durationHours: number }[]
   office_assets: { item: string, serialNo?: string, issuedDate?: string }[]
   disabled: boolean
+  disabled_reason: string | null
   full_name: string
   phone: string
   avatar_url: string
@@ -82,6 +83,7 @@ export async function createStaffUser(params: {
   employee_status?: string
   epf_number?: string
   student_id?: string
+  device_id?: string
 }) {
   // Calls the server-side API route which uses the service role key
   // to bypass RLS policies on the profiles table.
@@ -106,6 +108,7 @@ export async function createStaffUser(params: {
       office_assets: params.office_assets || [],
       phone: params.phone || null,
       nic: params.nic || null,
+      device_id: params.device_id || null,
       join_date: params.join_date || null,
       contract_type: params.contract_type || 'Full-time',
       monthly_salary: params.monthly_salary || null,
