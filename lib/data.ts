@@ -205,24 +205,26 @@ export async function enrollStudent(userId: string, courseId: string, batchId: s
   const { data: studentRec } = await supabase.from('students').select('student_id').eq('id', userId).maybeSingle()
   const existingStudentId = profile?.student_id || studentRec?.student_id
 
-  // Only generate a new student_id if the student doesn't already have one
-  if (!existingStudentId && batchId) {
-    const { data: batch } = await supabase.from('batches').select('name').eq('id', batchId).single()
+  // Generate a new student_id based on the assigned batch
+  if (batchId) {
+    const { data: batch } = await supabase.from('batches').select('name, batch_code').eq('id', batchId).single()
     if (batch) {
-      const batchCode = batch.name.split(' - ').pop() || 'GEN'
+      const rawBatchCode = batch.batch_code || batch.name || 'GEN'
+      const cleanBatchCode = rawBatchCode.replace(/[^A-Za-z0-9]/g, '').toUpperCase()
+      
       // Check both profiles and students tables for sequence
       const [{ data: seqProfiles }, { data: seqStudents }] = await Promise.all([
-        supabase.from('profiles').select('student_id').like('student_id', `${batchCode}%`).order('student_id', { ascending: false }).limit(1),
-        supabase.from('students').select('student_id').like('student_id', `${batchCode}%`).order('student_id', { ascending: false }).limit(1),
+        supabase.from('profiles').select('student_id').like('student_id', `${cleanBatchCode}%`).order('student_id', { ascending: false }).limit(1),
+        supabase.from('students').select('student_id').like('student_id', `${cleanBatchCode}%`).order('student_id', { ascending: false }).limit(1),
       ])
       
       let seq = 1
       const allSeq = [...(seqProfiles || []), ...(seqStudents || [])]
-        .map(r => parseInt((r.student_id || '').slice(-2), 10))
+        .map(r => parseInt((r.student_id || '').replace(cleanBatchCode, ''), 10))
         .filter(n => !isNaN(n))
       if (allSeq.length > 0) seq = Math.max(...allSeq) + 1
       
-      const newStudentId = `${batchCode}${String(seq).padStart(2, '0')}`
+      const newStudentId = `${cleanBatchCode}${String(seq).padStart(2, '0')}`
       await supabase.from('profiles').update({ student_id: newStudentId }).eq('id', userId)
       // Also update students table if exists
       await supabase.from('students').update({ student_id: newStudentId }).eq('id', userId)

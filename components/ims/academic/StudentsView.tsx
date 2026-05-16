@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { toast } from "sonner"
-import { Edit, Trash2, Plus, UserPlus, AlertTriangle, Search, Filter, CheckCircle, Users, Award } from "lucide-react"
+import { Edit, Trash2, Plus, UserPlus, AlertTriangle, Search, Filter, CheckCircle, Users, Award, User } from "lucide-react"
 import { motion } from "framer-motion"
 import CDMDataTable, { CDMColumn, CDMAction } from "@/components/ims/CDMDataTable"
 import { getStudents, getEnrollments, getCourses, getBatches, enrollStudent, deleteEnrollment, updateEnrollmentStatus } from "@/lib/data"
@@ -24,6 +24,7 @@ export default function StudentsView() {
   const [showEnrollModal, setShowEnrollModal] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<any>(null)
   const [showEditModal, setShowEditModal] = useState<any>(null)
+  const [showProfileModal, setShowProfileModal] = useState<any>(null)
   const [enrollForm, setEnrollForm] = useState({ student_id: '', course_id: '', batch_id: '', amount: '0' })
   const [saving, setSaving] = useState(false)
   
@@ -175,6 +176,11 @@ export default function StudentsView() {
   ]
 
   const actions: CDMAction<any>[] = canManage ? [
+    {
+      label: "View Profile",
+      icon: User,
+      onClick: (r) => setShowProfileModal(r)
+    },
     {
       label: "Edit Status",
       icon: Edit,
@@ -414,6 +420,62 @@ export default function StudentsView() {
                     </button>
                   ))}
                   <button onClick={() => setShowEditModal(null)} className="w-full px-4 py-2.5 mt-2 text-gray-500 hover:bg-gray-100 rounded-xl text-sm font-medium">Cancel</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* PROFILE MODAL */}
+          {showProfileModal && (
+            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm">
+              <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                      <User className="w-4 h-4" />
+                    </div>
+                    Student Profile
+                  </h3>
+                  <button onClick={() => setShowProfileModal(null)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+                </div>
+                <div className="p-6 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="col-span-2">
+                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Full Name</label>
+                      <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.full_name || 'N/A'}</div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Student ID</label>
+                      <div className="font-mono font-medium text-blue-600 bg-blue-50 px-3 py-2 rounded-xl border border-blue-100">{showProfileModal._original?.student_id || 'N/A'}</div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Phone Number</label>
+                      <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.phone || 'N/A'}</div>
+                    </div>
+                    <div className="col-span-2">
+                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Personal Email</label>
+                      <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.personal_email || showProfileModal._original?.email || 'N/A'}</div>
+                    </div>
+                    <div className="col-span-2">
+                      <label className="block text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5"/> Academic Email</label>
+                      <div className="font-medium text-gray-900 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100">{showProfileModal._original?.academic_email || 'N/A'}</div>
+                    </div>
+                    <div className="col-span-2">
+                      <label className="block text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5"/> Academic Password</label>
+                      <div className="font-mono font-medium text-gray-900 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100">{showProfileModal._original?.academic_password || 'N/A'}</div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">NIC</label>
+                      <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.nic || 'N/A'}</div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Date of Birth</label>
+                      <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{showProfileModal._original?.dob || 'N/A'}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-end">
+                  <button onClick={() => setShowProfileModal(null)} className="px-5 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-xl font-medium shadow-sm transition-all">Close</button>
                 </div>
               </div>
             </div>
