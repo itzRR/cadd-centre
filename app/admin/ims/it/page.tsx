@@ -52,8 +52,8 @@ export default function ITDashboardPage() {
   const [latencyEdge, setLatencyEdge] = useState(18)
 
   // SOC Live Metrics
-  const [socFailedLogins, setSocFailedLogins] = useState(14)
-  const [socBlockedIPs, setSocBlockedIPs] = useState(24)
+  const [socFailedLogins, setSocFailedLogins] = useState(0)
+  const [socBlockedIPs, setSocBlockedIPs] = useState(0)
 
   const loadData = useCallback(async () => {
     setLoading(true)
@@ -81,10 +81,6 @@ export default function ITDashboardPage() {
       setLatencyAuth(prev => Math.max(15, prev + Math.floor(Math.random() * 7) - 3))
       setLatencyStorage(prev => Math.max(30, prev + Math.floor(Math.random() * 10) - 5))
       setLatencyEdge(prev => Math.max(10, prev + Math.floor(Math.random() * 6) - 3))
-      
-      // Occasionally simulate a failed login or blocked IP
-      if (Math.random() > 0.8) setSocFailedLogins(prev => prev + 1)
-      if (Math.random() > 0.95) setSocBlockedIPs(prev => prev + 1)
 
       setLiveDataHistory(prev => {
         const next = [...prev.slice(1), cpuUsage]
@@ -459,7 +455,6 @@ export default function ITDashboardPage() {
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                           {loginLogs.slice(0, 15).map(log => {
-                            const isFailed = Math.random() > 0.9; // Simulate a few failed logs
                             return (
                               <tr key={log.id} className="hover:bg-gray-50">
                                 <td className="py-4 px-4">
