@@ -821,6 +821,7 @@ export async function confirmLeadPayment(params: {
   confirmedBy: string | null
   academicEmail?: string | null
   academicPassword?: string | null
+  studentId?: string | null
 }): Promise<any> {
   // 1. Mark payment as confirmed
   await supabase
@@ -828,10 +829,13 @@ export async function confirmLeadPayment(params: {
     .update({ payment_confirmed: true })
     .eq('id', params.paymentId)
 
-  // 2. Generate student ID
-  const batchCodeForId = params.batchCode || 'GEN'
-  const seq = await getNextStudentSequence(batchCodeForId)
-  const studentId = generateStudentId(batchCodeForId, seq)
+  // 2. Generate student ID (or use provided)
+  let studentId = params.studentId
+  if (!studentId) {
+    const batchCodeForId = params.batchCode || 'GEN'
+    const seq = await getNextStudentSequence(batchCodeForId)
+    studentId = generateStudentId(batchCodeForId, seq)
+  }
 
   // The auth login email is the ACADEMIC email (studentId@caddcentre.lk)
   const authEmail = params.academicEmail || `${studentId.toLowerCase()}@caddcentre.lk`

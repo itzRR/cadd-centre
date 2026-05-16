@@ -117,11 +117,7 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
     setAllocating(true)
     try {
       const batch = batches.find((b: any) => b.id === selectedBatchId)
-      const batchCode = batch?.name?.split(' - ').pop() || batch?.name || 'GEN'
-      const seq = await getNextStudentSequence(batchCode)
-      const studentId = generateStudentId(batchCode, seq)
-      const finalEmail = `${studentId.toLowerCase()}@caddcentre.lk`
-      const finalPassword = studentId
+      const batchCode = batch?.batch_code || batch?.name || 'GEN'
 
       const batchCourseId = batch?.course_id || batch?.courses?.id
       const courseByName = courses.find((c: any) =>
@@ -143,20 +139,21 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
         batchCode: batchCode,
         batchId: selectedBatchId,
         confirmedBy: currentUser?.id || null,
-        academicEmail: finalEmail,
-        academicPassword: finalPassword,
+        academicEmail: academicEmail,
+        academicPassword: academicPassword,
+        studentId: generatedStudentId,
       })
 
       await confirmLeadAsStudent(
         selectedLead.id,
         currentUser?.id || null,
         selectedBatchId,
-        studentId
+        generatedStudentId
       )
 
       toast.success(
-        `${selectedLead.lead_name} enrolled as student ${studentId}!`,
-        { description: `Academic Email: ${finalEmail}` }
+        `${selectedLead.lead_name} enrolled as student ${generatedStudentId}!`,
+        { description: `Academic Email: ${academicEmail}` }
       )
 
       setShowModal(false)
