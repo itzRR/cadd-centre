@@ -88,7 +88,7 @@ export default function FinanceLeadConfirmationsView({ currentUser, onRefresh }:
       key: "course_interested",
       label: "Course",
       render: (val) => (
-        <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-lg border border-blue-100">
+        <span className="px-2 py-1 bg-red-50 text-red-700 text-xs font-bold rounded-lg border border-red-100">
           {val}
         </span>
       )
@@ -214,7 +214,7 @@ export default function FinanceLeadConfirmationsView({ currentUser, onRefresh }:
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Course:</span>
-                    <span className="font-bold text-blue-700">{selectedLead.course_interested}</span>
+                    <span className="font-bold text-red-700">{selectedLead.course_interested}</span>
                   </div>
                   {(selectedLead.payment_amount ?? 0) > 0 && (
                     <div className="flex justify-between text-sm pt-2 border-t border-gray-200">

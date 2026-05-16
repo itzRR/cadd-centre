@@ -74,7 +74,7 @@ export default function ContactPage() {
     }, 1500)
   }
 
-  const inputBaseClass = "w-full bg-[#F8FAFC] border rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 text-[#0F172A]"
+  const inputBaseClass = "w-full bg-[#F8FAFC] border rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-red-500/20 focus:border-red-500 transition-all duration-300 text-[#0F172A]"
   const errorInputClass = "border-red-400 focus:ring-red-400/20 focus:border-red-400"
   const normalInputClass = "border-gray-200"
 
@@ -83,20 +83,20 @@ export default function ContactPage() {
       
       {/* ── PREMIUM HERO ────────────────────────────────────────────── */}
       <section className="relative pt-32 pb-24 bg-gradient-to-b from-[#F0F6FA] to-[#F8FAFC] overflow-hidden border-b border-gray-100">
-        <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-blue-200/40 blur-[100px] rounded-full pointer-events-none mix-blend-multiply animate-pulse" style={{ animationDuration: '8s' }} />
+        <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-red-200/40 blur-[100px] rounded-full pointer-events-none mix-blend-multiply animate-pulse" style={{ animationDuration: '8s' }} />
         <div className="absolute top-[20%] right-[15%] w-[400px] h-[400px] bg-cyan-200/40 blur-[80px] rounded-full pointer-events-none mix-blend-multiply animate-pulse" style={{ animationDuration: '10s', animationDelay: '1s' }} />
         
         {/* Floating animated icon */}
         <motion.div animate={{ y: [0, -20, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="absolute top-24 right-20 hidden lg:flex items-center justify-center w-24 h-24 bg-white/80 backdrop-blur-xl rounded-3xl shadow-[0_20px_50px_rgba(37,99,235,0.1)] border border-white">
-           <MessageCircle className="w-10 h-10 text-blue-500" />
+           <MessageCircle className="w-10 h-10 text-red-500" />
         </motion.div>
 
         <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="max-w-3xl mx-auto">
-            <span className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-blue-100 text-blue-700 text-sm font-bold tracking-widest uppercase px-5 py-2 rounded-full mb-6 shadow-sm">
+            <span className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-red-100 text-red-700 text-sm font-bold tracking-widest uppercase px-5 py-2 rounded-full mb-6 shadow-sm">
               We're Here to Help
             </span>
-            <h1 className="text-5xl md:text-7xl font-black text-[#0F172A] mb-6 tracking-tight">Let's start a <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Conversation</span></h1>
+            <h1 className="text-5xl md:text-7xl font-black text-[#0F172A] mb-6 tracking-tight">Let's start a <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-cyan-500">Conversation</span></h1>
             <p className="text-lg text-[#475569] mb-8 font-medium">Whether you have a question about our programs, pricing, or anything else, our team is ready to answer all your questions.</p>
           </motion.div>
         </div>
@@ -175,7 +175,7 @@ export default function ContactPage() {
                       />
                       <FieldError message={fieldErrors.message} />
                     </div>
-                    <Button type="submit" disabled={isSubmitting} className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-[0_10px_30px_rgba(37,99,235,0.3)] hover:shadow-[0_15px_40px_rgba(37,99,235,0.4)] transition-all duration-300 group">
+                    <Button type="submit" disabled={isSubmitting} className="w-full h-14 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-bold text-lg shadow-[0_10px_30px_rgba(37,99,235,0.3)] hover:shadow-[0_15px_40px_rgba(37,99,235,0.4)] transition-all duration-300 group">
                       {isSubmitting ? (
                         <div className="flex items-center gap-2"><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Sending...</div>
                       ) : (
@@ -194,7 +194,7 @@ export default function ContactPage() {
               <h3 className="text-xl font-black text-[#0F172A] mb-6">Contact Information</h3>
               <div className="space-y-6">
                  <div className="flex items-start gap-4 p-3 rounded-2xl hover:bg-[#F8FAFC] transition-colors">
-                    <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform"><Phone className="w-5 h-5 text-blue-600" /></div>
+                    <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform"><Phone className="w-5 h-5 text-red-600" /></div>
                     <div>
                        <p className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-1">Phone</p>
                        <p className="text-lg font-bold text-[#0F172A]">+94 11 234 5678</p>
@@ -221,10 +221,10 @@ export default function ContactPage() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.4 }} className="relative bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-[2rem] p-8 shadow-[0_20px_50px_rgba(15,23,42,0.3)] overflow-hidden group">
-               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 blur-[30px] rounded-full group-hover:scale-150 transition-transform duration-700" />
+               <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/20 blur-[30px] rounded-full group-hover:scale-150 transition-transform duration-700" />
                <div className="relative z-10">
                   <div className="flex items-center justify-between mb-6">
-                     <h3 className="text-xl font-black text-white flex items-center gap-2"><Clock className="w-5 h-5 text-blue-400" /> Office Hours</h3>
+                     <h3 className="text-xl font-black text-white flex items-center gap-2"><Clock className="w-5 h-5 text-red-400" /> Office Hours</h3>
                   </div>
                   <ul className="space-y-3">
                      {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map((day, idx) => {
@@ -251,7 +251,7 @@ export default function ContactPage() {
       <section className="py-24 px-4 max-w-7xl mx-auto">
          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="rounded-[3rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-gray-100 bg-white p-2">
             <div className="rounded-[2.5rem] overflow-hidden w-full h-[400px] relative group">
-               <div className="absolute inset-0 bg-blue-600/5 group-hover:bg-transparent transition-colors duration-500 z-10 pointer-events-none" />
+               <div className="absolute inset-0 bg-red-600/5 group-hover:bg-transparent transition-colors duration-500 z-10 pointer-events-none" />
                {/* Replace with actual map embed, using a styled iframe placeholder */}
                <iframe 
                   src="https://maps.google.com/maps?q=Colombo%2003,%20Sri%20Lanka&t=&z=13&ie=UTF8&iwloc=&output=embed" 
@@ -270,7 +270,7 @@ export default function ContactPage() {
       {/* ── FAQ ACCORDION ─────────────────────────────────────────── */}
       <section className="py-12 px-4 max-w-3xl mx-auto">
          <div className="text-center mb-12">
-            <span className="text-blue-600 font-bold uppercase tracking-widest text-sm mb-4 block">Got Questions?</span>
+            <span className="text-red-600 font-bold uppercase tracking-widest text-sm mb-4 block">Got Questions?</span>
             <h2 className="text-3xl md:text-4xl font-black text-[#0F172A]">Frequently Asked Questions</h2>
          </div>
          <div className="space-y-4">
@@ -278,7 +278,7 @@ export default function ContactPage() {
                <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} key={i} className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
                   <button onClick={() => setActiveFaq(activeFaq === i ? null : i)} className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none">
                      <span className="font-bold text-[#0F172A] pr-4">{faq.q}</span>
-                     <ChevronDown className={`w-5 h-5 text-blue-500 transition-transform duration-300 ${activeFaq === i ? 'rotate-180' : ''}`} />
+                     <ChevronDown className={`w-5 h-5 text-red-500 transition-transform duration-300 ${activeFaq === i ? 'rotate-180' : ''}`} />
                   </button>
                   <AnimatePresence>
                      {activeFaq === i && (
@@ -299,7 +299,7 @@ export default function ContactPage() {
          <motion.a initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1, type: "spring" }} href="https://wa.me/94112345678" target="_blank" rel="noopener noreferrer" className="w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center shadow-[0_10px_30px_rgba(34,197,94,0.4)] hover:scale-110 transition-all duration-300">
             <MessageCircle className="w-7 h-7" />
          </motion.a>
-         <motion.a initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1.1, type: "spring" }} href="tel:+94112345678" className="md:hidden w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-[0_10px_30px_rgba(37,99,235,0.4)] hover:scale-110 transition-all duration-300">
+         <motion.a initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 1.1, type: "spring" }} href="tel:+94112345678" className="md:hidden w-14 h-14 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center shadow-[0_10px_30px_rgba(37,99,235,0.4)] hover:scale-110 transition-all duration-300">
             <PhoneCall className="w-6 h-6" />
          </motion.a>
       </div>

@@ -16,7 +16,7 @@ const TYPE_ICONS: Record<string, any> = {
 }
 
 const TYPE_COLORS: Record<string, string> = {
-  ebook:    "bg-blue-100 text-blue-800",
+  ebook:    "bg-red-100 text-red-800",
   video:    "bg-red-100 text-red-800",
   guide:    "bg-green-100 text-green-800",
   document: "bg-gray-100 text-gray-800",

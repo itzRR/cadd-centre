@@ -11,7 +11,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
 const STATUS_META: Record<string, { icon: any; color: string; badge: string }> = {
   completed:   { icon: CheckCircle, color: "text-green-600",  badge: "bg-green-100 text-green-800" },
-  in_progress: { icon: Clock,       color: "text-blue-600",   badge: "bg-blue-100 text-blue-800" },
+  in_progress: { icon: Clock,       color: "text-red-600",   badge: "bg-red-100 text-red-800" },
   not_started: { icon: Circle,      color: "text-gray-400",   badge: "bg-gray-100 text-gray-600" },
 }
 
@@ -49,7 +49,7 @@ export default function MyProgressPage() {
             <Layers className="h-14 w-14 text-gray-200 mx-auto mb-4" />
             <h2 className="text-xl font-bold text-gray-700 mb-2">No courses enrolled</h2>
             <p className="text-gray-400 text-sm mb-6">Enroll in a CADD programme to track your academic progress</p>
-            <Link href="/courses"><button className="px-6 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">Browse Courses</button></Link>
+            <Link href="/courses"><button className="px-6 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">Browse Courses</button></Link>
           </div>
         ) : (
           <div className="space-y-6">
@@ -63,19 +63,19 @@ export default function MyProgressPage() {
 
               return (
                 <div key={enrollment.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                  <div className="p-5 border-b bg-gradient-to-r from-blue-50 to-white">
+                  <div className="p-5 border-b bg-gradient-to-r from-red-50 to-white">
                     <div className="flex items-center justify-between gap-4">
                       <div>
                         <h2 className="font-bold text-gray-900">{course?.title}</h2>
                         <div className="flex gap-2 mt-1 flex-wrap">
-                          {course?.level && <Badge className={course.level === "Expert Certificate" ? "bg-purple-100 text-purple-800" : course.level === "Master Certificate" ? "bg-blue-100 text-blue-800" : "bg-green-100 text-green-800"}>{course.level}</Badge>}
+                          {course?.level && <Badge className={course.level === "Expert Certificate" ? "bg-purple-100 text-purple-800" : course.level === "Master Certificate" ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"}>{course.level}</Badge>}
                           <span className="text-xs text-gray-400">{course?.total_hours}h total</span>
                           <Badge className="bg-slate-100 text-slate-700">{progressPct}% complete</Badge>
                         </div>
                       </div>
-                      <Badge className={enrollment.status === "completed" ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}>{enrollment.status}</Badge>
+                      <Badge className={enrollment.status === "completed" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}>{enrollment.status}</Badge>
                     </div>
-                    <div className="mt-4 bg-gray-100 rounded-full h-2"><div className="bg-blue-600 h-2 rounded-full" style={{ width: `${progressPct}%` }} /></div>
+                    <div className="mt-4 bg-gray-100 rounded-full h-2"><div className="bg-red-600 h-2 rounded-full" style={{ width: `${progressPct}%` }} /></div>
                   </div>
 
                   <div className="divide-y divide-gray-50">
@@ -87,7 +87,7 @@ export default function MyProgressPage() {
                       return (
                         <div key={mod.id} className="p-4 hover:bg-gray-50 transition-colors">
                           <div className="flex items-start gap-3">
-                            <span className="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">{i + 1}</span>
+                            <span className="w-7 h-7 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">{i + 1}</span>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-start justify-between gap-3">
                                 <div>

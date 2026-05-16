@@ -121,7 +121,7 @@ export default function IMSTasksPage(props: any) {
   }
 
   const filterConfig = [
-    { id: "all" as const, label: "All", color: "from-blue-600 to-cyan-500" },
+    { id: "all" as const, label: "All", color: "from-red-600 to-cyan-500" },
     { id: "pending" as const, label: "Pending", color: "from-yellow-500 to-orange-500" },
     { id: "completed" as const, label: "Done", color: "from-green-500 to-emerald-500" },
     { id: "mine" as const, label: "Mine", color: "from-purple-500 to-pink-500" },
@@ -129,7 +129,7 @@ export default function IMSTasksPage(props: any) {
   ]
 
   return (
-    <div className={embedded ? "space-y-6 text-gray-900 selection:bg-blue-500/20" : "min-h-screen bg-gray-50 p-4 md:p-8 space-y-6 text-gray-900 selection:bg-blue-500/20"}>
+    <div className={embedded ? "space-y-6 text-gray-900 selection:bg-red-500/20" : "min-h-screen bg-gray-50 p-4 md:p-8 space-y-6 text-gray-900 selection:bg-red-500/20"}>
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
@@ -160,7 +160,7 @@ export default function IMSTasksPage(props: any) {
           { label: "Total Tasks", value: counts.all, color: "text-gray-900", glow: "" },
           { label: "Pending", value: counts.pending, color: "text-yellow-600", glow: "" },
           { label: "Completed", value: counts.completed, color: "text-green-600", glow: "" },
-          { label: "Assigned to Me", value: counts.mine, color: "text-blue-600", glow: "" },
+          { label: "Assigned to Me", value: counts.mine, color: "text-red-600", glow: "" },
         ].map((s, i) => (
           <div key={i} className={`bg-white border border-gray-200 rounded-2xl p-5 shadow-sm ${s.glow}`}>
             <p className="text-xs text-gray-500 mb-1">{s.label}</p>

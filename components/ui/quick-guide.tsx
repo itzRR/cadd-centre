@@ -84,7 +84,7 @@ export function QuickGuide({ guideKey, dashboardName, accentGradient, steps, ren
           <HelpCircle className="h-3.5 w-3.5" />
           Guide
           {!hasSeenGuide && (
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-blue-500 rounded-full animate-ping" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping" />
           )}
         </button>
       )}
@@ -175,9 +175,9 @@ export function QuickGuide({ guideKey, dashboardName, accentGradient, steps, ren
 
                     {/* Tip */}
                     {step.tip && (
-                      <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                        <p className="text-blue-700 text-xs leading-relaxed">{step.tip}</p>
+                      <div className="bg-red-50 border border-red-100 rounded-xl px-4 py-3 flex items-start gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                        <p className="text-red-700 text-xs leading-relaxed">{step.tip}</p>
                       </div>
                     )}
                   </motion.div>

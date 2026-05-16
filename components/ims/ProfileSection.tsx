@@ -113,7 +113,7 @@ export const PhotoEditor = ({ uid, currentPhotoURL, name, onClose, onUpdate }: {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={onClose}>
       <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={e => e.stopPropagation()} className="bg-white border border-gray-200 rounded-2xl p-6 w-full max-w-md shadow-xl">
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2"><ImageIcon className="w-5 h-5 text-blue-500" /> Update Profile Photo</h3>
+          <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2"><ImageIcon className="w-5 h-5 text-red-500" /> Update Profile Photo</h3>
           <button onClick={onClose} className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100"><X className="w-5 h-5" /></button>
         </div>
         <div className="flex justify-center mb-5">
@@ -149,14 +149,14 @@ export const PhotoEditor = ({ uid, currentPhotoURL, name, onClose, onUpdate }: {
             <label className="block text-sm font-medium text-gray-600">Image URL or Google Drive share link</label>
             <div className="relative">
               <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input type="url" value={url} onChange={e => handleUrlChange(e.target.value)} placeholder="https://..." className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50" />
+              <input type="url" value={url} onChange={e => handleUrlChange(e.target.value)} placeholder="https://..." className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500/50" />
             </div>
-            {isGoogleDriveLink(url) && <p className="text-xs text-blue-600 flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5" /> Drive link detected.</p>}
+            {isGoogleDriveLink(url) && <p className="text-xs text-red-600 flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5" /> Drive link detected.</p>}
           </div>
         </div>
         <div className="flex gap-2">
           {currentPhotoURL && <button onClick={handleRemove} disabled={saving} className="px-3 py-2.5 bg-red-100 text-red-600 rounded-xl text-sm font-medium hover:bg-red-500/30 transition-all">Remove</button>}
-          <button onClick={handleSave} disabled={saving} className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-2.5 rounded-xl text-sm font-medium hover:from-blue-600 hover:to-indigo-600 flex justify-center items-center gap-2">
+          <button onClick={handleSave} disabled={saving} className="flex-1 bg-gradient-to-r from-red-500 to-indigo-500 text-white py-2.5 rounded-xl text-sm font-medium hover:from-red-600 hover:to-indigo-600 flex justify-center items-center gap-2">
             {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Save className="w-4 h-4" /> Save Photo</>}
           </button>
         </div>
@@ -214,7 +214,7 @@ const DocumentEditor = ({ uid, existingDocs = [], onClose, onUpdate }: { uid: st
         <div className="flex items-center justify-between mb-8">
           <div>
             <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-red-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-red-500/20">
                 <FileText className="w-5 h-5 text-white" />
               </div>
               Add Document
@@ -230,7 +230,7 @@ const DocumentEditor = ({ uid, existingDocs = [], onClose, onUpdate }: { uid: st
           <div className="space-y-2">
             <label className="text-sm font-bold text-gray-600">Document Title</label>
             <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Degree Certificate" 
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all" />
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all" />
           </div>
 
           <div className="space-y-2">
@@ -253,7 +253,7 @@ const DocumentEditor = ({ uid, existingDocs = [], onClose, onUpdate }: { uid: st
             <div className="relative">
               <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input type="url" value={url} onChange={e => handleUrlChange(e.target.value)} placeholder="https://..." 
-                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all" />
+                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all" />
             </div>
           </div>
           
@@ -280,7 +280,7 @@ const DocumentEditor = ({ uid, existingDocs = [], onClose, onUpdate }: { uid: st
             Cancel
           </button>
           <button onClick={handleSave} disabled={saving || !title.trim() || !url.trim()} 
-            className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-500/20 hover:from-blue-400 hover:to-indigo-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+            className="flex-1 bg-gradient-to-r from-red-500 to-indigo-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-red-500/20 hover:from-red-400 hover:to-indigo-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
             {saving ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Plus className="w-5 h-5" /> Add Document</>}
           </button>
         </div>
@@ -391,7 +391,7 @@ export default function ProfileSection({ userData, onUpdateProfile }: { userData
     }
   }
 
-  const inputCls = "bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:ring-blue-500/30 focus:border-blue-500 rounded-xl h-12 pl-12 transition-all w-full"
+  const inputCls = "bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:ring-red-500/30 focus:border-red-500 rounded-xl h-12 pl-12 transition-all w-full"
   
   const ROLE_LABELS: Record<string, string> = {
     admin:            "Administrator",
@@ -419,7 +419,7 @@ export default function ProfileSection({ userData, onUpdateProfile }: { userData
               className="relative w-28 h-28 mx-auto mb-6 group cursor-pointer"
               onClick={() => setShowPhotoEditor(true)}
             >
-              <div className="w-full h-full rounded-[2rem] overflow-hidden shadow-lg shadow-blue-500/20">
+              <div className="w-full h-full rounded-[2rem] overflow-hidden shadow-lg shadow-red-500/20">
                 <Avatar photoURL={localUser.avatar_url} name={localUser.full_name} className="w-full h-full" />
               </div>
               <div className="absolute inset-0 rounded-[2rem] bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center backdrop-blur-sm">
@@ -432,9 +432,9 @@ export default function ProfileSection({ userData, onUpdateProfile }: { userData
             <p className="text-gray-400 text-sm mb-6 truncate">{localUser.email}</p>
 
             <div className="flex flex-col gap-3">
-              <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-2.5 flex items-center justify-center gap-2">
-                <Shield className="h-3.5 w-3.5 text-blue-600" />
-                <span className="text-[11px] font-black text-blue-700 uppercase tracking-widest">
+              <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-2.5 flex items-center justify-center gap-2">
+                <Shield className="h-3.5 w-3.5 text-red-600" />
+                <span className="text-[11px] font-black text-red-700 uppercase tracking-widest">
                   {ROLE_LABELS[localUser.role] || localUser.role.replace('_', ' ')}
                 </span>
               </div>
@@ -448,9 +448,9 @@ export default function ProfileSection({ userData, onUpdateProfile }: { userData
 
             {/* Student ID Badge */}
             {localUser.role === 'student' && (localUser as any).student_id && (
-              <div className="bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-200 rounded-xl px-4 py-3 flex flex-col items-center gap-1 mt-3">
-                <span className="text-[9px] text-blue-500 font-black uppercase tracking-widest">Student ID</span>
-                <span className="text-lg font-black text-blue-800 font-mono tracking-wider">{(localUser as any).student_id}</span>
+              <div className="bg-gradient-to-r from-red-50 to-sky-50 border border-red-200 rounded-xl px-4 py-3 flex flex-col items-center gap-1 mt-3">
+                <span className="text-[9px] text-red-500 font-black uppercase tracking-widest">Student ID</span>
+                <span className="text-lg font-black text-red-800 font-mono tracking-wider">{(localUser as any).student_id}</span>
               </div>
             )}
           </div>
@@ -460,7 +460,7 @@ export default function ProfileSection({ userData, onUpdateProfile }: { userData
             <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 px-2">Account Details</h3>
             
             <div className="flex items-center gap-4 px-3 py-2">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600"><CalendarIcon className="w-5 h-5" /></div>
+              <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-red-600"><CalendarIcon className="w-5 h-5" /></div>
               <div><p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Member Since</p><p className="text-sm font-bold text-gray-900">{localUser.created_at ? format(new Date(localUser.created_at), 'MMM d, yyyy') : 'Unknown'}</p></div>
             </div>
             
@@ -491,7 +491,7 @@ export default function ProfileSection({ userData, onUpdateProfile }: { userData
           {/* Profile Details Form */}
           <div className="bg-white border border-gray-200 rounded-[2.5rem] p-8 shadow-sm">
             <h3 className="text-lg font-black text-gray-900 mb-8 flex items-center gap-3">
-              <div className="w-1.5 h-6 bg-blue-600 rounded-full" />
+              <div className="w-1.5 h-6 bg-red-600 rounded-full" />
               Profile Details
             </h3>
 
@@ -500,7 +500,7 @@ export default function ProfileSection({ userData, onUpdateProfile }: { userData
                 <div className="space-y-1.5">
                   <label htmlFor="full_name" className="text-xs font-black text-gray-500 uppercase tracking-widest ml-1 block">Full Name *</label>
                   <div className="relative group">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-red-600 transition-colors" />
                     <input id="full_name" className={inputCls} placeholder="Enter your full name"
                       value={editedName} onChange={e => setEditedName(e.target.value)} required />
                   </div>
@@ -516,7 +516,7 @@ export default function ProfileSection({ userData, onUpdateProfile }: { userData
 
               <div className="pt-4 border-t border-gray-100 flex flex-col sm:flex-row gap-4">
                 <button type="submit"
-                  className="flex-1 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black shadow-lg shadow-blue-500/20 gap-3 border-none transition-all active:scale-[0.98] flex items-center justify-center"
+                  className="flex-1 h-14 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-black shadow-lg shadow-red-500/20 gap-3 border-none transition-all active:scale-[0.98] flex items-center justify-center"
                   disabled={isLoading || editedName === localUser.full_name}>
                   {isLoading ? <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" /> : <Save className="h-5 w-5" />}
                   {isLoading ? "Saving..." : "Save Changes"}
@@ -622,13 +622,13 @@ export default function ProfileSection({ userData, onUpdateProfile }: { userData
                               <p className="font-bold text-gray-900 text-sm">{enrollment.courses?.title || 'Unknown Course'}</p>
                               <div className="flex items-center gap-2 mt-1">
                                 {enrollment.batches?.name && (
-                                  <span className="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-md font-bold uppercase flex items-center gap-1">
+                                  <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-md font-bold uppercase flex items-center gap-1">
                                     <Layers className="w-3 h-3" /> {enrollment.batches.name}
                                   </span>
                                 )}
                                 <span className={`text-[10px] px-2 py-0.5 rounded-md font-black uppercase ${
                                   enrollment.status === 'completed' ? 'bg-emerald-100 text-emerald-700' :
-                                  enrollment.status === 'confirmed' ? 'bg-blue-100 text-blue-700' :
+                                  enrollment.status === 'confirmed' ? 'bg-red-100 text-red-700' :
                                   'bg-gray-100 text-gray-600'
                                 }`}>
                                   {enrollment.status}
@@ -722,7 +722,7 @@ export default function ProfileSection({ userData, onUpdateProfile }: { userData
                                 </div>
                               </div>
                               <div className="flex gap-1.5">
-                                <a href={docItem.url} target="_blank" rel="noreferrer" className="w-7 h-7 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-100 transition-all border border-blue-100" title="Open Link">
+                                <a href={docItem.url} target="_blank" rel="noreferrer" className="w-7 h-7 bg-red-50 text-red-600 rounded-lg flex items-center justify-center hover:bg-red-100 transition-all border border-red-100" title="Open Link">
                                   <LinkIcon className="w-3.5 h-3.5" />
                                 </a>
                                 <button onClick={() => handleDeleteDoc(docItem.id)} className="w-7 h-7 bg-red-50 text-red-600 rounded-lg flex items-center justify-center hover:bg-red-100 transition-all border border-red-100" title="Delete">

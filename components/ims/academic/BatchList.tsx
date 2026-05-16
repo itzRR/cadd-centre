@@ -87,7 +87,7 @@ export default function BatchList({ onRefresh }: { onRefresh: () => void }) {
 
   const getCourseName = (id: string | null) => id ? courses.find(c => c.id === id)?.name || "—" : "—"
   const getLecturerName = (id: string | null) => id ? lecturers.find(l => l.id === id)?.fullName || "—" : "—"
-  const statusColors: Record<string, string> = { active: "bg-green-100 text-green-700", completed: "bg-blue-100 text-blue-700", upcoming: "bg-yellow-100 text-yellow-700" }
+  const statusColors: Record<string, string> = { active: "bg-green-100 text-green-700", completed: "bg-red-100 text-red-700", upcoming: "bg-yellow-100 text-yellow-700" }
   const statusIcons: Record<string, React.ElementType> = { active: CheckCircle, completed: Archive, upcoming: Clock }
 
   const inputCls = "w-full bg-gray-50 text-gray-900 px-3 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm"
@@ -161,7 +161,7 @@ export default function BatchList({ onRefresh }: { onRefresh: () => void }) {
                 <div className="flex flex-wrap gap-1.5 pt-3 border-t border-gray-100">
                   <button onClick={() => setSelectedBatchId(b.id)} className="flex items-center gap-1 px-2.5 py-1.5 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-medium hover:bg-emerald-100 transition-colors"><Eye className="w-3 h-3" />View</button>
                   <button onClick={() => openEdit(b)} className="flex items-center gap-1 px-2.5 py-1.5 bg-gray-50 text-gray-600 rounded-lg text-xs font-medium hover:bg-gray-100 transition-colors"><Edit className="w-3 h-3" />Edit</button>
-                  <button onClick={() => openStudentAssign(b.id)} className="flex items-center gap-1 px-2.5 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium hover:bg-blue-100 transition-colors"><Users className="w-3 h-3" />Students</button>
+                  <button onClick={() => openStudentAssign(b.id)} className="flex items-center gap-1 px-2.5 py-1.5 bg-red-50 text-red-700 rounded-lg text-xs font-medium hover:bg-red-100 transition-colors"><Users className="w-3 h-3" />Students</button>
                   <button onClick={() => handleDelete(b.id)} className="flex items-center gap-1 px-2.5 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-medium hover:bg-red-100 transition-colors"><Trash2 className="w-3 h-3" />Delete</button>
                 </div>
               </motion.div>
@@ -202,7 +202,7 @@ export default function BatchList({ onRefresh }: { onRefresh: () => void }) {
                     <td className="px-4 py-3">
                       <div className="flex gap-1">
                         <button onClick={() => setSelectedBatchId(b.id)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-emerald-600"><Eye className="w-3.5 h-3.5" /></button>
-                        <button onClick={() => openEdit(b)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-blue-600"><Edit className="w-3.5 h-3.5" /></button>
+                        <button onClick={() => openEdit(b)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-red-600"><Edit className="w-3.5 h-3.5" /></button>
                         <button onClick={() => handleDelete(b.id)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-red-600"><Trash2 className="w-3.5 h-3.5" /></button>
                       </div>
                     </td>

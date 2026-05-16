@@ -199,7 +199,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 border-b border-gray-100">
         <div className="flex items-center gap-3">
           {TitleIcon && (
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white flex-shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-500 to-indigo-600 flex items-center justify-center text-white flex-shrink-0">
               <TitleIcon className="w-4.5 h-4.5" />
             </div>
           )}
@@ -221,7 +221,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder={searchPlaceholder}
-                className="pl-9 pr-3 py-2 w-52 border border-gray-200 rounded-xl bg-gray-50 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+                className="pl-9 pr-3 py-2 w-52 border border-gray-200 rounded-xl bg-gray-50 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all"
               />
               {search && (
                 <button onClick={() => setSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -236,7 +236,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
             <div className="relative">
               <button
                 onClick={() => setShowColumnMenu(p => !p)}
-                className={`p-2 rounded-xl border transition-all ${showColumnMenu ? "bg-blue-50 border-blue-200 text-blue-600" : "border-gray-200 text-gray-500 hover:bg-gray-50"}`}
+                className={`p-2 rounded-xl border transition-all ${showColumnMenu ? "bg-red-50 border-red-200 text-red-600" : "border-gray-200 text-gray-500 hover:bg-gray-50"}`}
                 title="Toggle columns"
               >
                 <Columns3 className="w-4 h-4" />
@@ -256,7 +256,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
                           type="checkbox"
                           checked={visibleColumns.has(col.key)}
                           onChange={() => toggleColumn(col.key)}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          className="rounded border-gray-300 text-red-600 focus:ring-red-500"
                         />
                         <span className="text-gray-700 font-medium">{col.label}</span>
                       </label>
@@ -298,7 +298,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
                     type="checkbox"
                     checked={paginated.length > 0 && selectedIds.size === paginated.length}
                     onChange={toggleSelectAll}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-gray-300 text-red-600 focus:ring-red-500"
                   />
                 </th>
               )}
@@ -314,7 +314,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
                     {col.sortable !== false && (
                       <span className="text-gray-300">
                         {sortKey === col.key ? (
-                          sortDir === "asc" ? <ChevronUp className="w-3.5 h-3.5 text-blue-500" /> : <ChevronDown className="w-3.5 h-3.5 text-blue-500" />
+                          sortDir === "asc" ? <ChevronUp className="w-3.5 h-3.5 text-red-500" /> : <ChevronDown className="w-3.5 h-3.5 text-red-500" />
                         ) : (
                           <ChevronsUpDown className="w-3 h-3" />
                         )}
@@ -335,7 +335,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
               <tr>
                 <td colSpan={activeColumns.length + (enableSelection ? 1 : 0) + (actions ? 1 : 0)} className="py-16 text-center">
                   <div className="flex flex-col items-center gap-3">
-                    <div className="w-8 h-8 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+                    <div className="w-8 h-8 border-2 border-red-500/30 border-t-blue-500 rounded-full animate-spin" />
                     <span className="text-gray-400 text-sm">Loading...</span>
                   </div>
                 </td>
@@ -356,7 +356,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
                 return (
                   <tr
                     key={rowId}
-                    className={`hover:bg-blue-50/30 transition-colors ${isSelected ? "bg-blue-50/50" : ""} ${rowClassName ? rowClassName(row, i) : ""}`}
+                    className={`hover:bg-red-50/30 transition-colors ${isSelected ? "bg-red-50/50" : ""} ${rowClassName ? rowClassName(row, i) : ""}`}
                   >
                     {enableSelection && (
                       <td className={`${px} ${py}`}>
@@ -364,7 +364,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
                           type="checkbox"
                           checked={isSelected}
                           onChange={() => toggleSelect(rowId)}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          className="rounded border-gray-300 text-red-600 focus:ring-red-500"
                         />
                       </td>
                     )}
@@ -460,7 +460,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
             <select
               value={pageSize}
               onChange={e => { setPageSize(Number(e.target.value)); setPage(0) }}
-              className="border border-gray-200 rounded-lg px-2 py-1 bg-white text-gray-700 focus:outline-none focus:border-blue-400"
+              className="border border-gray-200 rounded-lg px-2 py-1 bg-white text-gray-700 focus:outline-none focus:border-red-400"
             >
               {pageSizeOptions.map(n => <option key={n} value={n}>{n}</option>)}
             </select>

@@ -141,7 +141,7 @@ export default function HRDashboard() {
   const hrGuideSteps: GuideStep[] = [
     { title: "Staff Directory", description: "View all staff members with their department, role, and status. Add new staff, edit details, assign shifts, and manage office assets.", icon: Users, gradient: "from-purple-500 to-pink-500", tip: "Hover over a staff row to see Edit and Enable/Disable actions." },
     { title: "Leave Requests", description: "Staff can submit leave requests (Annual, Sick, Emergency, etc.). Department heads can approve or reject them.", icon: CalendarDays, gradient: "from-orange-500 to-pink-500", tip: "Pending leave count is shown as a badge in the sidebar." },
-    { title: "Payroll Management", description: "Log salary payouts for each employee, generate PDF payslips, and export the full payroll to Excel.", icon: DollarSign, gradient: "from-blue-500 to-indigo-500" },
+    { title: "Payroll Management", description: "Log salary payouts for each employee, generate PDF payslips, and export the full payroll to Excel.", icon: DollarSign, gradient: "from-red-500 to-indigo-500" },
     { title: "Performance Reviews", description: "Record quarterly performance scores (0-100) with notes. Track employee performance over time.", icon: Star, gradient: "from-yellow-500 to-orange-500" },
     { title: "Staff Resources", description: "When adding/editing staff, you can assign shift schedules, office assets (laptops, etc.), and granular permissions.", icon: Briefcase, gradient: "from-emerald-500 to-cyan-500", tip: "Use 'Granular Permissions' to control exactly what each staff member can access." },
   ]
@@ -468,7 +468,7 @@ export default function HRDashboard() {
                   { label: 'Total Staff', value: employees.length, color: 'from-purple-500 to-pink-500', icon: Users },
                   { label: 'Active', value: employees.filter(e => !e.disabled).length, color: 'from-emerald-500 to-cyan-500', icon: CheckCircle },
                   { label: 'Pending Leaves', value: leaves.filter(l => l.status === 'Pending').length, color: 'from-amber-500 to-orange-500', icon: CalendarDays },
-                  { label: 'Avg Performance', value: reviews.length ? `${Math.round(reviews.reduce((s, r) => s + r.score, 0) / reviews.length)}%` : 'N/A', color: 'from-blue-500 to-indigo-500', icon: Star },
+                  { label: 'Avg Performance', value: reviews.length ? `${Math.round(reviews.reduce((s, r) => s + r.score, 0) / reviews.length)}%` : 'N/A', color: 'from-red-500 to-indigo-500', icon: Star },
                 ].map((card, i) => (
                   <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
                     className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-shadow">
@@ -540,7 +540,7 @@ export default function HRDashboard() {
               {/* Payroll Trend */}
               <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
                 <h3 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <div className="w-1.5 h-5 bg-blue-500 rounded-full" /> Payroll Trend
+                  <div className="w-1.5 h-5 bg-red-500 rounded-full" /> Payroll Trend
                 </h3>
                 {(() => {
                   const monthData: Record<string, number> = {}
@@ -571,7 +571,7 @@ export default function HRDashboard() {
                 {[
                   { label: 'Staff Directory', icon: Users, onClick: () => setActiveTab('directory'), color: 'from-purple-500 to-pink-500' },
                   { label: 'Leave Requests', icon: CalendarDays, onClick: () => setActiveTab('leaves'), color: 'from-amber-500 to-orange-500' },
-                  { label: 'Payroll', icon: DollarSign, onClick: () => setActiveTab('salary'), color: 'from-blue-500 to-indigo-500' },
+                  { label: 'Payroll', icon: DollarSign, onClick: () => setActiveTab('salary'), color: 'from-red-500 to-indigo-500' },
                   { label: 'Performance', icon: Star, onClick: () => setActiveTab('performance'), color: 'from-yellow-500 to-orange-500' },
                 ].map((action, i) => (
                   <motion.button key={i} whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }}
@@ -938,7 +938,7 @@ export default function HRDashboard() {
                       <label className="block text-gray-600 text-xs font-bold uppercase mb-1">Access Level</label>
                       <div className="grid grid-cols-2 gap-2">
                         <button type="button" onClick={() => setUserForm(p => ({ ...p, access_level: 1 }))}
-                          className={`px-3 py-2 rounded-xl font-semibold flex justify-center items-center gap-1.5 border transition-all text-sm ${userForm.access_level === 1 ? "bg-blue-500/20 border-blue-500/50 text-blue-600" : "bg-gray-100 border-gray-200 text-gray-500"}`}>
+                          className={`px-3 py-2 rounded-xl font-semibold flex justify-center items-center gap-1.5 border transition-all text-sm ${userForm.access_level === 1 ? "bg-red-500/20 border-red-500/50 text-red-600" : "bg-gray-100 border-gray-200 text-gray-500"}`}>
                           <User className="w-3.5 h-3.5" /> Staff
                         </button>
                         <button type="button" onClick={() => setUserForm(p => {
@@ -1053,9 +1053,9 @@ export default function HRDashboard() {
                               <p className="text-lg font-black text-red-600">{30 - totalPresent}</p>
                               <p className="text-[10px] text-red-500 font-semibold uppercase">Absent</p>
                             </div>
-                            <div className="bg-blue-50 border border-blue-200 rounded-xl p-2.5 text-center">
-                              <p className="text-lg font-black text-blue-700">{totalHours.toFixed(1)}</p>
-                              <p className="text-[10px] text-blue-600 font-semibold uppercase">Hours</p>
+                            <div className="bg-red-50 border border-red-200 rounded-xl p-2.5 text-center">
+                              <p className="text-lg font-black text-red-700">{totalHours.toFixed(1)}</p>
+                              <p className="text-[10px] text-red-600 font-semibold uppercase">Hours</p>
                             </div>
                           </div>
                           <div className="bg-gray-50 border border-gray-200 rounded-xl p-3">

@@ -129,7 +129,7 @@ export default function ReportsPage() {
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {[
-            { label: "Students", value: stats.totalStudents, icon: Users, color: "text-blue-600", bg: "bg-blue-50" },
+            { label: "Students", value: stats.totalStudents, icon: Users, color: "text-red-600", bg: "bg-red-50" },
             { label: "Enrollments", value: stats.totalEnrollments, icon: BookOpen, color: "text-purple-600", bg: "bg-purple-50" },
             { label: "Certificates", value: stats.certificatesIssued, icon: Award, color: "text-yellow-600", bg: "bg-yellow-50" },
             { label: "Attendance Rate", value: `${stats.attendanceRate}%`, icon: CalendarDays, color: "text-green-600", bg: "bg-green-50" },
@@ -170,11 +170,11 @@ export default function ReportsPage() {
                   {enrollments.map((e: any) => (
                     <tr key={e.id} className="border-b">
                       <td className="py-3 px-4">{e.students?.full_name || "-"}</td>
-                      <td className="py-3 px-4 text-xs text-blue-700">{e.students?.student_id || "-"}</td>
+                      <td className="py-3 px-4 text-xs text-red-700">{e.students?.student_id || "-"}</td>
                       <td className="py-3 px-4">{e.courses?.title || "-"}</td>
                       <td className="py-3 px-4">{e.batches?.name || "-"}</td>
                       <td className="py-3 px-4">{formatCurrency(e.amount_paid || 0)}</td>
-                      <td className="py-3 px-4"><Badge className="bg-blue-100 text-blue-800">{e.status}</Badge></td>
+                      <td className="py-3 px-4"><Badge className="bg-red-100 text-red-800">{e.status}</Badge></td>
                     </tr>
                   ))}
                 </tbody>

@@ -211,7 +211,7 @@ export default function StudentsView() {
       render: (val) => (
         <span className={`px-2 py-1 rounded-md text-xs font-medium ${
           val === 'confirmed' ? 'bg-emerald-100 text-emerald-700' :
-          val === 'completed' ? 'bg-blue-100 text-blue-700' :
+          val === 'completed' ? 'bg-red-100 text-red-700' :
           val === 'cancelled' ? 'bg-red-100 text-red-700' :
           val === 'pending' ? 'bg-amber-100 text-amber-700' :
           'bg-gray-100 text-gray-700'
@@ -483,14 +483,14 @@ export default function StudentsView() {
               <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50 flex-shrink-0">
                   <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center">
                       <User className="w-4 h-4" />
                     </div>
                     Student Profile
                   </h3>
                   <div className="flex items-center gap-2">
                     {canManage && !isEditingProfile && (
-                      <button onClick={() => setIsEditingProfile(true)} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-sm font-bold transition-all">
+                      <button onClick={() => setIsEditingProfile(true)} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg text-sm font-bold transition-all">
                         <Edit className="w-3.5 h-3.5" /> Edit
                       </button>
                     )}
@@ -504,19 +504,19 @@ export default function StudentsView() {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-2">
                           <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Full Name</label>
-                          <input required value={profileForm.full_name} onChange={e => setProfileForm({...profileForm, full_name: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                          <input required value={profileForm.full_name} onChange={e => setProfileForm({...profileForm, full_name: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none" />
                         </div>
                         <div>
                           <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Student ID</label>
-                          <input required value={profileForm.student_id} onChange={e => setProfileForm({...profileForm, student_id: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none font-mono" />
+                          <input required value={profileForm.student_id} onChange={e => setProfileForm({...profileForm, student_id: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none font-mono" />
                         </div>
                         <div>
                           <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Phone Number</label>
-                          <input value={profileForm.phone} onChange={e => setProfileForm({...profileForm, phone: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                          <input value={profileForm.phone} onChange={e => setProfileForm({...profileForm, phone: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none" />
                         </div>
                         <div className="col-span-2">
                           <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Personal Email</label>
-                          <input type="email" value={profileForm.personal_email} onChange={e => setProfileForm({...profileForm, personal_email: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                          <input type="email" value={profileForm.personal_email} onChange={e => setProfileForm({...profileForm, personal_email: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none" />
                         </div>
                         <div className="col-span-2">
                           <label className="block text-xs font-bold text-emerald-700 uppercase tracking-wider mb-1 flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5"/> Academic Email</label>
@@ -528,11 +528,11 @@ export default function StudentsView() {
                         </div>
                         <div>
                           <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">NIC</label>
-                          <input value={profileForm.nic} onChange={e => setProfileForm({...profileForm, nic: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                          <input value={profileForm.nic} onChange={e => setProfileForm({...profileForm, nic: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none" />
                         </div>
                         <div>
                           <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Date of Birth</label>
-                          <input type="date" value={profileForm.dob} onChange={e => setProfileForm({...profileForm, dob: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none" />
+                          <input type="date" value={profileForm.dob} onChange={e => setProfileForm({...profileForm, dob: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none" />
                         </div>
                       </div>
                     </form>
@@ -545,7 +545,7 @@ export default function StudentsView() {
                         </div>
                         <div>
                           <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Student ID</label>
-                          <div className="font-mono font-medium text-blue-600 bg-blue-50 px-3 py-2 rounded-xl border border-blue-100">{showProfileModal._original?.student_id || 'N/A'}</div>
+                          <div className="font-mono font-medium text-red-600 bg-red-50 px-3 py-2 rounded-xl border border-red-100">{showProfileModal._original?.student_id || 'N/A'}</div>
                         </div>
                         <div>
                           <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Phone Number</label>
@@ -580,7 +580,7 @@ export default function StudentsView() {
                   {isEditingProfile ? (
                     <>
                       <button onClick={() => setIsEditingProfile(false)} disabled={saving} className="px-5 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-xl font-medium shadow-sm transition-all disabled:opacity-50">Cancel</button>
-                      <button form="edit-profile-form" type="submit" disabled={saving} className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-sm shadow-blue-500/30 transition-all disabled:opacity-50">
+                      <button form="edit-profile-form" type="submit" disabled={saving} className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold shadow-sm shadow-red-500/30 transition-all disabled:opacity-50">
                         {saving ? 'Saving...' : 'Save Changes'}
                       </button>
                     </>

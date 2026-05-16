@@ -84,7 +84,7 @@ export default function MyCertificatesPage() {
 
                 <div className="mt-4 pt-4 border-t border-gray-50 bg-gray-50 rounded-xl p-3">
                   <p className="text-xs text-gray-500 mb-1">Certificate Number</p>
-                  <p className="font-mono text-sm font-semibold text-blue-700">{cert.certificate_number}</p>
+                  <p className="font-mono text-sm font-semibold text-red-700">{cert.certificate_number}</p>
                 </div>
               </div>
             ))}

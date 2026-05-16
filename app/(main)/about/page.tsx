@@ -53,16 +53,16 @@ export default function AboutPage() {
       {/* ── PREMIUM HERO ────────────────────────────────────────────── */}
       <section className="relative pt-32 pb-24 bg-[#F8FAFC] border-b border-gray-100 overflow-hidden min-h-[90vh] flex items-center">
         {/* Animated Shapes */}
-        <motion.div animate={{ rotate: 360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-blue-200/40 to-cyan-200/40 blur-[120px] rounded-full pointer-events-none" />
-        <motion.div animate={{ rotate: -360 }} transition={{ duration: 60, repeat: Infinity, ease: "linear" }} className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-blue-300/30 to-purple-200/30 blur-[100px] rounded-full pointer-events-none" />
+        <motion.div animate={{ rotate: 360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-red-200/40 to-cyan-200/40 blur-[120px] rounded-full pointer-events-none" />
+        <motion.div animate={{ rotate: -360 }} transition={{ duration: 60, repeat: Infinity, ease: "linear" }} className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-red-300/30 to-purple-200/30 blur-[100px] rounded-full pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 relative z-10 w-full flex flex-col lg:flex-row items-center gap-16">
           <motion.div initial="hidden" animate="visible" variants={stagger} className="flex-1">
-            <motion.div variants={fadeIn} className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-blue-100 text-blue-700 text-sm font-bold tracking-widest uppercase px-5 py-2 rounded-full mb-8 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" /> Our Story
+            <motion.div variants={fadeIn} className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-red-100 text-red-700 text-sm font-bold tracking-widest uppercase px-5 py-2 rounded-full mb-8 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" /> Our Story
             </motion.div>
             <motion.h1 variants={fadeIn} className="text-5xl md:text-7xl lg:text-[5.5rem] font-black text-[#0F172A] mb-8 tracking-tight leading-[1.05]">
-              Empowering <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Minds</span> Since 2005.
+              Empowering <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-cyan-500">Minds</span> Since 2005.
             </motion.h1>
             <motion.p variants={fadeIn} className="text-lg md:text-xl text-[#475569] mb-10 leading-relaxed font-medium max-w-xl">
               We are Sri Lanka's leading institute for technical software training, dedicated to transforming ambitions into industry-recognized expertise.
@@ -76,7 +76,7 @@ export default function AboutPage() {
              </div>
              
              <motion.div animate={{ y: [0, -20, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="absolute -bottom-10 -left-10 bg-white/90 backdrop-blur-xl p-6 rounded-3xl shadow-xl border border-white flex items-center gap-4">
-                <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center"><Building2 className="w-7 h-7 text-blue-600" /></div>
+                <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center"><Building2 className="w-7 h-7 text-red-600" /></div>
                 <div><h4 className="text-2xl font-black text-[#0F172A]">18+</h4><p className="text-sm font-bold text-gray-500 uppercase tracking-wider">Years of Excellence</p></div>
              </motion.div>
           </motion.div>
@@ -102,7 +102,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto">
            <div className="flex flex-col lg:flex-row items-center gap-20">
               <div className="flex-1 relative">
-                 <motion.div style={{ y: y1 }} className="absolute -top-20 -left-20 w-72 h-72 bg-blue-100 rounded-full blur-[80px] -z-10" />
+                 <motion.div style={{ y: y1 }} className="absolute -top-20 -left-20 w-72 h-72 bg-red-100 rounded-full blur-[80px] -z-10" />
                  <div className="relative rounded-[2rem] overflow-hidden h-[600px] shadow-2xl">
                     <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070" alt="Office environment" className="w-full h-full object-cover" />
                  </div>
@@ -113,7 +113,7 @@ export default function AboutPage() {
               </div>
               
               <div className="flex-1">
-                 <span className="text-blue-600 font-bold uppercase tracking-widest text-sm mb-4 block">The Genesis</span>
+                 <span className="text-red-600 font-bold uppercase tracking-widest text-sm mb-4 block">The Genesis</span>
                  <h2 className="text-4xl md:text-5xl font-black text-[#0F172A] mb-8 leading-tight">Bridging the gap between academia and industry.</h2>
                  
                  <div className="space-y-6 text-[#475569] text-lg leading-relaxed">
@@ -124,7 +124,7 @@ export default function AboutPage() {
                  
                  <div className="mt-10 flex gap-4">
                     <div className="flex items-center gap-2 text-[#0F172A] font-bold"><CheckCircle className="w-5 h-5 text-green-500" /> ISO 9001:2015</div>
-                    <div className="flex items-center gap-2 text-[#0F172A] font-bold"><CheckCircle className="w-5 h-5 text-blue-500" /> Global Partners</div>
+                    <div className="flex items-center gap-2 text-[#0F172A] font-bold"><CheckCircle className="w-5 h-5 text-red-500" /> Global Partners</div>
                  </div>
               </div>
            </div>
@@ -135,10 +135,10 @@ export default function AboutPage() {
       <section className="py-32 px-4 bg-[#F8FAFC]">
          <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="group bg-white p-12 rounded-[3rem] border border-gray-100 hover:border-blue-200 shadow-sm hover:shadow-[0_20px_50px_rgba(37,99,235,0.05)] transition-all duration-500 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-[40px] group-hover:scale-150 transition-transform duration-700" />
-                  <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
-                     <Target className="w-8 h-8 text-blue-600" />
+               <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="group bg-white p-12 rounded-[3rem] border border-gray-100 hover:border-red-200 shadow-sm hover:shadow-[0_20px_50px_rgba(37,99,235,0.05)] transition-all duration-500 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-full blur-[40px] group-hover:scale-150 transition-transform duration-700" />
+                  <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300">
+                     <Target className="w-8 h-8 text-red-600" />
                   </div>
                   <h3 className="text-3xl font-black text-[#0F172A] mb-4">Our Mission</h3>
                   <p className="text-[#475569] text-lg leading-relaxed relative z-10">To provide high-quality, industry-relevant training and certification that empowers individuals to excel in design, engineering, and management fields globally.</p>
@@ -159,7 +159,7 @@ export default function AboutPage() {
       {/* ── CORE VALUES ───────────────────────────────────────────── */}
       <section className="py-32 px-4 bg-white">
          <div className="max-w-7xl mx-auto text-center">
-            <span className="text-blue-600 font-bold uppercase tracking-widest text-sm mb-4 block">Our Principles</span>
+            <span className="text-red-600 font-bold uppercase tracking-widest text-sm mb-4 block">Our Principles</span>
             <h2 className="text-4xl md:text-5xl font-black text-[#0F172A] mb-16">Core Values</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -170,7 +170,7 @@ export default function AboutPage() {
                ].map((v, i) => (
                   <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} key={i} className="bg-[#F8FAFC] p-10 rounded-[2.5rem] text-center group hover:bg-white border border-transparent hover:border-gray-100 hover:shadow-[0_20px_40px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-2">
                      <div className="w-20 h-20 mx-auto bg-white rounded-[1.5rem] shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <v.icon className="w-8 h-8 text-blue-600" />
+                        <v.icon className="w-8 h-8 text-red-600" />
                      </div>
                      <h4 className="text-xl font-black text-[#0F172A] mb-4">{v.title}</h4>
                      <p className="text-[#475569] leading-relaxed">{v.desc}</p>
@@ -185,7 +185,7 @@ export default function AboutPage() {
          <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
          <div className="max-w-4xl mx-auto relative z-10">
             <div className="text-center mb-20">
-               <span className="text-blue-400 font-bold uppercase tracking-widest text-sm mb-4 block">Our Journey</span>
+               <span className="text-red-400 font-bold uppercase tracking-widest text-sm mb-4 block">Our Journey</span>
                <h2 className="text-4xl md:text-5xl font-black mb-6">Milestones</h2>
             </div>
             
@@ -198,10 +198,10 @@ export default function AboutPage() {
                   { year: "2025", title: "Global Reach", desc: "Introduced internationally accredited BIM Master Programs." }
                ].map((item, i) => (
                   <motion.div initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6 }} key={i} className={`relative pl-8 md:pl-0 mb-12 md:w-1/2 ${i % 2 === 0 ? 'md:pr-16 md:self-start md:text-right' : 'md:pl-16 md:self-end md:text-left'}`}>
-                     <div className={`absolute top-0 md:top-2 w-5 h-5 rounded-full bg-blue-500 border-4 border-[#0F172A] shadow-[0_0_0_4px_rgba(59,130,246,0.2)] ${i % 2 === 0 ? '-left-[11px] md:-right-[11px] md:left-auto' : '-left-[11px]'}`}>
-                        <div className="w-full h-full bg-blue-400 rounded-full animate-ping opacity-50" />
+                     <div className={`absolute top-0 md:top-2 w-5 h-5 rounded-full bg-red-500 border-4 border-[#0F172A] shadow-[0_0_0_4px_rgba(59,130,246,0.2)] ${i % 2 === 0 ? '-left-[11px] md:-right-[11px] md:left-auto' : '-left-[11px]'}`}>
+                        <div className="w-full h-full bg-red-400 rounded-full animate-ping opacity-50" />
                      </div>
-                     <h3 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 mb-2">{item.year}</h3>
+                     <h3 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-cyan-300 mb-2">{item.year}</h3>
                      <h4 className="text-xl font-bold mb-3">{item.title}</h4>
                      <p className="text-gray-400 leading-relaxed">{item.desc}</p>
                   </motion.div>
@@ -216,7 +216,7 @@ export default function AboutPage() {
       <section className="py-32 px-4 bg-white">
          <div className="max-w-7xl mx-auto">
             <div className="text-center mb-20">
-               <span className="text-blue-600 font-bold uppercase tracking-widest text-sm mb-4 block">Our Experts</span>
+               <span className="text-red-600 font-bold uppercase tracking-widest text-sm mb-4 block">Our Experts</span>
                <h2 className="text-4xl md:text-5xl font-black text-[#0F172A] mb-6">Learn from Industry Leaders</h2>
                <p className="text-[#475569] max-w-2xl mx-auto text-lg">Our instructors are active professionals who bring real-world project experience directly into the classroom.</p>
             </div>
@@ -236,13 +236,13 @@ export default function AboutPage() {
                         {/* Hover Reveal Content */}
                         <div className="absolute inset-0 p-6 flex flex-col justify-end translate-y-8 group-hover:translate-y-0 transition-transform duration-300">
                            <h4 className="text-2xl font-black text-white mb-1">{inst.name}</h4>
-                           <p className="text-blue-300 font-bold text-sm mb-3">{inst.role}</p>
+                           <p className="text-red-300 font-bold text-sm mb-3">{inst.role}</p>
                            
                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
                               <p className="text-gray-300 text-sm mb-4">{inst.cred}</p>
                               <div className="flex gap-3">
-                                 <a href="#" className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-blue-600 transition-colors"><Linkedin className="w-4 h-4" /></a>
-                                 <a href="#" className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-blue-400 transition-colors"><Twitter className="w-4 h-4" /></a>
+                                 <a href="#" className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-red-600 transition-colors"><Linkedin className="w-4 h-4" /></a>
+                                 <a href="#" className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-red-400 transition-colors"><Twitter className="w-4 h-4" /></a>
                               </div>
                            </div>
                         </div>

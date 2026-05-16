@@ -45,7 +45,7 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-          className="w-12 h-12 border-t-2 border-blue-600 border-solid rounded-full mb-4" />
+          className="w-12 h-12 border-t-2 border-red-600 border-solid rounded-full mb-4" />
         <p className="text-gray-400 text-sm font-bold uppercase tracking-widest animate-pulse">Syncing Portal...</p>
       </div>
     )
@@ -61,7 +61,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Subtle background blobs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-100 blur-[120px] rounded-full opacity-60" />
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-red-100 blur-[120px] rounded-full opacity-60" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-sky-100 blur-[100px] rounded-full opacity-40" />
       </div>
 
@@ -71,12 +71,12 @@ export default function DashboardPage() {
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}
           className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div className="flex flex-col sm:flex-row sm:items-center gap-5">
-            <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-blue-600 to-sky-400 flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0 mx-auto sm:mx-0">
+            <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-red-600 to-sky-400 flex items-center justify-center shadow-lg shadow-red-500/20 shrink-0 mx-auto sm:mx-0">
               <User className="w-8 h-8 text-white" />
             </div>
             <div className="text-center sm:text-left">
               <h1 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">
-                Welcome back, <span className="text-blue-600">{user?.name?.split(" ")[0]}</span> 👋
+                Welcome back, <span className="text-red-600">{user?.name?.split(" ")[0]}</span> 👋
               </h1>
               <p className="text-gray-500 text-sm mt-1 font-medium">Your CADD Centre Lanka student portal is active.</p>
             </div>
@@ -85,7 +85,7 @@ export default function DashboardPage() {
             <Button asChild variant="outline" className="border-gray-200 text-gray-700 hover:bg-gray-100 rounded-xl px-6 h-12 w-full sm:w-auto">
               <Link href="/profile">My Profile</Link>
             </Button>
-            <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 h-12 shadow-md border-none font-bold w-full sm:w-auto">
+            <Button asChild className="bg-red-600 hover:bg-red-700 text-white rounded-xl px-6 h-12 shadow-md border-none font-bold w-full sm:w-auto">
               <Link href="/courses">Browse Courses</Link>
             </Button>
           </div>
@@ -95,7 +95,7 @@ export default function DashboardPage() {
         <motion.div variants={container} initial="hidden" animate="show"
           className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           {[
-            { label: "Enrolled",     value: enrollments.length, icon: BookOpen,      color: "text-blue-600",    bg: "bg-blue-50 border-blue-100" },
+            { label: "Enrolled",     value: enrollments.length, icon: BookOpen,      color: "text-red-600",    bg: "bg-red-50 border-red-100" },
             { label: "Active",       value: active,             icon: ClipboardList, color: "text-sky-600",     bg: "bg-sky-50 border-sky-100" },
             { label: "Completed",    value: completed,          icon: CheckCircle,   color: "text-emerald-600", bg: "bg-emerald-50 border-emerald-100" },
             { label: "Certificates", value: completed,          icon: Award,         color: "text-amber-600",   bg: "bg-amber-50 border-amber-100" },
@@ -114,15 +114,15 @@ export default function DashboardPage() {
         {/* Empty state */}
         {enrollments.length === 0 && (
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-blue-600 to-sky-500 rounded-[2.5rem] p-12 text-center mb-10 relative overflow-hidden shadow-xl shadow-blue-500/20">
+            className="bg-gradient-to-br from-red-600 to-sky-500 rounded-[2.5rem] p-12 text-center mb-10 relative overflow-hidden shadow-xl shadow-red-500/20">
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
             <div className="relative z-10">
               <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
                 <GraduationCap className="h-10 w-10 text-white" />
               </div>
               <h2 className="text-2xl font-black text-white mb-3 tracking-tight">Start Your Professional Journey</h2>
-              <p className="text-blue-100 mb-8 max-w-md mx-auto leading-relaxed">Enroll in our industry-leading BIM & CAD programmes to unlock your career potential.</p>
-              <Button asChild className="bg-white text-blue-700 hover:bg-gray-50 rounded-2xl px-10 h-14 font-black shadow-xl transition-all hover:scale-105">
+              <p className="text-red-100 mb-8 max-w-md mx-auto leading-relaxed">Enroll in our industry-leading BIM & CAD programmes to unlock your career potential.</p>
+              <Button asChild className="bg-white text-red-700 hover:bg-gray-50 rounded-2xl px-10 h-14 font-black shadow-xl transition-all hover:scale-105">
                 <Link href="/courses">Browse All Courses</Link>
               </Button>
             </div>
@@ -136,12 +136,12 @@ export default function DashboardPage() {
             className="bg-white border border-gray-200 rounded-[2.5rem] p-8 shadow-sm">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-xl font-black text-gray-900 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
-                  <BookOpen className="h-5 w-5 text-blue-600" />
+                <div className="w-10 h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center">
+                  <BookOpen className="h-5 w-5 text-red-600" />
                 </div>
                 My Enrolled Courses
               </h2>
-              <Link href="/my-courses" className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 uppercase tracking-widest transition-all">
+              <Link href="/my-courses" className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 uppercase tracking-widest transition-all">
                 View all <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
@@ -152,7 +152,7 @@ export default function DashboardPage() {
                   <BookOpen className="h-7 w-7 text-gray-300" />
                 </div>
                 <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">No active enrollments</p>
-                <Link href="/courses" className="text-blue-600 text-xs font-bold mt-3 inline-block hover:underline">Browse catalogue →</Link>
+                <Link href="/courses" className="text-red-600 text-xs font-bold mt-3 inline-block hover:underline">Browse catalogue →</Link>
               </div>
             ) : (
               <div className="space-y-3">
@@ -160,20 +160,20 @@ export default function DashboardPage() {
                   const isCompleted = enrollment.status === "completed"
                   return (
                     <Link key={enrollment.id} href={`/courses/${enrollment.courses?.slug}`}
-                      className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100 hover:border-blue-200 hover:bg-blue-50/50 transition-all group">
-                      <div className={`w-14 h-14 rounded-xl overflow-hidden relative flex-shrink-0 ${isCompleted ? "bg-emerald-50" : "bg-blue-50"} border ${isCompleted ? "border-emerald-100" : "border-blue-100"} flex items-center justify-center`}>
+                      className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100 hover:border-red-200 hover:bg-red-50/50 transition-all group">
+                      <div className={`w-14 h-14 rounded-xl overflow-hidden relative flex-shrink-0 ${isCompleted ? "bg-emerald-50" : "bg-red-50"} border ${isCompleted ? "border-emerald-100" : "border-red-100"} flex items-center justify-center`}>
                         {isCompleted
                           ? <CheckCircle className="w-6 h-6 text-emerald-500" />
-                          : <BookOpen className="w-6 h-6 text-blue-400" />
+                          : <BookOpen className="w-6 h-6 text-red-400" />
                         }
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-bold text-gray-900 text-sm truncate group-hover:text-blue-600 transition-colors">
+                        <p className="font-bold text-gray-900 text-sm truncate group-hover:text-red-600 transition-colors">
                           {enrollment.courses?.title}
                         </p>
                         <div className="flex items-center gap-3 mt-1.5">
                           <span className={`text-[10px] font-black uppercase tracking-tighter px-2 py-0.5 rounded-md ${
-                            isCompleted ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700"
+                            isCompleted ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
                           }`}>
                             {enrollment.status}
                           </span>
@@ -184,7 +184,7 @@ export default function DashboardPage() {
                           )}
                         </div>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-red-500 group-hover:translate-x-1 transition-all" />
                     </Link>
                   )
                 })}
@@ -203,7 +203,7 @@ export default function DashboardPage() {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {[
-                { label: "Courses",      href: "/my-courses",      icon: BookOpen,     color: "from-blue-500 to-blue-600" },
+                { label: "Courses",      href: "/my-courses",      icon: BookOpen,     color: "from-red-500 to-red-600" },
                 { label: "Attendance",   href: "/my-attendance",   icon: CalendarDays, color: "from-sky-500 to-cyan-600" },
                 { label: "Results",      href: "/my-results",      icon: BarChart3,    color: "from-purple-500 to-purple-600" },
                 { label: "Certificates", href: "/my-certificates", icon: Award,        color: "from-amber-500 to-amber-600" },
@@ -238,13 +238,13 @@ export default function DashboardPage() {
                 <div key={enrollment.id}>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-1.5 h-8 rounded-full bg-blue-600" />
+                      <div className="w-1.5 h-8 rounded-full bg-red-600" />
                       <p className="text-base font-bold text-gray-900">{enrollment.courses?.title}</p>
                     </div>
                     <Badge className={`rounded-xl px-4 py-1 font-black uppercase text-[10px] ${
                       enrollment.status === "completed"
                         ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
-                        : "bg-blue-100 text-blue-700 border border-blue-200"
+                        : "bg-red-100 text-red-700 border border-red-200"
                     }`}>
                       {enrollment.status}
                     </Badge>
@@ -252,8 +252,8 @@ export default function DashboardPage() {
                   {enrollment.courses?.modules && enrollment.courses.modules.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                       {enrollment.courses.modules.map((mod: any, i: number) => (
-                        <div key={mod.id} className="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex items-center gap-3 hover:border-blue-200 hover:bg-blue-50/50 transition-colors">
-                          <span className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-black">{i + 1}</span>
+                        <div key={mod.id} className="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex items-center gap-3 hover:border-red-200 hover:bg-red-50/50 transition-colors">
+                          <span className="w-8 h-8 rounded-lg bg-red-100 text-red-700 flex items-center justify-center text-xs font-black">{i + 1}</span>
                           <div className="min-w-0">
                             <p className="text-xs font-bold text-gray-800 truncate leading-tight">{mod.title}</p>
                             <p className="text-[10px] text-gray-400 font-medium">{mod.duration_hours} Credit Hours</p>

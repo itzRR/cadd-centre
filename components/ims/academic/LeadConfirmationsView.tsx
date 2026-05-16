@@ -194,7 +194,7 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
     },
     {
       key: "course_interested", label: "Course",
-      render: (val) => <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-lg border border-blue-100">{val}</span>
+      render: (val) => <span className="px-2 py-1 bg-red-50 text-red-700 text-xs font-bold rounded-lg border border-red-100">{val}</span>
     },
     {
       key: "payment_amount", label: "Paid Amount",
@@ -212,7 +212,7 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
     {
       key: "stage", label: "Status",
       render: () => (
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-lg border border-blue-200">
+        <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-50 text-red-700 text-xs font-bold rounded-lg border border-red-200">
           <GraduationCap className="w-3 h-3" /> Ready to Enroll
         </span>
       )
@@ -248,7 +248,7 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
             <Mail className="w-3 h-3" /> Generate Email
           </div>
           <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold border border-blue-200 ring-2 ring-blue-300/50">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-xs font-bold border border-red-200 ring-2 ring-red-300/50">
             <GraduationCap className="w-3 h-3" /> Batch Allocation
           </div>
         </div>
@@ -268,7 +268,7 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
               <div className="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-cyan-50 flex justify-between items-center sticky top-0 z-10">
                 <div>
                   <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                    {step === 1 ? <><GraduationCap className="w-5 h-5 text-blue-600" /> Step 1: Select Batch</> : <><Mail className="w-5 h-5 text-purple-600" /> Step 2: Confirm Credentials & Enroll</>}
+                    {step === 1 ? <><GraduationCap className="w-5 h-5 text-red-600" /> Step 1: Select Batch</> : <><Mail className="w-5 h-5 text-purple-600" /> Step 2: Confirm Credentials & Enroll</>}
                   </h3>
                   <p className="text-xs text-gray-500 mt-0.5">
                     {step === 1 ? 'Select a batch to generate the final student ID and academic credentials' : 'Review credentials and confirm enrollment'}
@@ -290,7 +290,7 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Course:</span>
-                    <span className="font-bold text-blue-700">{selectedLead.course_interested}</span>
+                    <span className="font-bold text-red-700">{selectedLead.course_interested}</span>
                   </div>
                   <div className="flex justify-between text-sm pt-2 border-t border-gray-200">
                     <span className="text-gray-500">Verified Payment:</span>
@@ -316,13 +316,13 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
                     {/* Credential Preview — appears after batch selection */}
                     {emailGenerated && generatedStudentId && (
                       <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
-                        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center flex-shrink-0">
-                            <GraduationCap className="w-6 h-6 text-blue-600" />
+                        <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center flex-shrink-0">
+                            <GraduationCap className="w-6 h-6 text-red-600" />
                           </div>
                           <div>
-                            <p className="text-[10px] text-blue-600 font-bold uppercase tracking-widest">Final Student ID</p>
-                            <p className="text-xl font-black text-blue-800 font-mono tracking-wider">{generatedStudentId}</p>
+                            <p className="text-[10px] text-red-600 font-bold uppercase tracking-widest">Final Student ID</p>
+                            <p className="text-xl font-black text-red-800 font-mono tracking-wider">{generatedStudentId}</p>
                           </div>
                         </div>
                         <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 space-y-2">

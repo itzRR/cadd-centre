@@ -64,9 +64,9 @@ export default function AdminMessagesPage() {
                   </TableHeader>
                   <TableBody>
                     {messages.map((msg) => (
-                      <TableRow key={msg.id} className={`cursor-pointer ${!msg.is_read ? "bg-blue-50" : ""}`} onClick={() => setSelected(msg)}>
+                      <TableRow key={msg.id} className={`cursor-pointer ${!msg.is_read ? "bg-red-50" : ""}`} onClick={() => setSelected(msg)}>
                         <TableCell>
-                          <Badge className={msg.is_read ? "bg-gray-100 text-gray-600" : "bg-blue-100 text-blue-700"}>
+                          <Badge className={msg.is_read ? "bg-gray-100 text-gray-600" : "bg-red-100 text-red-700"}>
                             {msg.is_read ? "Read" : "New"}
                           </Badge>
                         </TableCell>

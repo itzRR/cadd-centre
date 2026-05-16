@@ -14,13 +14,13 @@ const ROSTER_TYPES = ["Shift", "Duty", "On-call", "Other"] as const
 const SHIFTS = ["Morning", "Afternoon", "Evening", "Night", "Full Day"]
 
 const TYPE_COLORS: Record<string, string> = {
-  Shift:      "bg-blue-100 text-blue-700 border-blue-200",
+  Shift:      "bg-red-100 text-red-700 border-red-200",
   Duty:       "bg-green-100 text-green-700 border-green-200",
   "On-call":  "bg-orange-100 text-orange-700 border-orange-200",
   Other:      "bg-gray-100 text-gray-600 border-gray-200",
 }
 const getShiftColor = (shift: string) => {
-  if (shift.includes("08:00 AM - 05:00 PM")) return "text-blue-600"
+  if (shift.includes("08:00 AM - 05:00 PM")) return "text-red-600"
   if (shift.includes("08:00 AM - 02:00 PM")) return "text-orange-600"
   if (shift.includes("01:00 PM - 07:00 PM")) return "text-purple-600"
   return "text-cyan-700"

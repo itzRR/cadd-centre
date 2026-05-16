@@ -59,7 +59,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Mobile Header */}
         <header className="md:hidden bg-[#0A1A2F] text-white p-4 flex items-center justify-between z-30 shadow-md">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-cyan-500 rounded-lg flex items-center justify-center">
               <GraduationCap className="h-4 w-4 text-white" />
             </div>
             <h1 className="font-bold text-lg leading-none">CADD Centre</h1>

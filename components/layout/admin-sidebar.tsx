@@ -181,7 +181,7 @@ export function AdminSidebar({ currentUser, mobileOpen, setMobileOpen }: AdminSi
           {isAdminRole && (
             <Link href="/admin" title="Dashboard"
               className={cn("flex items-center justify-center p-2.5 rounded-xl text-sm font-medium transition-all",
-                isActive("/admin") ? "bg-blue-600 text-white shadow-md" : "text-gray-400 hover:text-white hover:bg-white/10"
+                isActive("/admin") ? "bg-red-600 text-white shadow-md" : "text-gray-400 hover:text-white hover:bg-white/10"
               )}>
               <LayoutDashboard className="h-4 w-4" />
             </Link>
@@ -213,7 +213,7 @@ export function AdminSidebar({ currentUser, mobileOpen, setMobileOpen }: AdminSi
               {visibleCommon.map(item => (
                 <Link key={item.name} href={item.href} title={item.name}
                   className={cn("flex items-center justify-center p-2.5 rounded-xl text-sm font-medium transition-all",
-                    isActive(item.href) ? "bg-blue-600 text-white shadow-md" : "text-gray-400 hover:text-white hover:bg-white/10"
+                    isActive(item.href) ? "bg-red-600 text-white shadow-md" : "text-gray-400 hover:text-white hover:bg-white/10"
                   )}>
                   <item.icon className="h-4 w-4" />
                 </Link>
@@ -254,7 +254,7 @@ export function AdminSidebar({ currentUser, mobileOpen, setMobileOpen }: AdminSi
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-white/10">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-cyan-500 rounded-lg flex items-center justify-center">
             <GraduationCap className="h-4 w-4 text-white" />
           </div>
           <div>
@@ -283,7 +283,7 @@ export function AdminSidebar({ currentUser, mobileOpen, setMobileOpen }: AdminSi
           <Link href="/admin"
             className={cn(
               "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
-              isActive("/admin") ? "bg-blue-600 text-white shadow-md" : "text-gray-400 hover:text-white hover:bg-white/10"
+              isActive("/admin") ? "bg-red-600 text-white shadow-md" : "text-gray-400 hover:text-white hover:bg-white/10"
             )}>
             <LayoutDashboard className="h-4 w-4 flex-shrink-0" />
             Dashboard
@@ -350,7 +350,7 @@ export function AdminSidebar({ currentUser, mobileOpen, setMobileOpen }: AdminSi
               className={cn(
                 "w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-all group",
                 adminOnlyItems.some(item => isActive(item.href)) && !expandedGroups["Admin Tools"]
-                  ? "text-blue-400 bg-blue-600/10"
+                  ? "text-red-400 bg-red-600/10"
                   : "text-gray-400 hover:text-white hover:bg-white/5"
               )}
             >
@@ -368,13 +368,13 @@ export function AdminSidebar({ currentUser, mobileOpen, setMobileOpen }: AdminSi
               "overflow-hidden transition-all duration-200 ease-in-out",
               expandedGroups["Admin Tools"] ? "max-h-96 opacity-100 mt-0.5" : "max-h-0 opacity-0"
             )}>
-              <div className="ml-3 pl-3 border-l border-blue-500/10 space-y-0.5">
+              <div className="ml-3 pl-3 border-l border-red-500/10 space-y-0.5">
                 {adminOnlyItems.map(item => (
                   <Link key={item.name} href={item.href}
                     className={cn(
                       "flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all",
                       isActive(item.href)
-                        ? "bg-blue-600 text-white shadow-md font-medium"
+                        ? "bg-red-600 text-white shadow-md font-medium"
                         : "text-gray-500 hover:text-white hover:bg-white/5"
                     )}>
                     <item.icon className="h-3.5 w-3.5 flex-shrink-0" />
@@ -450,7 +450,7 @@ export function AdminSidebar({ currentUser, mobileOpen, setMobileOpen }: AdminSi
             className={cn(
               "flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all",
               isActive("/admin/profile")
-                ? "bg-blue-600 text-white shadow-md"
+                ? "bg-red-600 text-white shadow-md"
                 : "text-gray-400 hover:text-white hover:bg-white/10"
             )}>
             <User className="h-4 w-4 flex-shrink-0" />

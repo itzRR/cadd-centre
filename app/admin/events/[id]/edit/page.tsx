@@ -76,7 +76,7 @@ export default function EditEventPage({ params }: { params: Promise<{ id: string
     }
   }
 
-  if (isFetching) return <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" /></div>
+  if (isFetching) return <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600" /></div>
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -138,7 +138,7 @@ export default function EditEventPage({ params }: { params: Promise<{ id: string
         </Card>
         <div className="flex justify-end gap-3">
           <Button type="button" variant="outline" asChild><Link href="/admin/events">Cancel</Link></Button>
-          <Button type="submit" disabled={isLoading} className="bg-blue-600 hover:bg-blue-700">{isLoading ? "Saving..." : "Save Changes"}</Button>
+          <Button type="submit" disabled={isLoading} className="bg-red-600 hover:bg-red-700">{isLoading ? "Saving..." : "Save Changes"}</Button>
         </div>
       </form>
     </div>

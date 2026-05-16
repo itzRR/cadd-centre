@@ -149,7 +149,7 @@ export default function ITDashboardPage() {
                 {[
                   { label: 'Total Users', value: totalUsers, icon: Users, color: 'from-teal-500 to-cyan-500', sub: `${staffCount} staff · ${studentCount} students` },
                   { label: 'Active Now', value: onlineNow, icon: Wifi, color: 'from-emerald-500 to-green-500', sub: `${disabledUsers} disabled` },
-                  { label: 'Logins Today', value: todayLogins, icon: Activity, color: 'from-blue-500 to-indigo-500', sub: `${weekLogins} this week` },
+                  { label: 'Logins Today', value: todayLogins, icon: Activity, color: 'from-red-500 to-indigo-500', sub: `${weekLogins} this week` },
                   { label: 'Pending Commands', value: pendingCommands, icon: Shield, color: 'from-amber-500 to-orange-500', sub: `${commands.length} total` },
                 ].map((card, i) => (
                   <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
@@ -268,9 +268,9 @@ export default function ITDashboardPage() {
                   <p className="text-2xl font-black text-green-700">{onlineNow}</p>
                   <p className="text-xs text-green-600">Online Now</p>
                 </div>
-                <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-center">
-                  <p className="text-2xl font-black text-blue-700">{totalUsers}</p>
-                  <p className="text-xs text-blue-600">Total</p>
+                <div className="bg-red-50 border border-red-100 rounded-xl p-4 text-center">
+                  <p className="text-2xl font-black text-red-700">{totalUsers}</p>
+                  <p className="text-xs text-red-600">Total</p>
                 </div>
               </div>
               <div className="overflow-x-auto">

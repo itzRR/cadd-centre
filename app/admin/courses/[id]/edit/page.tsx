@@ -102,7 +102,7 @@ export default function EditCoursePage({ params }: { params: Promise<{ id: strin
     }
   }
 
-  if (isFetching) return <div className="flex justify-center p-12"><div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600" /></div>
+  if (isFetching) return <div className="flex justify-center p-12"><div className="h-8 w-8 animate-spin rounded-full border-b-2 border-red-600" /></div>
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
@@ -155,7 +155,7 @@ export default function EditCoursePage({ params }: { params: Promise<{ id: strin
 
         <div className="flex justify-end gap-3">
           <Button type="button" variant="outline" asChild><Link href="/admin/courses">Cancel</Link></Button>
-          <Button type="submit" disabled={isLoading} className="bg-blue-600 hover:bg-blue-700">{isLoading ? "Saving..." : "Save Changes"}</Button>
+          <Button type="submit" disabled={isLoading} className="bg-red-600 hover:bg-red-700">{isLoading ? "Saving..." : "Save Changes"}</Button>
         </div>
       </form>
     </div>

@@ -30,9 +30,9 @@ export default async function VerifyCertificatePage({ params }: { params: Promis
                 <div><p className="text-slate-500">Student</p><p className="font-semibold">{certificate.students?.full_name || '-'}</p></div>
                 <div><p className="text-slate-500">Student ID</p><p className="font-semibold">{certificate.students?.student_id || '-'}</p></div>
                 <div><p className="text-slate-500">Course</p><p className="font-semibold">{certificate.courses?.title || '-'}</p></div>
-                <div><p className="text-slate-500">Level</p><Badge className="bg-blue-100 text-blue-800">{certificate.courses?.level || '-'}</Badge></div>
+                <div><p className="text-slate-500">Level</p><Badge className="bg-red-100 text-red-800">{certificate.courses?.level || '-'}</Badge></div>
               </div>
-              {certificate.pdf_url && <a className="inline-flex px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium" href={certificate.pdf_url} target="_blank">Open certificate PDF</a>}
+              {certificate.pdf_url && <a className="inline-flex px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium" href={certificate.pdf_url} target="_blank">Open certificate PDF</a>}
             </>
           ) : (
             <div className="flex items-center gap-3 text-red-700 bg-red-50 border border-red-200 rounded-xl p-4">
@@ -43,7 +43,7 @@ export default async function VerifyCertificatePage({ params }: { params: Promis
               </div>
             </div>
           )}
-          <Link href="/" className="text-sm text-blue-600 hover:underline">Back to home</Link>
+          <Link href="/" className="text-sm text-red-600 hover:underline">Back to home</Link>
         </div>
       </div>
     </div>

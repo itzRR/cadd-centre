@@ -39,7 +39,7 @@ export default function AdminProfilePage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-red-500" />
       </div>
     )
   }
@@ -53,10 +53,10 @@ export default function AdminProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 selection:bg-blue-500/20">
+    <div className="min-h-screen bg-gray-50 selection:bg-red-500/20">
       {/* Subtle blobs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-100 blur-[120px] rounded-full opacity-50" />
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-red-100 blur-[120px] rounded-full opacity-50" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-sky-100 blur-[100px] rounded-full opacity-30" />
       </div>
 

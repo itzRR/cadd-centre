@@ -11,12 +11,12 @@ export default function AcademicOverview() {
   const stats = getAcademicStats()
 
   const cards = [
-    { title: "Total Batches", value: stats.totalBatches, icon: CalendarDays, gradient: "from-blue-500 to-cyan-500", bg: "bg-blue-50", text: "text-blue-700" },
+    { title: "Total Batches", value: stats.totalBatches, icon: CalendarDays, gradient: "from-red-500 to-cyan-500", bg: "bg-red-50", text: "text-red-700" },
     { title: "Total Students", value: stats.totalStudents, icon: Users, gradient: "from-emerald-500 to-green-500", bg: "bg-emerald-50", text: "text-emerald-700" },
     { title: "Total Lecturers", value: stats.totalLecturers, icon: UserCheck, gradient: "from-purple-500 to-indigo-500", bg: "bg-purple-50", text: "text-purple-700" },
     { title: "Total Courses", value: stats.totalCourses, icon: BookOpen, gradient: "from-orange-500 to-amber-500", bg: "bg-orange-50", text: "text-orange-700" },
     { title: "Active Batches", value: stats.activeBatches, icon: TrendingUp, gradient: "from-green-500 to-emerald-500", bg: "bg-green-50", text: "text-green-700" },
-    { title: "Completed", value: stats.completedBatches, icon: BarChart3, gradient: "from-cyan-500 to-blue-500", bg: "bg-cyan-50", text: "text-cyan-700" },
+    { title: "Completed", value: stats.completedBatches, icon: BarChart3, gradient: "from-cyan-500 to-red-500", bg: "bg-cyan-50", text: "text-cyan-700" },
     { title: "Upcoming", value: stats.upcomingBatches, icon: Clock, gradient: "from-yellow-500 to-orange-500", bg: "bg-yellow-50", text: "text-yellow-700" },
   ]
 
@@ -116,7 +116,7 @@ export default function AcademicOverview() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
           className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
           <div className="px-5 pt-4 pb-3 border-b border-gray-100 flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-cyan-500 flex items-center justify-center">
               <Activity className="h-4 w-4 text-white" />
             </div>
             <div>

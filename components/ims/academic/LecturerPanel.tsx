@@ -117,7 +117,7 @@ export default function LecturerPanel({ onRefresh }: { onRefresh: () => void }) 
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex gap-1.5">
-                        <button onClick={() => setExpandedId(expandedId === l.id ? null : l.id)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-blue-600 transition-colors"><Eye className="w-3.5 h-3.5" /></button>
+                        <button onClick={() => setExpandedId(expandedId === l.id ? null : l.id)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-red-600 transition-colors"><Eye className="w-3.5 h-3.5" /></button>
                         <button onClick={() => openEdit(l)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-purple-600 transition-colors"><Edit className="w-3.5 h-3.5" /></button>
                         <button onClick={() => handleDelete(l.id)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-red-600 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
                       </div>

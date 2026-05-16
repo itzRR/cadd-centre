@@ -21,7 +21,7 @@ type CmdType = "force_logout" | "popup" | "broadcast" | "disable_user"
 const CMD_META: Record<CmdType, { icon: React.ReactNode; label: string; color: string }> = {
   force_logout:  { icon: <LogOut className="h-4 w-4" />,  label: "Force Logout",    color: "text-red-600" },
   popup:         { icon: <Bell className="h-4 w-4" />,     label: "Popup Alert",     color: "text-yellow-600" },
-  broadcast:     { icon: <Send className="h-4 w-4" />,     label: "Broadcast",       color: "text-blue-600" },
+  broadcast:     { icon: <Send className="h-4 w-4" />,     label: "Broadcast",       color: "text-red-600" },
   disable_user:  { icon: <Shield className="h-4 w-4" />,   label: "Disable Account", color: "text-orange-600" },
 }
 
@@ -162,7 +162,7 @@ export default function IMSControlPanelPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Active Staff",   value: users.length,                                        icon: Users,    color: "text-blue-600",   bg: "bg-blue-50 border-blue-100" },
+          { label: "Active Staff",   value: users.length,                                        icon: Users,    color: "text-red-600",   bg: "bg-red-50 border-red-100" },
           { label: "Commands Sent",  value: commands.length,                                     icon: Terminal, color: "text-purple-600", bg: "bg-purple-50 border-purple-100" },
           { label: "Active Commands",value: commands.filter(c => c.status === "pending").length, icon: Clock,    color: "text-yellow-600", bg: "bg-yellow-50 border-yellow-100" },
           { label: "Login Events",   value: loginLogs.length,                                    icon: Shield,   color: "text-green-600",  bg: "bg-green-50 border-green-100" },
@@ -282,7 +282,7 @@ export default function IMSControlPanelPage() {
             <div className={`rounded-xl p-4 text-sm font-medium ${
               cmdType === "force_logout" || cmdType === "disable_user"
                 ? "bg-red-50 border border-red-200 text-red-700"
-                : "bg-blue-50 border border-blue-200 text-blue-700"
+                : "bg-red-50 border border-red-200 text-red-700"
             }`}>
               {cmdType === "force_logout" && "⚠️ This will immediately end the selected user's session."}
               {cmdType === "disable_user" && "⚠️ This will permanently disable the account until re-enabled."}
@@ -428,15 +428,15 @@ export default function IMSControlPanelPage() {
             </div>
           ) : users.map(u => (
             <motion.div key={u.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-              className="bg-white border border-gray-200 rounded-2xl p-5 hover:border-blue-300 hover:shadow-sm transition-all flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-md">
+              className="bg-white border border-gray-200 rounded-2xl p-5 hover:border-red-300 hover:shadow-sm transition-all flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-md">
                 {(u.full_name || "?")[0].toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-gray-900 truncate">{u.full_name || "-"}</p>
                 <p className="text-xs text-gray-400 truncate">{u.email}</p>
                 <div className="flex items-center gap-2 mt-2 flex-wrap">
-                  <span className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-200 capitalize">
+                  <span className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold bg-red-100 text-red-700 border border-red-200 capitalize">
                     {u.role.replace(/_/g, " ")}
                   </span>
                   {u.department && (

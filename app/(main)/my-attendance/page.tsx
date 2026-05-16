@@ -13,7 +13,7 @@ const STATUS_META: Record<string, { icon: any; color: string; bg: string }> = {
   present: { icon: CheckCircle, color: "text-green-600",  bg: "bg-green-100 text-green-800" },
   absent:  { icon: XCircle,    color: "text-red-600",    bg: "bg-red-100 text-red-800" },
   late:    { icon: Clock,      color: "text-yellow-600", bg: "bg-yellow-100 text-yellow-800" },
-  excused: { icon: MinusCircle,color: "text-blue-600",   bg: "bg-blue-100 text-blue-800" },
+  excused: { icon: MinusCircle,color: "text-red-600",   bg: "bg-red-100 text-red-800" },
 }
 
 export default function MyAttendancePage() {
@@ -87,7 +87,7 @@ export default function MyAttendancePage() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-5 border-b">
             <h2 className="font-bold text-gray-900 flex items-center gap-2">
-              <CalendarDays className="h-5 w-5 text-blue-600" /> Attendance Records
+              <CalendarDays className="h-5 w-5 text-red-600" /> Attendance Records
             </h2>
           </div>
           {records.length === 0 ? (

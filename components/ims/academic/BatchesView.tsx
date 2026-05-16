@@ -335,11 +335,11 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
           {filtered.map(batch => (
             <motion.div key={batch.id} whileHover={{ y: -4 }} onClick={() => selectBatch(batch)}
               className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-xl hover:shadow-cyan-500/10 transition-all cursor-pointer group relative">
-              <button onClick={(e) => openEdit(batch, e)} className="absolute top-3 right-3 p-1.5 bg-gray-50 hover:bg-blue-50 text-gray-400 hover:text-blue-600 rounded-lg opacity-0 group-hover:opacity-100 transition-all z-10">
+              <button onClick={(e) => openEdit(batch, e)} className="absolute top-3 right-3 p-1.5 bg-gray-50 hover:bg-red-50 text-gray-400 hover:text-red-600 rounded-lg opacity-0 group-hover:opacity-100 transition-all z-10">
                 <Edit className="w-3.5 h-3.5" />
               </button>
               <div className="flex justify-between items-start mb-3">
-                <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl"><CalendarDays className="w-5 h-5" /></div>
+                <div className="p-2.5 bg-red-50 text-red-600 rounded-xl"><CalendarDays className="w-5 h-5" /></div>
                 <span className="text-[10px] font-bold px-2 py-1 bg-gray-100 text-gray-600 rounded-md uppercase tracking-wider">{batch.batch_code || 'NO CODE'}</span>
               </div>
               <h3 className="font-bold text-gray-900 text-lg mb-1 truncate">{batch.name}</h3>
@@ -374,15 +374,15 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
             </tr></thead>
             <tbody className="divide-y divide-gray-50">
               {filtered.map(batch => (
-                <tr key={batch.id} onClick={() => selectBatch(batch)} className="hover:bg-blue-50/30 cursor-pointer transition-colors">
+                <tr key={batch.id} onClick={() => selectBatch(batch)} className="hover:bg-red-50/30 cursor-pointer transition-colors">
                   <td className="px-4 py-3"><p className="font-bold text-gray-900 truncate max-w-[200px]">{batch.name}</p><p className="text-[10px] text-gray-400 font-mono">{batch.batch_code}</p></td>
                   <td className="px-4 py-3 text-gray-600 text-xs hidden md:table-cell truncate max-w-[150px]">{batch.course_name}</td>
                   <td className="px-4 py-3 text-gray-600 text-xs hidden lg:table-cell truncate max-w-[120px]">{batch.lecturer_name}</td>
                   <td className="px-4 py-3 text-gray-600 text-xs">{new Date(batch.start_date).toLocaleDateString()}</td>
                   <td className="px-4 py-3 text-gray-600 text-xs hidden md:table-cell">{batch.end_date ? new Date(batch.end_date).toLocaleDateString() : '—'}</td>
-                  <td className="px-4 py-3 text-center"><span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-md">{batch.enrolled_count || 0}</span></td>
+                  <td className="px-4 py-3 text-center"><span className="px-2 py-1 bg-red-50 text-red-700 text-xs font-bold rounded-md">{batch.enrolled_count || 0}</span></td>
                   <td className="px-4 py-3 text-center">
-                    <button onClick={(e) => openEdit(batch, e)} className="p-1.5 hover:bg-blue-50 text-gray-400 hover:text-blue-600 rounded-lg transition-colors"><Edit className="w-3.5 h-3.5" /></button>
+                    <button onClick={(e) => openEdit(batch, e)} className="p-1.5 hover:bg-red-50 text-gray-400 hover:text-red-600 rounded-lg transition-colors"><Edit className="w-3.5 h-3.5" /></button>
                   </td>
                 </tr>
               ))}
@@ -530,7 +530,7 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
                       </div>
                     </div>
                     <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
-                      <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600"><Users className="w-6 h-6" /></div>
+                      <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-600"><Users className="w-6 h-6" /></div>
                       <div>
                         <p className="text-xs text-gray-400 font-bold uppercase">Enrolled Students</p>
                         <p className="font-medium text-gray-900">{selectedBatch.enrolled_count || 0}</p>
@@ -543,7 +543,7 @@ export default function BatchesView({ courses, lecturers }: BatchesViewProps) {
                     {enrollments.filter(e => e.batch_id === selectedBatch.id).map(e => (
                       <div key={e.id} className="bg-white p-4 rounded-xl border border-gray-100 flex items-center justify-between shadow-sm">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-full flex items-center justify-center text-cyan-700 font-bold border border-cyan-100">
+                          <div className="w-10 h-10 bg-gradient-to-br from-cyan-500/20 to-red-500/20 rounded-full flex items-center justify-center text-cyan-700 font-bold border border-cyan-100">
                             {e.students?.full_name?.charAt(0) || 'S'}
                           </div>
                           <div>

@@ -97,7 +97,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
   const msgColors = {
     success: "bg-emerald-50 text-emerald-700 border border-emerald-200",
     error: "bg-red-50 text-red-700 border border-red-200",
-    info: "bg-blue-50 text-blue-700 border border-blue-200",
+    info: "bg-red-50 text-red-700 border border-red-200",
   }
 
   return (

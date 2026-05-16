@@ -59,55 +59,55 @@ export default function LoginPage() {
 
   if (isCheckingSession) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0d1635 50%, #0a1628 100%)" }}>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-          className="w-10 h-10 rounded-full border-2 border-transparent border-t-blue-400" />
+          className="w-10 h-10 rounded-full border-2 border-transparent border-t-red-600" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen flex overflow-hidden" style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0d1635 50%, #0a1628 100%)" }}>
+    <div className="min-h-screen flex overflow-hidden bg-[#FAFAFA] selection:bg-red-200 selection:text-red-900">
 
-      {/* ── Animated background orbs ── */}
+      {/* ── Animated background orbs (Red/White theme) ── */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <motion.div animate={{ x: [0, 30, 0], y: [0, -40, 0], scale: [1, 1.1, 1] }}
           transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-[-15%] left-[-10%] w-[55%] h-[55%] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)", filter: "blur(40px)" }} />
+          style={{ background: "radial-gradient(circle, rgba(227,30,36,0.06) 0%, transparent 70%)", filter: "blur(40px)" }} />
         <motion.div animate={{ x: [0, -25, 0], y: [0, 30, 0], scale: [1, 1.15, 1] }}
           transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 3 }}
           className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)", filter: "blur(40px)" }} />
+          style={{ background: "radial-gradient(circle, rgba(227,30,36,0.04) 0%, transparent 70%)", filter: "blur(40px)" }} />
         <motion.div animate={{ x: [0, 20, 0], y: [0, -20, 0] }}
           transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 6 }}
           className="absolute top-[40%] right-[20%] w-[30%] h-[30%] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(14,165,233,0.08) 0%, transparent 70%)", filter: "blur(40px)" }} />
+          style={{ background: "radial-gradient(circle, rgba(227,30,36,0.03) 0%, transparent 70%)", filter: "blur(40px)" }} />
         {/* Grid overlay */}
-        <div className="absolute inset-0 opacity-[0.03]"
-          style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
+        <div className="absolute inset-0 opacity-[0.4]"
+          style={{ backgroundImage: "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
       </div>
 
       {/* ── Left Panel (desktop only) ── */}
-      <div className="hidden lg:flex lg:w-[48%] flex-col justify-between p-12 relative z-10">
+      <div className="hidden lg:flex lg:w-[48%] flex-col justify-between p-12 relative z-10 bg-white border-r border-gray-100 shadow-[20px_0_40px_rgba(0,0,0,0.02)]">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <img src="/cadd-logo.png" alt="CADD Centre" className="h-12 w-auto object-contain brightness-200" />
+          <img src="/cadd-logo.png" alt="CADD Centre" className="h-14 w-auto object-contain" />
         </motion.div>
 
         <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3, duration: 0.8 }}
           className="space-y-8">
           <div>
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-6 h-0.5 bg-blue-400" />
-              <span className="text-blue-400 text-xs font-bold uppercase tracking-[0.3em]">CADD Centre</span>
+              <div className="w-6 h-0.5 bg-red-600" />
+              <span className="text-red-600 text-xs font-bold uppercase tracking-[0.3em]">CADD Centre</span>
             </div>
-            <h2 className="text-5xl font-black text-white leading-[1.1] tracking-tight">
+            <h2 className="text-5xl font-black text-gray-900 leading-[1.1] tracking-tight">
               Design Your
-              <span className="block bg-gradient-to-r from-blue-400 to-sky-300 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-red-600 to-red-400 bg-clip-text text-transparent mt-1">
                 Future Today
               </span>
             </h2>
-            <p className="text-white/50 text-lg mt-5 leading-relaxed max-w-sm">
+            <p className="text-gray-500 text-lg mt-5 leading-relaxed max-w-sm">
               Join thousands of students mastering world-class CAD skills through our premium education platform.
             </p>
           </div>
@@ -117,17 +117,17 @@ export default function LoginPage() {
               <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5 + i * 0.1 }}
                 className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
-                  <f.icon className="w-5 h-5 text-blue-400" />
+                <div className="w-10 h-10 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center flex-shrink-0">
+                  <f.icon className="w-5 h-5 text-red-600" />
                 </div>
-                <span className="text-white/70 font-medium">{f.text}</span>
+                <span className="text-gray-700 font-medium">{f.text}</span>
               </motion.div>
             ))}
           </div>
         </motion.div>
 
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
-          className="text-white/20 text-sm">
+          className="text-gray-400 text-sm font-medium">
           © {new Date().getFullYear()} CADD Centre Lanka. All rights reserved.
         </motion.p>
       </div>
@@ -139,48 +139,47 @@ export default function LoginPage() {
 
           {/* Mobile logo */}
           <div className="lg:hidden text-center mb-8">
-            <img src="/cadd-logo.png" alt="CADD Centre" className="h-12 w-auto object-contain brightness-200 mx-auto mb-3" />
-            <h1 className="text-2xl font-black text-white">CADD Centre</h1>
+            <img src="/cadd-logo.png" alt="CADD Centre" className="h-12 w-auto object-contain mx-auto mb-3" />
+            <h1 className="text-2xl font-black text-gray-900">CADD Centre</h1>
           </div>
 
           {/* Card */}
           <div className="relative">
-            {/* Glow border */}
-            <div className="absolute -inset-px rounded-[2rem] bg-gradient-to-br from-blue-500/30 via-transparent to-indigo-500/20" />
-            <div className="relative rounded-[2rem] p-8 space-y-6"
-              style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(24px)", border: "1px solid rgba(255,255,255,0.08)" }}>
+            {/* Soft subtle shadow backplate */}
+            <div className="absolute -inset-px rounded-[2rem] bg-gradient-to-br from-red-200/50 via-transparent to-red-100/30 blur-sm" />
+            <div className="relative rounded-[2rem] p-8 space-y-6 bg-white/80 backdrop-blur-xl border border-white shadow-xl shadow-red-900/5">
 
               {/* Header */}
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-blue-400" />
+                  <div className="w-8 h-8 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-red-600" />
                   </div>
-                  <span className="text-blue-400 text-xs font-bold uppercase tracking-widest">Welcome back</span>
+                  <span className="text-red-600 text-xs font-bold uppercase tracking-widest">Welcome back</span>
                 </div>
-                <h2 className="text-3xl font-black text-white tracking-tight">Sign In</h2>
-                <p className="text-white/40 text-sm">Access your learning dashboard</p>
+                <h2 className="text-3xl font-black text-gray-900 tracking-tight">Sign In</h2>
+                <p className="text-gray-500 text-sm font-medium">Access your learning dashboard</p>
               </div>
 
               {/* Error */}
               <AnimatePresence>
                 {error && (
                   <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-                    <div className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm font-medium">
+                    <div className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0" />
                     {error}
                   </motion.div>
                 )}
               </AnimatePresence>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-5">
 
                 {/* Email */}
                 <div className="space-y-1.5">
-                  <label htmlFor="email" className="text-xs font-bold text-white/40 uppercase tracking-widest block">Email Address</label>
+                  <label htmlFor="email" className="text-xs font-bold text-gray-500 uppercase tracking-widest block">Email Address</label>
                   <div className="relative group">
-                    <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors duration-200 ${focusedField === "email" ? "text-blue-400" : "text-white/20"}`} />
+                    <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors duration-200 ${focusedField === "email" ? "text-red-600" : "text-gray-400"}`} />
                     <input
                       id="email"
                       type="email"
@@ -192,11 +191,10 @@ export default function LoginPage() {
                       required
                       autoComplete="email"
                       autoFocus
-                      className="w-full h-12 pl-11 pr-4 rounded-xl text-white placeholder-white/20 text-sm font-medium outline-none transition-all duration-200"
+                      className="w-full h-12 pl-11 pr-4 rounded-xl text-gray-900 placeholder-gray-400 text-sm font-medium outline-none transition-all duration-200 bg-gray-50/50"
                       style={{
-                        background: "rgba(255,255,255,0.05)",
-                        border: focusedField === "email" ? "1px solid rgba(59,130,246,0.5)" : "1px solid rgba(255,255,255,0.08)",
-                        boxShadow: focusedField === "email" ? "0 0 0 3px rgba(59,130,246,0.1)" : "none",
+                        border: focusedField === "email" ? "1px solid rgba(227,30,36,0.4)" : "1px solid rgba(0,0,0,0.06)",
+                        boxShadow: focusedField === "email" ? "0 0 0 4px rgba(227,30,36,0.1)" : "none",
                       }}
                     />
                   </div>
@@ -204,9 +202,9 @@ export default function LoginPage() {
 
                 {/* Password */}
                 <div className="space-y-1.5">
-                  <label htmlFor="password" className="text-xs font-bold text-white/40 uppercase tracking-widest block">Password</label>
+                  <label htmlFor="password" className="text-xs font-bold text-gray-500 uppercase tracking-widest block">Password</label>
                   <div className="relative">
-                    <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors duration-200 ${focusedField === "password" ? "text-blue-400" : "text-white/20"}`} />
+                    <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors duration-200 ${focusedField === "password" ? "text-red-600" : "text-gray-400"}`} />
                     <input
                       id="password"
                       type={showPassword ? "text" : "password"}
@@ -217,15 +215,14 @@ export default function LoginPage() {
                       placeholder="••••••••"
                       required
                       autoComplete="current-password"
-                      className="w-full h-12 pl-11 pr-12 rounded-xl text-white placeholder-white/20 text-sm font-medium outline-none transition-all duration-200"
+                      className="w-full h-12 pl-11 pr-12 rounded-xl text-gray-900 placeholder-gray-400 text-sm font-medium outline-none transition-all duration-200 bg-gray-50/50"
                       style={{
-                        background: "rgba(255,255,255,0.05)",
-                        border: focusedField === "password" ? "1px solid rgba(59,130,246,0.5)" : "1px solid rgba(255,255,255,0.08)",
-                        boxShadow: focusedField === "password" ? "0 0 0 3px rgba(59,130,246,0.1)" : "none",
+                        border: focusedField === "password" ? "1px solid rgba(227,30,36,0.4)" : "1px solid rgba(0,0,0,0.06)",
+                        boxShadow: focusedField === "password" ? "0 0 0 4px rgba(227,30,36,0.1)" : "none",
                       }}
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} tabIndex={-1}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center text-white/60 hover:text-white transition-colors rounded-lg">
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors rounded-lg">
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
@@ -237,10 +234,10 @@ export default function LoginPage() {
                   disabled={isLoading}
                   whileHover={{ scale: isLoading ? 1 : 1.01 }}
                   whileTap={{ scale: isLoading ? 1 : 0.98 }}
-                  className="w-full h-13 rounded-xl font-bold text-white flex items-center justify-center gap-2.5 transition-all duration-200 relative overflow-hidden mt-2"
+                  className="w-full rounded-xl font-bold text-white flex items-center justify-center gap-2.5 transition-all duration-200 relative overflow-hidden mt-4"
                   style={{
-                    background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
-                    boxShadow: "0 8px 32px rgba(37,99,235,0.35), 0 2px 8px rgba(37,99,235,0.2)",
+                    background: "linear-gradient(135deg, #e31e24 0%, #c2181d 100%)",
+                    boxShadow: "0 8px 24px rgba(227,30,36,0.25), 0 2px 8px rgba(227,30,36,0.15)",
                     height: "52px",
                   }}>
                   {/* Shimmer */}
@@ -248,7 +245,7 @@ export default function LoginPage() {
                     <motion.div className="absolute inset-0 -translate-x-full"
                       animate={{ translateX: ["−100%", "200%"] }}
                       transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", repeatDelay: 1.5 }}
-                      style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)" }} />
+                      style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)" }} />
                   )}
                   {isLoading ? (
                     <>
@@ -266,9 +263,9 @@ export default function LoginPage() {
               </form>
 
               {/* Footer link */}
-              <p className="text-center text-white/30 text-sm">
+              <p className="text-center text-gray-500 text-sm font-medium">
                 New student?{" "}
-                <Link href="/contact" className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">
+                <Link href="/contact" className="text-red-600 font-bold hover:text-red-500 transition-colors">
                   Contact us to enroll
                 </Link>
               </p>

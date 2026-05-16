@@ -90,7 +90,7 @@ export function Navbar() {
                 href={item.href}
                 className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
                   pathname === item.href
-                    ? "bg-blue-50 text-blue-700"
+                    ? "bg-red-50 text-red-700"
                     : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                 }`}
               >
@@ -108,7 +108,7 @@ export function Navbar() {
                     variant="ghost"
                     className="flex items-center gap-2 text-gray-700 hover:bg-gray-100"
                   >
-                    <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-blue-100">
+                    <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-red-100">
                       <Avatar photoURL={avatarUrl} name={user.name ?? ""} size="sm" className="w-full h-full" />
                     </div>
                     <span className="text-sm font-medium max-w-[120px] truncate">{user.name?.split(" ")[0]}</span>
@@ -119,7 +119,7 @@ export function Navbar() {
                   <DropdownMenuLabel className="font-normal">
                     <p className="font-semibold text-sm truncate">{user.name}</p>
                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
-                    <span className="inline-block mt-1 text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full capitalize">
+                    <span className="inline-block mt-1 text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full capitalize">
                       {user.role?.replace("_", " ")}
                     </span>
                   </DropdownMenuLabel>
@@ -143,7 +143,7 @@ export function Navbar() {
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
-                        <Link href={adminRoute} className="flex items-center gap-2 text-blue-700">
+                        <Link href={adminRoute} className="flex items-center gap-2 text-red-700">
                           <LayoutDashboard className="h-4 w-4" /> Admin Panel
                         </Link>
                       </DropdownMenuItem>
@@ -156,7 +156,7 @@ export function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
+              <Button asChild size="sm" className="bg-red-600 hover:bg-red-700 text-white shadow-md">
                 <Link href="/auth/login">Sign In</Link>
               </Button>
             )}
@@ -178,7 +178,7 @@ export function Navbar() {
           <div className="px-4 py-3 space-y-1">
             {navigation.map((item) => (
               <Link key={item.name} href={item.href}
-                className={`block px-3 py-2 rounded-lg text-sm font-medium ${pathname === item.href ? "bg-blue-50 text-blue-700" : "text-gray-700 hover:bg-gray-50"}`}
+                className={`block px-3 py-2 rounded-lg text-sm font-medium ${pathname === item.href ? "bg-red-50 text-red-700" : "text-gray-700 hover:bg-gray-50"}`}
                 onClick={() => setIsOpen(false)}>
                 {item.name}
               </Link>
@@ -187,7 +187,7 @@ export function Navbar() {
               {user ? (
                 <>
                   <Link href="/dashboard" className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50" onClick={() => setIsOpen(false)}>My Portal</Link>
-                  {isAdminUser && <Link href={adminRoute} className="block px-3 py-2 rounded-lg text-sm font-medium text-blue-700 hover:bg-blue-50" onClick={() => setIsOpen(false)}>Admin Panel</Link>}
+                  {isAdminUser && <Link href={adminRoute} className="block px-3 py-2 rounded-lg text-sm font-medium text-red-700 hover:bg-red-50" onClick={() => setIsOpen(false)}>Admin Panel</Link>}
                   <button onClick={handleLogout} className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50">Sign Out</button>
                 </>
               ) : (

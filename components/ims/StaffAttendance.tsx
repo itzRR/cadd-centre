@@ -142,7 +142,7 @@ export default function StaffAttendance({ isAdmin = false }: { isAdmin?: boolean
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <p className="text-sm text-blue-600 font-medium">{format(new Date(), "EEEE, MMMM d, yyyy")}</p>
+          <p className="text-sm text-red-600 font-medium">{format(new Date(), "EEEE, MMMM d, yyyy")}</p>
         </div>
         <div className="flex gap-2">
           <button onClick={loadData} className="px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200 text-gray-600 bg-white hover:bg-gray-50 flex items-center transition-colors shadow-sm">
@@ -212,7 +212,7 @@ export default function StaffAttendance({ isAdmin = false }: { isAdmin?: boolean
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Present Days",    value: presentDays,                                                       icon: CheckCircle, color: "text-green-600",  bg: "bg-green-50 border-green-200" },
-          { label: "Total Sessions",  value: sessions.filter(s => s.time_out).length,                           icon: Clock,       color: "text-blue-600",   bg: "bg-blue-50 border-blue-200" },
+          { label: "Total Sessions",  value: sessions.filter(s => s.time_out).length,                           icon: Clock,       color: "text-red-600",   bg: "bg-red-50 border-red-200" },
           { label: "Avg Duration",    value: `${Math.floor(avgDuration / 60)}h ${avgDuration % 60}m`,           icon: Calendar,    color: "text-purple-600", bg: "bg-purple-50 border-purple-200" },
           { label: "This Month",      value: sessions.filter(s => s.date.startsWith(today.slice(0, 7))).length, icon: User,        color: "text-indigo-600", bg: "bg-indigo-50 border-indigo-200" },
         ].map((s, i) => (
@@ -234,7 +234,7 @@ export default function StaffAttendance({ isAdmin = false }: { isAdmin?: boolean
           {(["my", "team"] as const).map(t => (
             <button key={t} onClick={() => setTab(t)}
               className={`px-4 py-2 text-sm font-medium capitalize border-b-2 transition-colors ${
-                tab === t ? "border-blue-500 text-blue-600" : "border-transparent text-gray-500 hover:text-gray-800"
+                tab === t ? "border-red-500 text-red-600" : "border-transparent text-gray-500 hover:text-gray-800"
               }`}>
               {t === "my" ? "My Records" : `Team Records (${allSessions.length})`}
             </button>
@@ -274,7 +274,7 @@ export default function StaffAttendance({ isAdmin = false }: { isAdmin?: boolean
                 <td className="py-3 px-4">
                   <Badge className={`border-none ${
                     s.status === "late" ? "bg-orange-100 text-orange-700" :
-                    !s.time_out ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700"
+                    !s.time_out ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
                   }`}>
                     {!s.time_out ? "active" : s.status}
                   </Badge>
@@ -300,7 +300,7 @@ export default function StaffAttendance({ isAdmin = false }: { isAdmin?: boolean
             </div>
             <div className="p-5 space-y-4">
               <textarea
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-red-400"
                 rows={5}
                 placeholder="Completed tasks, meetings, progress, blockers..."
                 value={reportText}
@@ -308,7 +308,7 @@ export default function StaffAttendance({ isAdmin = false }: { isAdmin?: boolean
                 autoFocus
               />
               <div className="flex gap-3">
-                <button className="flex-1 px-4 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 flex items-center justify-center transition-all shadow-md" onClick={submitClockOut}>
+                <button className="flex-1 px-4 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-red-500 to-indigo-500 text-white hover:from-red-600 hover:to-indigo-600 flex items-center justify-center transition-all shadow-md" onClick={submitClockOut}>
                   <LogOut className="h-4 w-4 mr-2" /> Submit &amp; Clock Out
                 </button>
                 <button className="flex-1 px-4 py-2.5 rounded-xl font-semibold text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 transition-colors" onClick={() => { setShowReportModal(false); setClocingOut(false) }}>

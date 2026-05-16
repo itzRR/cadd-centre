@@ -162,7 +162,7 @@ export default function NewEventPage() {
 
         <div className="flex justify-end gap-3">
           <Button type="button" variant="outline" asChild><Link href="/admin/events">Cancel</Link></Button>
-          <Button type="submit" disabled={isLoading} className="bg-blue-600 hover:bg-blue-700">
+          <Button type="submit" disabled={isLoading} className="bg-red-600 hover:bg-red-700">
             {isLoading ? "Creating..." : "Create Event"}
           </Button>
         </div>

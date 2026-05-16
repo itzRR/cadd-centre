@@ -111,14 +111,14 @@ export default function LeadPipelineView({ leads, staff, currentUser, onRefresh 
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2 bg-white p-1 rounded-xl shadow-sm border border-gray-100">
-          <button onClick={() => setFilter('all')} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'all' ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:text-gray-700'}`}>All Leads</button>
-          <button onClick={() => setFilter('mine')} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'mine' ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:text-gray-700'}`}>My Leads</button>
+          <button onClick={() => setFilter('all')} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'all' ? 'bg-red-50 text-red-700' : 'text-gray-500 hover:text-gray-700'}`}>All Leads</button>
+          <button onClick={() => setFilter('mine')} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'mine' ? 'bg-red-50 text-red-700' : 'text-gray-500 hover:text-gray-700'}`}>My Leads</button>
         </div>
 
         <div className="flex items-center gap-3 flex-1 justify-end">
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search leads..." className="max-w-xs w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-500" />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search leads..." className="max-w-xs w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-red-500" />
           <button onClick={() => { setEditingLead(null); setForm({ name: "", email: "", contact: "", source: "Facebook", course_interested: "AutoCAD", status: "New", assigned_to: currentUser?.id || "" }); setShowModal(true) }}
-            className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:opacity-90 shadow-lg shadow-blue-500/20">
+            className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:opacity-90 shadow-lg shadow-red-500/20">
             <Plus className="w-4 h-4" /> Add Lead
           </button>
         </div>
@@ -169,7 +169,7 @@ export default function LeadPipelineView({ leads, staff, currentUser, onRefresh 
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-bold text-gray-900 text-sm truncate pr-8">{lead.name}</h4>
                       <div className="absolute top-4 right-4 flex opacity-0 group-hover:opacity-100 transition-opacity gap-1">
-                        <button onClick={() => { setEditingLead(lead); setForm(lead as any); setShowModal(true) }} className="p-1 text-gray-400 hover:text-blue-600"><Edit className="w-3.5 h-3.5" /></button>
+                        <button onClick={() => { setEditingLead(lead); setForm(lead as any); setShowModal(true) }} className="p-1 text-gray-400 hover:text-red-600"><Edit className="w-3.5 h-3.5" /></button>
                         <button onClick={() => handleDelete(lead.id)} className="p-1 text-gray-400 hover:text-red-600"><Trash2 className="w-3.5 h-3.5" /></button>
                       </div>
                     </div>
@@ -179,7 +179,7 @@ export default function LeadPipelineView({ leads, staff, currentUser, onRefresh 
                     <div className="flex items-center justify-between mt-4">
                       <div className="flex gap-2">
                         <a href={`tel:${lead.contact}`} className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors"><Phone className="w-3 h-3" /></a>
-                        <a href={`mailto:${lead.email}`} className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"><Mail className="w-3 h-3" /></a>
+                        <a href={`mailto:${lead.email}`} className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"><Mail className="w-3 h-3" /></a>
                       </div>
                       
                       {status !== 'Converted' && status !== 'Lost' && (
@@ -296,7 +296,7 @@ export default function LeadPipelineView({ leads, staff, currentUser, onRefresh 
               </div>
               <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 mt-6">
                 <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl font-medium">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700">Save Lead</button>
+                <button type="submit" className="px-4 py-2 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700">Save Lead</button>
               </div>
             </form>
           </div>

@@ -23,7 +23,7 @@ export default function AssessmentPanel({ modules, enrollments, assessments, onR
   const typeIcon = (type: string) => {
     if (type === 'practical') return <ClipboardCheck className="w-4 h-4 text-purple-500" />
     if (type === 'final_project') return <Award className="w-4 h-4 text-amber-500" />
-    return <FileText className="w-4 h-4 text-blue-500" />
+    return <FileText className="w-4 h-4 text-red-500" />
   }
 
   const typeLabel = (type: string) => {
@@ -172,7 +172,7 @@ export default function AssessmentPanel({ modules, enrollments, assessments, onR
               </div>
               <div className="flex items-center gap-2">
                 {uniqueAssessments.length > 0 && (
-                  <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded-md">
+                  <span className="px-2 py-0.5 bg-red-50 text-red-600 text-[10px] font-bold rounded-md">
                     {uniqueAssessments.length} assessment{uniqueAssessments.length !== 1 ? 's' : ''}
                   </span>
                 )}
@@ -208,7 +208,7 @@ export default function AssessmentPanel({ modules, enrollments, assessments, onR
                       </div>
                       <button
                         onClick={() => openGrading(a)}
-                        className="px-3 py-1.5 bg-blue-50 text-blue-600 text-xs font-bold rounded-lg hover:bg-blue-100 transition-colors"
+                        className="px-3 py-1.5 bg-red-50 text-red-600 text-xs font-bold rounded-lg hover:bg-red-100 transition-colors"
                       >
                         Grade
                       </button>
@@ -318,7 +318,7 @@ export default function AssessmentPanel({ modules, enrollments, assessments, onR
                 const g = grades[item.enrollment_id] || { marks: '', grade: '', isManual: false }
                 return (
                   <div key={item.enrollment_id} className="bg-gray-50 p-3.5 rounded-xl border border-gray-100 flex items-center gap-4">
-                    <div className="w-9 h-9 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-full flex items-center justify-center text-cyan-700 font-bold text-sm border border-cyan-100 shrink-0">
+                    <div className="w-9 h-9 bg-gradient-to-br from-cyan-500/20 to-red-500/20 rounded-full flex items-center justify-center text-cyan-700 font-bold text-sm border border-cyan-100 shrink-0">
                       {studentName.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -343,7 +343,7 @@ export default function AssessmentPanel({ modules, enrollments, assessments, onR
                           }
                         }))
                       }}
-                      className="w-20 px-2 py-1.5 border rounded-lg text-sm text-center font-mono focus:outline-none focus:border-blue-500"
+                      className="w-20 px-2 py-1.5 border rounded-lg text-sm text-center font-mono focus:outline-none focus:border-red-500"
                     />
                     <span className="text-xs text-gray-400">/ {item.total_marks}</span>
                     <input
@@ -360,10 +360,10 @@ export default function AssessmentPanel({ modules, enrollments, assessments, onR
                           } 
                         }))
                       }}
-                      className={`w-12 px-2 py-1.5 border rounded-lg text-sm text-center font-bold focus:outline-none focus:border-blue-500 ${
+                      className={`w-12 px-2 py-1.5 border rounded-lg text-sm text-center font-bold focus:outline-none focus:border-red-500 ${
                         g.grade === 'F' ? 'text-red-600 border-red-200 bg-red-50' :
                         g.grade.startsWith('A') ? 'text-emerald-600 border-emerald-200 bg-emerald-50' :
-                        g.grade.startsWith('B') ? 'text-blue-600 border-blue-200 bg-blue-50' : 
+                        g.grade.startsWith('B') ? 'text-red-600 border-red-200 bg-red-50' : 
                         g.grade ? 'text-amber-600 border-amber-200 bg-amber-50' : ''
                       }`}
                     />
@@ -373,7 +373,7 @@ export default function AssessmentPanel({ modules, enrollments, assessments, onR
             </div>
             <div className="px-6 py-4 border-t border-gray-100 flex justify-end gap-3 shrink-0">
               <button onClick={() => setShowGradeModal(null)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl font-medium">Cancel</button>
-              <button onClick={saveGrades} disabled={creating} className="px-4 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 disabled:opacity-50">
+              <button onClick={saveGrades} disabled={creating} className="px-4 py-2 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 disabled:opacity-50">
                 {creating ? 'Saving...' : 'Save Grades'}
               </button>
             </div>

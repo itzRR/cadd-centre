@@ -148,7 +148,7 @@ export default function CertificatesPage() {
                     <tr><td colSpan={8} className="text-center py-8 text-gray-500">No certificates issued yet</td></tr>
                   ) : filtered.map(cert => (
                     <tr key={cert.id} className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4 font-mono text-xs font-semibold text-blue-700">{cert.certificate_number}</td>
+                      <td className="py-3 px-4 font-mono text-xs font-semibold text-red-700">{cert.certificate_number}</td>
                       <td className="py-3 px-4 font-medium">{cert.students?.full_name || "-"}</td>
                       <td className="py-3 px-4 text-gray-500 text-xs">{cert.students?.student_id || "-"}</td>
                       <td className="py-3 px-4 text-gray-600 max-w-xs truncate">{cert.courses?.title || "-"}</td>

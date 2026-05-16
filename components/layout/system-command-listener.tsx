@@ -82,7 +82,7 @@ export function SystemCommandListener() {
 
               toast(
                 <div className="flex flex-col gap-1 cursor-pointer group">
-                  <span className="font-bold flex items-center gap-2 group-hover:text-blue-600 transition-colors"><Bell className="w-4 h-4 text-blue-500" /> Notification</span>
+                  <span className="font-bold flex items-center gap-2 group-hover:text-red-600 transition-colors"><Bell className="w-4 h-4 text-red-500" /> Notification</span>
                   <span className="text-sm text-gray-600">{cmd.message}</span>
                 </div>,
                 { duration: 8000 }
@@ -125,9 +125,9 @@ export function SystemCommandListener() {
           if (myPending.length > 0) {
             toast(
               <div className="flex flex-col gap-1 cursor-pointer group" onClick={() => { const route = getTaskRoute(user); if (route) router.push(route) }}>
-                <span className="font-bold flex items-center gap-2 group-hover:text-blue-600 transition-colors"><Bell className="w-4 h-4 text-blue-500" /> Action Required</span>
+                <span className="font-bold flex items-center gap-2 group-hover:text-red-600 transition-colors"><Bell className="w-4 h-4 text-red-500" /> Action Required</span>
                 <span className="text-sm text-gray-600">You have {myPending.length} pending task(s) to complete.</span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-500 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">Click to view tasks &rarr;</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-red-500 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">Click to view tasks &rarr;</span>
               </div>,
               { duration: 10000, id: "pending_tasks_reminder" }
             )
@@ -176,9 +176,9 @@ export function SystemCommandListener() {
           if (isForMe && task.created_by !== currentUser.id) {
             toast(
               <div className="flex flex-col gap-1 cursor-pointer group" onClick={() => { const route = getTaskRoute(currentUser); if (route) router.push(route) }}>
-                <span className="font-bold flex items-center gap-2 group-hover:text-blue-600 transition-colors"><Bell className="w-4 h-4 text-blue-500" /> New Task Assigned</span>
+                <span className="font-bold flex items-center gap-2 group-hover:text-red-600 transition-colors"><Bell className="w-4 h-4 text-red-500" /> New Task Assigned</span>
                 <span className="text-sm text-gray-600">{task.title}</span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-500 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">Click to view tasks &rarr;</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-red-500 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">Click to view tasks &rarr;</span>
               </div>,
               { duration: 8000 }
             )

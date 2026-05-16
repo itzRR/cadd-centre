@@ -116,10 +116,10 @@ export default function EditBatchPage() {
               <div className="space-y-2"><Label>Venue / Platform</Label><Input value={form.venue} onChange={e => set('venue', e.target.value)} /></div>
 
               {/* Lecturer Assignment */}
-              <div className="space-y-2 p-4 bg-blue-50/50 border border-blue-100 rounded-xl">
-                <Label className="flex items-center gap-2"><UserCheck className="h-4 w-4 text-blue-600" /> Assigned Lecturer</Label>
+              <div className="space-y-2 p-4 bg-red-50/50 border border-red-100 rounded-xl">
+                <Label className="flex items-center gap-2"><UserCheck className="h-4 w-4 text-red-600" /> Assigned Lecturer</Label>
                 <select
-                  className="w-full border border-blue-200 bg-white rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-red-200 bg-white rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                   value={form.lecturer_id}
                   onChange={e => set('lecturer_id', e.target.value)}
                 >

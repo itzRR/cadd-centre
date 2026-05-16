@@ -50,7 +50,7 @@ interface WeatherInfo {
 function WeatherIcon({ icon, size = 16 }: { icon: string; size?: number }) {
   if (icon.includes("01")) return <Sun size={size} className="text-yellow-400" />
   if (icon.includes("02") || icon.includes("03") || icon.includes("04")) return <Cloud size={size} className="text-gray-400" />
-  if (icon.includes("09") || icon.includes("10") || icon.includes("11")) return <CloudRain size={size} className="text-blue-400" />
+  if (icon.includes("09") || icon.includes("10") || icon.includes("11")) return <CloudRain size={size} className="text-red-400" />
   return <Wind size={size} className="text-gray-400" />
 }
 
@@ -69,7 +69,7 @@ export default function SriLankaCalendar({ accentColor = "blue" }: { accentColor
   const [form, setForm] = useState({ title: "", date: "", end_date: "", start_time: "", end_time: "", category: "Work" as WorkCalendarEvent["category"], color: "#3b82f6", notes: "" })
 
   const accentMap: Record<string, string> = {
-    blue: "bg-blue-600", purple: "bg-purple-600", orange: "bg-orange-500",
+    blue: "bg-red-600", purple: "bg-purple-600", orange: "bg-orange-500",
     emerald: "bg-emerald-500", cyan: "bg-cyan-500",
   }
   const accentBg = accentMap[accentColor] || accentMap.blue
@@ -173,7 +173,7 @@ export default function SriLankaCalendar({ accentColor = "blue" }: { accentColor
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <CalendarDays className="h-6 w-6 text-blue-500" /> Calendar
+            <CalendarDays className="h-6 w-6 text-red-500" /> Calendar
           </h1>
           <p className="text-sm text-gray-500 mt-1">Sri Lanka - Personal Work Events</p>
         </div>
@@ -183,10 +183,10 @@ export default function SriLankaCalendar({ accentColor = "blue" }: { accentColor
               <WeatherIcon icon={weather.icon} />
               <span className="font-bold text-gray-800">{weather.temp}°C</span>
               <span className="text-gray-500 capitalize hidden sm:block">{weather.desc}</span>
-              <span className="text-blue-500 font-medium text-xs hidden md:block">· Kandy</span>
+              <span className="text-red-500 font-medium text-xs hidden md:block">· Kandy</span>
             </div>
           )}
-          <button onClick={() => openAdd()} className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold rounded-xl shadow-lg transition-all">
+          <button onClick={() => openAdd()} className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-red-600 to-cyan-500 hover:from-red-500 hover:to-cyan-400 text-white font-bold rounded-xl shadow-lg transition-all">
             <Plus className="h-4 w-4" /> Add Event
           </button>
         </div>
@@ -232,7 +232,7 @@ export default function SriLankaCalendar({ accentColor = "blue" }: { accentColor
                   key={day.toISOString()}
                   onClick={() => setSelectedDay(isSel ? null : day)}
                   className={`border-r border-b min-h-[80px] p-1.5 cursor-pointer transition-colors relative group
-                    ${isSel ? "bg-blue-50 ring-2 ring-inset ring-blue-500" : "hover:bg-gray-50"}
+                    ${isSel ? "bg-red-50 ring-2 ring-inset ring-red-500" : "hover:bg-gray-50"}
                     ${isWeekend ? "bg-red-50/30" : ""}
                   `}
                 >
@@ -315,7 +315,7 @@ export default function SriLankaCalendar({ accentColor = "blue" }: { accentColor
                         {ev.notes && <p className="text-xs text-gray-400 truncate">{ev.notes}</p>}
                       </div>
                       <div className="flex gap-0.5 ml-2 flex-shrink-0">
-                        <button onClick={e => openEdit(ev, e)} className="p-1 text-gray-400 hover:text-blue-600"><Edit className="h-3.5 w-3.5" /></button>
+                        <button onClick={e => openEdit(ev, e)} className="p-1 text-gray-400 hover:text-red-600"><Edit className="h-3.5 w-3.5" /></button>
                         <button onClick={e => handleDelete(ev.id, e)} className="p-1 text-gray-400 hover:text-red-500"><Trash2 className="h-3.5 w-3.5" /></button>
                       </div>
                     </div>
@@ -377,7 +377,7 @@ export default function SriLankaCalendar({ accentColor = "blue" }: { accentColor
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
                 <input
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                   value={form.title}
                   onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
                   placeholder="Event title"
@@ -386,11 +386,11 @@ export default function SriLankaCalendar({ accentColor = "blue" }: { accentColor
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Date *</label>
-                  <input type="date" className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))} />
+                  <input type="date" className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-                  <input type="date" className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" value={form.end_date} onChange={e => setForm(p => ({ ...p, end_date: e.target.value }))} />
+                  <input type="date" className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500" value={form.end_date} onChange={e => setForm(p => ({ ...p, end_date: e.target.value }))} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
@@ -420,7 +420,7 @@ export default function SriLankaCalendar({ accentColor = "blue" }: { accentColor
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
                 <textarea
-                  className="w-full border rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-500"
                   rows={2}
                   value={form.notes}
                   onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}

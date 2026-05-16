@@ -46,8 +46,8 @@ const EMPLOYEE_STATUSES = ["Active", "Inactive", "On Leave", "Terminated"]
 const ROLE_COLORS: Record<string, string> = {
   admin:             "bg-red-100 text-red-600 border-red-200",
   super_admin:       "bg-red-100 text-red-600 border-red-200",
-  academic_head:     "bg-blue-100 text-blue-700 border-blue-200",
-  academic_officer:  "bg-blue-50 text-blue-600 border-blue-200",
+  academic_head:     "bg-red-100 text-red-700 border-red-200",
+  academic_officer:  "bg-red-50 text-red-600 border-red-200",
   marketing_head:    "bg-pink-100 text-pink-700 border-pink-200",
   marketing_officer: "bg-pink-50 text-pink-600 border-pink-200",
   finance_head:      "bg-green-100 text-green-700 border-green-200",
@@ -119,7 +119,7 @@ function PermissionGrid({ role, grantedPermissions, onChange, readOnly }: Permis
                     whileTap={!isBase ? { scale: 0.99 } : {}}
                     className={`flex items-start gap-3 p-3 rounded-2xl border cursor-pointer transition-all duration-300 ${
                       isBase
-                        ? 'bg-blue-500/10 border-blue-500/20 opacity-80 cursor-default'
+                        ? 'bg-red-500/10 border-red-500/20 opacity-80 cursor-default'
                         : isExtra
                           ? 'bg-emerald-500/10 border-emerald-500/30 shadow-lg shadow-emerald-500/5'
                           : 'bg-gray-200 border-gray-100 hover:border-gray-200 hover:bg-gray-100'
@@ -128,7 +128,7 @@ function PermissionGrid({ role, grantedPermissions, onChange, readOnly }: Permis
                   >
                     <div className="flex-shrink-0 mt-0.5">
                       {isBase ? (
-                        <div className="w-5 h-5 rounded-lg bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                        <div className="w-5 h-5 rounded-lg bg-red-500 flex items-center justify-center shadow-lg shadow-red-500/30">
                           <Lock className="h-3 w-3 text-gray-900" />
                         </div>
                       ) : (
@@ -149,7 +149,7 @@ function PermissionGrid({ role, grantedPermissions, onChange, readOnly }: Permis
                       <div className="flex items-center gap-2">
                         <span className={`text-sm font-bold transition-colors ${isGranted ? 'text-gray-900' : 'text-gray-600'}`}>{def.label}</span>
                         {isBase && (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-blue-500/20 text-blue-600 font-bold border border-blue-500/20 uppercase tracking-tighter">
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-red-500/20 text-red-600 font-bold border border-red-500/20 uppercase tracking-tighter">
                             Default
                           </span>
                         )}
@@ -169,10 +169,10 @@ function PermissionGrid({ role, grantedPermissions, onChange, readOnly }: Permis
         )
       })}
 
-      <div className="flex items-center gap-3 bg-blue-500/5 p-4 rounded-2xl border border-blue-500/10">
-        <Info className="h-5 w-5 flex-shrink-0 text-blue-600" />
+      <div className="flex items-center gap-3 bg-red-500/5 p-4 rounded-2xl border border-red-500/10">
+        <Info className="h-5 w-5 flex-shrink-0 text-red-600" />
         <p className="text-[11px] text-gray-500 leading-relaxed">
-          <strong className="text-blue-600">Blue/Lock</strong> permissions are fixed for this role. 
+          <strong className="text-red-600">Blue/Lock</strong> permissions are fixed for this role. 
           <br />
           <strong className="text-emerald-700">Emerald</strong> permissions are custom overrides granted to this specific user.
         </p>
@@ -442,7 +442,7 @@ export default function IMSUsersPage() {
           <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-100 text-gray-900 rounded-xl border border-gray-200 transition-colors" onClick={loadData}><RefreshCw className="h-4 w-4" /> Refresh</button>
           <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-100 text-gray-900 rounded-xl border border-gray-200 transition-colors" onClick={exportUsers}><Download className="h-4 w-4" /> Export</button>
           {isAdmin && (
-            <button className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-gray-900 font-bold rounded-xl shadow-lg transition-all" onClick={() => setShowCreateModal(true)}>
+            <button className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-red-600 to-cyan-500 hover:from-red-500 hover:to-cyan-400 text-gray-900 font-bold rounded-xl shadow-lg transition-all" onClick={() => setShowCreateModal(true)}>
               <Plus className="h-4 w-4" /> Add New Staff
             </button>
           )}
@@ -530,7 +530,7 @@ export default function IMSUsersPage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="relative">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-gray-900 font-bold shadow-lg overflow-hidden">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-red-500 flex items-center justify-center text-gray-900 font-bold shadow-lg overflow-hidden">
                               {p.avatar_url ? (
                                 <img src={p.avatar_url} alt="" className="w-full h-full object-cover" />
                               ) : (
@@ -585,7 +585,7 @@ export default function IMSUsersPage() {
                       <td className="px-6 py-4 text-right">
                         {isAdmin && (
                           <div className="flex items-center justify-end gap-2">
-                            <button onClick={() => openEditModal(p)} className="p-2 bg-gray-100 hover:bg-blue-500/20 text-gray-600 hover:text-blue-600 rounded-lg transition-colors" title="Edit user">
+                            <button onClick={() => openEditModal(p)} className="p-2 bg-gray-100 hover:bg-red-500/20 text-gray-600 hover:text-red-600 rounded-lg transition-colors" title="Edit user">
                               <Edit className="h-4 w-4" />
                             </button>
                             <button onClick={() => handleToggleDisable(p)} className={`p-2 rounded-lg transition-colors ${p.disabled ? 'bg-green-500/10 text-green-700 hover:bg-green-100' : 'bg-red-500/10 text-red-600 hover:bg-red-100'}`} title={p.disabled ? "Enable user" : "Disable user"}>
@@ -721,7 +721,7 @@ export default function IMSUsersPage() {
 
               <div className="pt-6 border-t border-gray-200 flex justify-end gap-3">
                 <button type="button" onClick={() => setShowCreateModal(false)} className="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl font-semibold">Cancel</button>
-                <button type="submit" disabled={creating} className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-gray-900 rounded-xl shadow-lg font-bold disabled:opacity-50">
+                <button type="submit" disabled={creating} className="px-5 py-2.5 bg-gradient-to-r from-red-600 to-cyan-500 hover:from-red-500 hover:to-cyan-400 text-gray-900 rounded-xl shadow-lg font-bold disabled:opacity-50">
                   {creating ? "Creating..." : "Create Account"}
                 </button>
               </div>
@@ -980,9 +980,9 @@ export default function IMSUsersPage() {
                           <p className="text-lg font-black text-amber-700">{totalLate}</p>
                           <p className="text-[10px] text-amber-600 font-semibold uppercase">Late Days</p>
                         </div>
-                        <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-center">
-                          <p className="text-lg font-black text-blue-700">{totalHours.toFixed(1)}</p>
-                          <p className="text-[10px] text-blue-600 font-semibold uppercase">Total Hours</p>
+                        <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-center">
+                          <p className="text-lg font-black text-red-700">{totalHours.toFixed(1)}</p>
+                          <p className="text-[10px] text-red-600 font-semibold uppercase">Total Hours</p>
                         </div>
                       </div>
                       {/* Bar chart */}
@@ -1029,7 +1029,7 @@ export default function IMSUsersPage() {
                 <button onClick={() => setShowEditModal(false)} className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl font-bold transition-colors">
                   Cancel
                 </button>
-                <button onClick={handleEditSave} className="flex-1 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-gray-900 rounded-xl font-bold shadow-lg transition-all">
+                <button onClick={handleEditSave} className="flex-1 py-3 bg-gradient-to-r from-cyan-500 to-red-500 hover:from-cyan-400 hover:to-red-400 text-gray-900 rounded-xl font-bold shadow-lg transition-all">
                   Save Changes
                 </button>
               </div>

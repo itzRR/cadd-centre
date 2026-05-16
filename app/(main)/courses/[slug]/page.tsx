@@ -98,7 +98,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
 
   const levelColor =
     course.level === "Expert Certificate"   ? "bg-purple-100 text-purple-800" :
-    course.level === "Master Certificate"   ? "bg-blue-100 text-blue-800" :
+    course.level === "Master Certificate"   ? "bg-red-100 text-red-800" :
                                               "bg-green-100 text-green-800"
 
   return (
@@ -106,7 +106,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
       {/* Hero */}
       <div className="bg-gradient-to-br from-[#0A1A2F] to-[#0D2340] text-white pt-24 pb-12 px-4">
         <div className="max-w-6xl mx-auto">
-          <Link href="/courses" className="inline-flex items-center gap-2 text-blue-300 hover:text-white text-sm mb-6 transition-colors">
+          <Link href="/courses" className="inline-flex items-center gap-2 text-red-300 hover:text-white text-sm mb-6 transition-colors">
             <ArrowLeft className="h-4 w-4" /> All Courses
           </Link>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -116,8 +116,8 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
                 <Badge className="bg-white/10 text-white border-white/20">{course.category}</Badge>
               </div>
               <h1 className="text-3xl md:text-4xl font-bold mb-4">{course.title}</h1>
-              <p className="text-blue-200 text-lg mb-6">{course.short_description || course.description}</p>
-              <div className="flex flex-wrap gap-4 text-sm text-blue-200">
+              <p className="text-red-200 text-lg mb-6">{course.short_description || course.description}</p>
+              <div className="flex flex-wrap gap-4 text-sm text-red-200">
                 <span className="flex items-center gap-1.5"><Clock className="h-4 w-4" /> {course.total_hours} hours</span>
                 <span className="flex items-center gap-1.5"><Layers className="h-4 w-4" /> {course.modules?.length || 0} modules</span>
                 <span className="flex items-center gap-1.5"><Award className="h-4 w-4" /> {course.level}</span>
@@ -138,7 +138,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
 
               <div className="space-y-3">
                 <Button
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-base py-6"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-base py-6"
                   onClick={() => setShowEnquiry(true)}
                 >
                   <Sparkles className="h-4 w-4 mr-2" /> Enroll Now
@@ -172,14 +172,14 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
           {course.modules && course.modules.length > 0 && (
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               <h2 className="text-xl font-bold mb-5 flex items-center gap-2">
-                <Layers className="h-5 w-5 text-blue-600" /> Course Modules
+                <Layers className="h-5 w-5 text-red-600" /> Course Modules
               </h2>
               <div className="space-y-4">
                 {[...course.modules].sort((a: any, b: any) => a.order_index - b.order_index).map((mod: any, i: number) => (
                   <div key={mod.id} className="border border-gray-100 rounded-xl p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-3">
-                        <span className="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                        <span className="w-7 h-7 bg-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
                           {i + 1}
                         </span>
                         <div>
@@ -187,7 +187,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
                           {mod.description && <p className="text-sm text-gray-500 mt-0.5">{mod.description}</p>}
                         </div>
                       </div>
-                      <Badge className="bg-blue-50 text-blue-700 text-xs ml-3 flex-shrink-0">{mod.duration_hours}h</Badge>
+                      <Badge className="bg-red-50 text-red-700 text-xs ml-3 flex-shrink-0">{mod.duration_hours}h</Badge>
                     </div>
                     {mod.topics && mod.topics.length > 0 && (
                       <div className="ml-10 grid grid-cols-1 md:grid-cols-2 gap-1">
@@ -233,10 +233,10 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
             </ul>
           </div>
 
-          <div className="bg-blue-50 rounded-2xl p-5 border border-blue-100">
-            <h3 className="font-bold text-blue-900 mb-2">Need more info?</h3>
-            <p className="text-sm text-blue-700 mb-4">Contact CADD Centre Lanka for batch schedules and registration assistance.</p>
-            <Button asChild variant="outline" className="w-full border-blue-300 text-blue-700 hover:bg-blue-100">
+          <div className="bg-red-50 rounded-2xl p-5 border border-red-100">
+            <h3 className="font-bold text-red-900 mb-2">Need more info?</h3>
+            <p className="text-sm text-red-700 mb-4">Contact CADD Centre Lanka for batch schedules and registration assistance.</p>
+            <Button asChild variant="outline" className="w-full border-red-300 text-red-700 hover:bg-red-100">
               <Link href="/contact">Contact Us</Link>
             </Button>
           </div>
@@ -267,15 +267,15 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
                     <CheckCircle className="w-10 h-10 text-emerald-400" />
                   </div>
                   <h2 className="text-2xl font-black text-white mb-2">Thank You!</h2>
-                  <p className="text-white/60 mb-4">Your enquiry for <span className="text-blue-400 font-semibold">{course.title}</span> has been submitted.</p>
+                  <p className="text-white/60 mb-4">Your enquiry for <span className="text-red-400 font-semibold">{course.title}</span> has been submitted.</p>
                   <div className="bg-white/5 border border-white/10 rounded-xl p-5 mb-6 text-left">
                     <div className="flex items-center gap-2 mb-2">
-                      <MessageCircle className="w-4 h-4 text-blue-400" />
+                      <MessageCircle className="w-4 h-4 text-red-400" />
                       <span className="text-white/80 font-semibold text-sm">What happens next?</span>
                     </div>
                     <p className="text-white/50 text-sm">Our team will contact you shortly with course details, fees, and batch schedules.</p>
                   </div>
-                  <button onClick={resetForm} className="text-blue-400 font-semibold hover:text-blue-300 text-sm">Close</button>
+                  <button onClick={resetForm} className="text-red-400 font-semibold hover:text-red-300 text-sm">Close</button>
                 </div>
               ) : (
                 /* ── FORM ── */
@@ -283,11 +283,11 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <Sparkles className="w-4 h-4 text-blue-400" />
-                        <span className="text-blue-400 text-xs font-bold uppercase tracking-widest">Course Enquiry</span>
+                        <Sparkles className="w-4 h-4 text-red-400" />
+                        <span className="text-red-400 text-xs font-bold uppercase tracking-widest">Course Enquiry</span>
                       </div>
                       <h2 className="text-2xl font-black text-white">Get Started</h2>
-                      <p className="text-white/40 text-sm">Submit details for <span className="text-blue-400 font-medium">{course.title}</span></p>
+                      <p className="text-white/40 text-sm">Submit details for <span className="text-red-400 font-medium">{course.title}</span></p>
                     </div>
                     <button onClick={resetForm} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-colors">
                       <X className="w-4 h-4" />
@@ -366,8 +366,8 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
                     <div className="space-y-1">
                       <label className="text-xs font-bold text-white/40 uppercase tracking-widest block">Course</label>
                       <div className="relative">
-                        <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-400" />
-                        <div className="w-full h-12 pl-11 pr-4 rounded-xl text-blue-400 text-sm font-semibold flex items-center"
+                        <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-red-400" />
+                        <div className="w-full h-12 pl-11 pr-4 rounded-xl text-red-400 text-sm font-semibold flex items-center"
                           style={{ background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.2)" }}>
                           {course.title}
                         </div>
@@ -404,7 +404,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
 
                   <p className="text-center text-white/30 text-sm">
                     Already a student?{" "}
-                    <Link href="/auth/login" className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">Sign in</Link>
+                    <Link href="/auth/login" className="text-red-400 font-semibold hover:text-red-300 transition-colors">Sign in</Link>
                   </p>
                 </div>
               )}

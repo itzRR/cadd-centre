@@ -154,28 +154,28 @@ export default function LecturersView() {
                   <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Full Name *</label>
                   <input required value={form.full_name} onChange={e => setForm({...form, full_name: e.target.value})} 
                     placeholder="Letters only"
-                    className="w-full bg-gray-50 text-gray-900 px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" />
+                    className="w-full bg-gray-50 text-gray-900 px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" />
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Email *</label>
                   <input type="email" required={!editingLecturer} value={form.email} onChange={e => setForm({...form, email: e.target.value})} 
                     placeholder="lecturer@example.com"
-                    className="w-full bg-gray-50 text-gray-900 px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" />
+                    className="w-full bg-gray-50 text-gray-900 px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" />
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Phone</label>
                   <input value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} 
                     placeholder="077 123 4567"
-                    className="w-full bg-gray-50 text-gray-900 px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" />
+                    className="w-full bg-gray-50 text-gray-900 px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" />
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Specialization</label>
                   <input value={form.specialization} onChange={e => setForm({...form, specialization: e.target.value})} 
                     placeholder="e.g. AutoCAD, Revit, 3ds Max"
-                    className="w-full bg-gray-50 text-gray-900 px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" />
+                    className="w-full bg-gray-50 text-gray-900 px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" />
                 </div>
 
                 {!editingLecturer && (
@@ -185,7 +185,7 @@ export default function LecturersView() {
                       <input type={showPassword ? "text" : "password"} required value={form.password} 
                         onChange={e => setForm({...form, password: e.target.value})} 
                         placeholder="Min 8 characters" autoComplete="new-password"
-                        className="w-full bg-gray-50 text-gray-900 px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all pr-10" />
+                        className="w-full bg-gray-50 text-gray-900 px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all pr-10" />
                       <button type="button" onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -196,7 +196,7 @@ export default function LecturersView() {
 
                 <div className="flex gap-3 pt-2">
                   <button type="button" onClick={() => setShowModal(false)} className="flex-1 px-4 py-2 border border-gray-200 text-gray-900 hover:bg-gray-100 rounded-xl font-medium transition-colors">Cancel</button>
-                  <button type="submit" disabled={creating} className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-medium transition-colors">
+                  <button type="submit" disabled={creating} className="flex-1 px-4 py-2 bg-gradient-to-r from-red-600 to-cyan-600 hover:from-red-700 hover:to-cyan-700 text-white rounded-xl font-medium transition-colors">
                     {creating ? "Creating..." : (editingLecturer ? 'Save Changes' : 'Create Lecturer')}
                   </button>
                 </div>

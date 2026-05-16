@@ -103,7 +103,7 @@ export default function FinanceDashboard() {
   };
 
   const financeGuideSteps: GuideStep[] = [
-    { title: "Recording Payments", description: "Log student payments with amount, method (Cash, Bank Transfer, Online), and optionally link them to invoices for automatic tracking.", icon: CreditCard, gradient: "from-blue-500 to-violet-500", tip: "Click the receipt icon on any payment to download a PDF receipt." },
+    { title: "Recording Payments", description: "Log student payments with amount, method (Cash, Bank Transfer, Online), and optionally link them to invoices for automatic tracking.", icon: CreditCard, gradient: "from-red-500 to-violet-500", tip: "Click the receipt icon on any payment to download a PDF receipt." },
     { title: "Invoice Management", description: "Create invoices with line items, track their status (Unpaid, Partial, Paid), and generate professional PDF invoices for students.", icon: FileText, gradient: "from-indigo-500 to-purple-500", tip: "Use 'Pay Now' on unpaid invoices to quickly record a payment." },
     { title: "Expense Tracking", description: "Log institute expenses by category (Utilities, Rent, Salaries, Marketing, etc.) to track where money is going.", icon: TrendingDown, gradient: "from-red-500 to-orange-500" },
     { title: "P&L Reports", description: "View total revenue vs expenses and net profit at a glance. Export all financial data to Excel.", icon: BarChart3, gradient: "from-emerald-500 to-cyan-500", tip: "Use the Export button to download payments and expenses as an Excel file." },
@@ -316,25 +316,25 @@ export default function FinanceDashboard() {
   );
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center deep-blue-bg">
+    <div className="min-h-screen flex items-center justify-center deep-red-bg">
       <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-        className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full" />
+        className="w-16 h-16 border-t-4 border-red-500 border-solid rounded-full" />
     </div>
   );
 
   return (
-    <div className="min-h-screen deep-blue-bg">
+    <div className="min-h-screen deep-red-bg">
       <AnimatePresence>
         {showLoadingAnimation && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gray-900/90 backdrop-blur-md">
             <motion.div animate={{ rotate: 360, scale: [1, 1.15, 1] }} transition={{ duration: 3, repeat: Infinity }}
-              className="w-24 h-24 bg-gradient-to-r from-blue-500 to-violet-500 rounded-full flex items-center justify-center mb-6">
+              className="w-24 h-24 bg-gradient-to-r from-red-500 to-violet-500 rounded-full flex items-center justify-center mb-6">
               <DollarSign className="w-12 h-12 text-gray-900" />
             </motion.div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">CADD Centre - Finance</h2>
             <div className="w-64 h-1.5 bg-gray-700 rounded-full overflow-hidden">
-              <motion.div className="h-full bg-gradient-to-r from-blue-500 to-violet-400"
+              <motion.div className="h-full bg-gradient-to-r from-red-500 to-violet-400"
                 initial={{ width: 0 }} animate={{ width: '100%' }} transition={{ duration: 3 }} />
             </div>
           </motion.div>
@@ -347,11 +347,11 @@ export default function FinanceDashboard() {
           <button className="md:hidden text-gray-900" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-violet-500 rounded-xl flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-violet-500 rounded-xl flex items-center justify-center shrink-0">
             <DollarSign className="w-6 h-6 text-gray-900" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-blue-600">Finance Dashboard</h1>
+            <h1 className="text-xl font-bold text-red-600">Finance Dashboard</h1>
             <p className="text-gray-500 text-sm hidden md:block">CADD Centre - {currentUser?.name}</p>
           </div>
         </div>
@@ -359,7 +359,7 @@ export default function FinanceDashboard() {
           <QuickGuide
             guideKey="finance_dashboard"
             dashboardName="Finance"
-            accentGradient="from-blue-500 to-violet-500"
+            accentGradient="from-red-500 to-violet-500"
             steps={financeGuideSteps}
           />
           {['admin', 'super_admin'].includes(currentUser?.role) && <button onClick={() => router.push('/admin/ims')} className="text-gray-600 hover:text-gray-900 px-3 py-2 border border-gray-200 rounded-xl text-sm font-medium">Back to Admin</button>}
@@ -384,7 +384,7 @@ export default function FinanceDashboard() {
           {/* Profile Card */}
           <div className="px-4 pt-5 pb-4 border-b border-gray-100">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-violet-500 flex items-center justify-center text-gray-900 font-bold text-sm flex-shrink-0 overflow-hidden">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-violet-500 flex items-center justify-center text-gray-900 font-bold text-sm flex-shrink-0 overflow-hidden">
                 {currentUser?.avatar_url ? (
                   <img src={currentUser.avatar_url} alt="" className="w-full h-full object-cover" />
                 ) : (
@@ -392,7 +392,7 @@ export default function FinanceDashboard() {
                 )}
               </div>
               <div className="min-w-0">
-                <p className="text-blue-600 text-xs font-semibold">Finance Dept.</p>
+                <p className="text-red-600 text-xs font-semibold">Finance Dept.</p>
                 <p className="text-gray-400 text-[10px] mt-0.5">CCL Taskflow</p>
               </div>
             </div>
@@ -422,7 +422,7 @@ export default function FinanceDashboard() {
                       onClick={() => { setActiveTab(item.id); setMobileMenuOpen(false); }}
                       className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-sm relative ${
                         activeTab === item.id
-                          ? 'bg-gradient-to-r from-blue-600 to-violet-600 text-gray-900 shadow-lg shadow-blue-500/20'
+                          ? 'bg-gradient-to-r from-red-600 to-violet-600 text-gray-900 shadow-lg shadow-red-500/20'
                           : (item as any).urgent
                             ? 'text-yellow-300 bg-yellow-500/10 hover:bg-yellow-100 border border-yellow-200'
                             : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
@@ -457,7 +457,7 @@ export default function FinanceDashboard() {
                 {[
                   { label: 'Total Revenue', value: `LKR ${totalIncome.toLocaleString()}`, color: 'from-emerald-500 to-cyan-500', icon: TrendingUp },
                   { label: 'Total Expenses', value: `LKR ${totalExpenses.toLocaleString()}`, color: 'from-rose-500 to-pink-500', icon: TrendingDown },
-                  { label: 'Net Profit', value: `LKR ${netProfit.toLocaleString()}`, color: 'from-blue-500 to-indigo-500', icon: DollarSign },
+                  { label: 'Net Profit', value: `LKR ${netProfit.toLocaleString()}`, color: 'from-red-500 to-indigo-500', icon: DollarSign },
                   { label: 'Pending Invoices', value: invoices.filter(i => i.status === 'Unpaid').length, color: 'from-amber-500 to-orange-500', icon: FileText },
                 ].map((card, i) => (
                   <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
@@ -479,7 +479,7 @@ export default function FinanceDashboard() {
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
                   className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100">
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2"><BarChart3 className="w-5 h-5 text-blue-600" /> Revenue & Expenses</h2>
+                    <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2"><BarChart3 className="w-5 h-5 text-red-600" /> Revenue & Expenses</h2>
                   </div>
                   <div className="h-[300px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
@@ -595,7 +595,7 @@ export default function FinanceDashboard() {
               emptyMessage="No payments recorded yet"
               headerActions={
                 <motion.button whileHover={{ scale: 1.05 }} onClick={() => setShowPaymentModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-violet-600 text-white rounded-xl font-semibold text-sm">
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500 to-violet-600 text-white rounded-xl font-semibold text-sm">
                   <Plus className="w-4 h-4" /> Record Payment
                 </motion.button>
               }
@@ -608,14 +608,14 @@ export default function FinanceDashboard() {
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold text-gray-900">Invoices</h2>
                 <motion.button whileHover={{ scale: 1.05 }} onClick={() => setShowInvoiceModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-violet-600 text-white rounded-xl font-semibold">
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500 to-violet-600 text-white rounded-xl font-semibold">
                   <Plus className="w-4 h-4" /> New Invoice
                 </motion.button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredInvoices.map(inv => (
-                  <div key={inv.id} className="bg-white border border-gray-200 p-5 rounded-2xl border border-gray-200 space-y-3 relative overflow-hidden group hover:border-blue-500/50 transition-colors">
+                  <div key={inv.id} className="bg-white border border-gray-200 p-5 rounded-2xl border border-gray-200 space-y-3 relative overflow-hidden group hover:border-red-500/50 transition-colors">
                     <div className={`absolute top-0 right-0 px-3 py-1 text-xs font-bold rounded-bl-xl ${inv.status === 'Paid' ? 'bg-green-100 text-green-700' : inv.status === 'Unpaid' ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-700'}`}>
                       {inv.status}
                     </div>
@@ -623,7 +623,7 @@ export default function FinanceDashboard() {
                       <h3 className="font-bold text-gray-900 text-lg">{inv.student_name}</h3>
                       <p className="text-gray-400 text-xs">ID: {inv.student_id} | Course: {inv.course_name}</p>
                     </div>
-                    <div className="text-3xl font-black text-blue-600">LKR {inv.total.toLocaleString()}</div>
+                    <div className="text-3xl font-black text-red-600">LKR {inv.total.toLocaleString()}</div>
                     <div className="text-xs text-gray-600 space-y-1">
                       <div className="flex justify-between border-b border-gray-100 pb-1"><span>Issued:</span> <span>{format(new Date(inv.generated_at), 'dd MMM yyyy')}</span></div>
                       <div className="flex justify-between"><span>Due:</span> <span className={new Date(inv.due_date || '') < new Date() && inv.status !== 'Paid' ? 'text-red-600 font-bold' : ''}>{inv.due_date}</span></div>
@@ -714,12 +714,12 @@ export default function FinanceDashboard() {
                   </div>
                   <h3 className="text-3xl font-black text-red-600">LKR {totalExpenses.toLocaleString()}</h3>
                 </div>
-                <div className={`bg-white border border-gray-200 p-6 rounded-2xl border ${netProfit >= 0 ? 'border-blue-500/20 bg-blue-500/5' : 'border-orange-500/20 bg-orange-500/5'}`}>
+                <div className={`bg-white border border-gray-200 p-6 rounded-2xl border ${netProfit >= 0 ? 'border-red-500/20 bg-red-500/5' : 'border-orange-500/20 bg-orange-500/5'}`}>
                   <div className="flex items-center gap-3 mb-2">
-                    <div className={`p-2 rounded-lg ${netProfit >= 0 ? 'bg-blue-500/20 text-blue-600' : 'bg-orange-500/20 text-orange-700'}`}><DollarSign className="w-5 h-5" /></div>
+                    <div className={`p-2 rounded-lg ${netProfit >= 0 ? 'bg-red-500/20 text-red-600' : 'bg-orange-500/20 text-orange-700'}`}><DollarSign className="w-5 h-5" /></div>
                     <p className="text-gray-600 font-semibold">Net Profit</p>
                   </div>
-                  <h3 className={`text-3xl font-black ${netProfit >= 0 ? 'text-blue-600' : 'text-orange-700'}`}>LKR {netProfit.toLocaleString()}</h3>
+                  <h3 className={`text-3xl font-black ${netProfit >= 0 ? 'text-red-600' : 'text-orange-700'}`}>LKR {netProfit.toLocaleString()}</h3>
                 </div>
               </div>
             </div>
@@ -769,7 +769,7 @@ export default function FinanceDashboard() {
                     <label className="block text-gray-600 text-sm mb-1">{label as string}</label>
                     <input type={type as string} required={req as boolean} value={(paymentForm as any)[key as string]}
                       onChange={e => setPaymentForm(p => ({ ...p, [key as string]: e.target.value }))}
-                      className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500" />
+                      className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500" />
                   </div>
                 ))}
                 <div>
@@ -777,7 +777,7 @@ export default function FinanceDashboard() {
                   <select
                     value={paymentForm.course_id || ''}
                     onChange={e => setPaymentForm(p => ({ ...p, course_id: e.target.value }))}
-                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500"
+                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500"
                   >
                     <option value="">-- Select Course (Optional) --</option>
                     {courses.map(c => (
@@ -788,12 +788,12 @@ export default function FinanceDashboard() {
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">Amount (LKR) *</label>
                   <input type="number" required value={paymentForm.amount} onChange={e => setPaymentForm(p => ({ ...p, amount: Number(e.target.value) }))}
-                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500" />
+                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500" />
                 </div>
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">Method</label>
                   <select value={paymentForm.method} onChange={e => setPaymentForm(p => ({ ...p, method: e.target.value as 'Cash' | 'Bank Transfer' | 'Online' }))}
-                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500">
+                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500">
                     {PAYMENT_METHODS.map(m => <option key={m} value={m}>{m}</option>)}
                   </select>
                 </div>
@@ -801,12 +801,12 @@ export default function FinanceDashboard() {
                   <div key={key}>
                     <label className="block text-gray-600 text-sm mb-1">{label}</label>
                     <input type={type} value={(paymentForm as any)[key]} onChange={e => setPaymentForm(p => ({ ...p, [key]: e.target.value }))}
-                      className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500" />
+                      className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500" />
                   </div>
                 ))}
                 <div className="flex gap-3 pt-2">
                   <button type="button" onClick={() => setShowPaymentModal(false)} className="flex-1 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl border border-gray-200">Cancel</button>
-                  <button type="submit" className="flex-1 py-2 bg-gradient-to-r from-blue-500 to-violet-600 text-white rounded-xl font-semibold">Save</button>
+                  <button type="submit" className="flex-1 py-2 bg-gradient-to-r from-red-500 to-violet-600 text-white rounded-xl font-semibold">Save</button>
                 </div>
               </form>
             </motion.div>
@@ -831,7 +831,7 @@ export default function FinanceDashboard() {
                     <label className="block text-gray-600 text-sm mb-1">{label as string}</label>
                     <input required={req as boolean} value={(invoiceForm as any)[key as string]}
                       onChange={e => setInvoiceForm(p => ({ ...p, [key as string]: e.target.value }))}
-                      className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500" />
+                      className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500" />
                   </div>
                 ))}
                 <div>
@@ -839,7 +839,7 @@ export default function FinanceDashboard() {
                   <select
                     value={invoiceForm.course_name}
                     onChange={e => setInvoiceForm(p => ({ ...p, course_name: e.target.value }))}
-                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500"
+                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500"
                   >
                     <option value="">-- Select Course (Optional) --</option>
                     {courses.map(c => (
@@ -850,35 +850,35 @@ export default function FinanceDashboard() {
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">Due Date</label>
                   <input type="date" value={invoiceForm.due_date} onChange={e => setInvoiceForm(p => ({ ...p, due_date: e.target.value }))}
-                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500" />
+                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500" />
                 </div>
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <label className="text-gray-600 text-sm">Line Items</label>
                     <button type="button" onClick={() => setInvoiceForm(p => ({ ...p, items: [...p.items, { description: '', amount: 0 }] }))}
-                      className="text-xs text-blue-600 hover:text-blue-600 flex items-center gap-1"><Plus className="w-3 h-3" /> Add Item</button>
+                      className="text-xs text-red-600 hover:text-red-600 flex items-center gap-1"><Plus className="w-3 h-3" /> Add Item</button>
                   </div>
                   {invoiceForm.items.map((item, i) => (
                     <div key={i} className="flex gap-2 mb-2">
                       <input placeholder="Description" value={item.description}
                         onChange={e => { const items = [...invoiceForm.items]; items[i].description = e.target.value; setInvoiceForm(p => ({ ...p, items })); }}
-                        className="flex-1 bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500 text-sm" />
+                        className="flex-1 bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500 text-sm" />
                       <input type="number" placeholder="LKR" value={item.amount}
                         onChange={e => { const items = [...invoiceForm.items]; items[i].amount = Number(e.target.value); setInvoiceForm(p => ({ ...p, items })); }}
-                        className="w-28 bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500 text-sm" />
+                        className="w-28 bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500 text-sm" />
                       {invoiceForm.items.length > 1 && (
                         <button type="button" onClick={() => setInvoiceForm(p => ({ ...p, items: p.items.filter((_, j) => j !== i) }))}
                           className="text-gray-400 hover:text-red-600"><X className="w-4 h-4" /></button>
                       )}
                     </div>
                   ))}
-                  <div className="text-right text-sm font-bold text-blue-600">
+                  <div className="text-right text-sm font-bold text-red-600">
                     Total: LKR {invoiceForm.items.reduce((s, i) => s + i.amount, 0).toLocaleString()}
                   </div>
                 </div>
                 <div className="flex gap-3 pt-2">
                   <button type="button" onClick={() => setShowInvoiceModal(false)} className="flex-1 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl border border-gray-200">Cancel</button>
-                  <button type="submit" className="flex-1 py-2 bg-gradient-to-r from-blue-500 to-violet-600 text-gray-900 rounded-xl font-semibold">Create Invoice</button>
+                  <button type="submit" className="flex-1 py-2 bg-gradient-to-r from-red-500 to-violet-600 text-gray-900 rounded-xl font-semibold">Create Invoice</button>
                 </div>
               </form>
             </motion.div>
@@ -901,28 +901,28 @@ export default function FinanceDashboard() {
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">Category</label>
                   <select value={expenseForm.category} onChange={e => setExpenseForm(p => ({ ...p, category: e.target.value as any }))}
-                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500">
+                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500">
                     {EXPENSE_CATS.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">Amount (LKR) *</label>
                   <input type="number" required value={expenseForm.amount} onChange={e => setExpenseForm(p => ({ ...p, amount: Number(e.target.value) }))}
-                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500" />
+                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500" />
                 </div>
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">Date</label>
                   <input type="date" value={expenseForm.date} onChange={e => setExpenseForm(p => ({ ...p, date: e.target.value }))}
-                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500" />
+                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500" />
                 </div>
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">Notes</label>
                   <textarea value={expenseForm.notes} onChange={e => setExpenseForm(p => ({ ...p, notes: e.target.value }))} rows={2}
-                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-blue-500 resize-none" />
+                    className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-red-500 resize-none" />
                 </div>
                 <div className="flex gap-3 pt-2">
                   <button type="button" onClick={() => setShowExpenseModal(false)} className="flex-1 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl border border-gray-200">Cancel</button>
-                  <button type="submit" className="flex-1 py-2 bg-gradient-to-r from-blue-500 to-violet-600 text-gray-900 rounded-xl font-semibold">Save</button>
+                  <button type="submit" className="flex-1 py-2 bg-gradient-to-r from-red-500 to-violet-600 text-gray-900 rounded-xl font-semibold">Save</button>
                 </div>
               </form>
             </motion.div>

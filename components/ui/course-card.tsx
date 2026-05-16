@@ -45,7 +45,7 @@ const CourseCard = async () => {
               ) : null}
               <div className="text-xl font-bold text-deep-sky">{formatCurrency(course.price)}</div>
             </div>
-            <Button className="w-full bg-deep-sky hover:bg-blue-hover" asChild>
+            <Button className="w-full bg-deep-sky hover:bg-red-hover" asChild>
               <Link href={`/courses/${course.slug}`}>
                 View Program Details
                 <ArrowRight className="ml-2 h-4 w-4" />

@@ -124,12 +124,12 @@ export default function StudentManagement({ onRefresh }: { onRefresh: () => void
                       ) : <span className="text-gray-400 text-xs">None</span>}
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${s.status === 'active' ? 'bg-green-100 text-green-700' : s.status === 'graduated' ? 'bg-blue-100 text-blue-700' : s.status === 'withdrawn' ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'}`}>{s.status}</span>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${s.status === 'active' ? 'bg-green-100 text-green-700' : s.status === 'graduated' ? 'bg-red-100 text-red-700' : s.status === 'withdrawn' ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'}`}>{s.status}</span>
                     </td>
                     <td className="px-4 py-3 text-gray-400 text-xs">{s.registrationDate}</td>
                     <td className="px-4 py-3">
                       <div className="flex gap-1.5">
-                        <button onClick={() => setExpandedId(expandedId === s.id ? null : s.id)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-blue-600 transition-colors" title="View"><Eye className="w-3.5 h-3.5" /></button>
+                        <button onClick={() => setExpandedId(expandedId === s.id ? null : s.id)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-red-600 transition-colors" title="View"><Eye className="w-3.5 h-3.5" /></button>
                         <button onClick={() => openEdit(s)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-emerald-600 transition-colors" title="Edit"><Edit className="w-3.5 h-3.5" /></button>
                         <button onClick={() => handleDelete(s.id)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-red-600 transition-colors" title="Delete"><Trash2 className="w-3.5 h-3.5" /></button>
                       </div>

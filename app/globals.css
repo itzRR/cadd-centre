@@ -6,25 +6,25 @@
 
 @theme {
     /* Base and backgrounds */
-    --color-ocean-base: #EAF3FB;             /* primary background - soft blueish white */
-    --color-sky-shell: #F5F9FC;              /* secondary background - even lighter, airy feel */
-    --color-deep-sky: #1B3A57;               /* deep background - grounded and rich blue */
-    --color-midnight-blue: #13293D;          /* dark base - smooth professional tone */
-    --color-blue-black: #0A1A2F;             /* ultra-dark tone - elegant depth */
+    --color-ocean-base: #FAFAFA;             /* primary background - soft white */
+    --color-sky-shell: #FFFFFF;              /* secondary background - solid white */
+    --color-deep-sky: #111827;               /* deep background - dark gray */
+    --color-midnight-blue: #030712;          /* dark base - near black */
+    --color-blue-black: #000000;             /* ultra-dark tone - pure black */
 
     /* Accents and highlights */
-    --color-soft-ice: #F0F6FA;               /* subtle contrast background - clean and modern */
-    --color-muted-cyan: #A9CDE8;             /* soft accent - uplifting yet calm */
-    --color-sky-gray: #6A8CA3;               /* calm contrast - for icons, secondary accents */
+    --color-soft-ice: #FEF2F2;               /* subtle contrast background - soft red */
+    --color-muted-cyan: #FCA5A5;             /* soft accent - muted red */
+    --color-sky-gray: #9CA3AF;               /* calm contrast - medium gray */
 
     /* Texts */
     --color-clean-white: #FFFFFF;            /* main text on dark backgrounds */
-    --color-deep-navy: #14202E;              /* main text on light backgrounds */
-    --color-muted-slate: #8CA0B3;            /* secondary text - readable and calm */
+    --color-deep-navy: #111827;              /* main text on light backgrounds */
+    --color-muted-slate: #6B7280;            /* secondary text - gray */
 
     /* CTA / buttons */
-    --color-action-blue: #2D7DD2;            /* button base - bold blue for strong CTAs */
-    --color-blue-hover: #1C5FA8;             /* button hover - darker blue for interaction */
+    --color-action-blue: #E31E24;            /* button base - CADD Red */
+    --color-blue-hover: #C2181D;             /* button hover - Darker Red */
 
     /* Effects */
     --color-glass-overlay: rgba(255, 255, 255, 0.06);  /* card overlay effect */
@@ -84,98 +84,98 @@
   --radius: 0.625rem;
 
   /* Backgrounds */
-  --background: #EAF3FB; /* ocean base */
-  --foreground: #14202E; /* deep navy (text on light) */
+  --background: #FAFAFA; /* pure white base */
+  --foreground: #111827; /* deep gray (text on light) */
 
-  --card: #F5F9FC; /* sky shell */
-  --card-foreground: #14202E;
+  --card: #FFFFFF; /* solid white */
+  --card-foreground: #111827;
 
-  --popover: #F0F6FA; /* soft ice */
-  --popover-foreground: #14202E;
+  --popover: #FFFFFF;
+  --popover-foreground: #111827;
 
   /* Primary actions */
-  --primary: #2D7DD2; /* action blue */
+  --primary: #E31E24; /* CADD Red */
   --primary-foreground: #FFFFFF; /* clean white */
 
   /* Secondary accents */
-  --secondary: #A9CDE8; /* muted cyan */
-  --secondary-foreground: #14202E;
+  --secondary: #FEF2F2; /* soft red */
+  --secondary-foreground: #E31E24;
 
-  --muted: #F0F6FA; /* soft ice */
-  --muted-foreground: #8CA0B3; /* muted slate */
+  --muted: #F3F4F6; /* light gray */
+  --muted-foreground: #6B7280; /* muted gray */
 
-  --accent: #6A8CA3; /* sky gray */
-  --accent-foreground: #FFFFFF;
+  --accent: #FEE2E2; /* red accent */
+  --accent-foreground: #E31E24;
 
-  --destructive: #D9534F; /* fallback red */
+  --destructive: #DC2626; /* solid red */
   --destructive-foreground: #FFFFFF;
 
   /* Borders & Inputs */
   --border: rgba(0, 0, 0, 0.08); /* border hint */
   --input: rgba(0, 0, 0, 0.08);
-  --ring: #2D7DD2; /* action blue */
+  --ring: #E31E24; /* CADD Red */
 
   /* Charts (mapped creatively) */
-  --chart-1: #2D7DD2;
-  --chart-2: #1C5FA8;
-  --chart-3: #A9CDE8;
-  --chart-4: #6A8CA3;
-  --chart-5: #8CA0B3;
+  --chart-1: #E31E24;
+  --chart-2: #C2181D;
+  --chart-3: #FCA5A5;
+  --chart-4: #9CA3AF;
+  --chart-5: #6B7280;
 
   /* Sidebar */
-  --sidebar: #F5F9FC; /* sky shell */
-  --sidebar-foreground: #14202E;
-  --sidebar-primary: #2D7DD2;
+  --sidebar: #FFFFFF; /* solid white */
+  --sidebar-foreground: #111827;
+  --sidebar-primary: #E31E24;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #A9CDE8;
-  --sidebar-accent-foreground: #14202E;
+  --sidebar-accent: #FEF2F2;
+  --sidebar-accent-foreground: #E31E24;
   --sidebar-border: rgba(0, 0, 0, 0.08);
-  --sidebar-ring: #2D7DD2;
+  --sidebar-ring: #E31E24;
 }
 
 .dark {
-  --background: #13293D; /* midnight blue */
-  --foreground: #FFFFFF; /* clean white */
+  --background: #111827; /* deep gray */
+  --foreground: #F9FAFB; /* clean white */
 
-  --card: #1B3A57; /* deep sky */
-  --card-foreground: #FFFFFF;
+  --card: #1F2937; /* dark card */
+  --card-foreground: #F9FAFB;
 
-  --popover: #1B3A57;
-  --popover-foreground: #FFFFFF;
+  --popover: #1F2937;
+  --popover-foreground: #F9FAFB;
 
-  --primary: #2D7DD2; /* action blue */
+  --primary: #E31E24; /* CADD Red */
   --primary-foreground: #FFFFFF;
 
-  --secondary: #6A8CA3; /* sky gray */
-  --secondary-foreground: #FFFFFF;
+  --secondary: #374151; /* gray */
+  --secondary-foreground: #F9FAFB;
 
-  --muted: #0A1A2F; /* blue black */
-  --muted-foreground: #8CA0B3;
+  --muted: #030712; /* dark black */
+  --muted-foreground: #9CA3AF;
 
-  --accent: #A9CDE8; /* muted cyan */
-  --accent-foreground: #0A1A2F;
+  --accent: #7F1D1D; /* dark red accent */
+  --accent-foreground: #FEF2F2;
 
-  --destructive: #D9534F; /* fallback red */
+  --destructive: #DC2626; /* solid red */
   --destructive-foreground: #FFFFFF;
 
-  --border: rgba(255, 255, 255, 0.06); /* glass overlay */
-  --input: rgba(255, 255, 255, 0.06);
-  --ring: #2D7DD2;
+  --border: rgba(255, 255, 255, 0.1); /* glass overlay */
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #E31E24;
 
-  --chart-1: #A9CDE8;
-  --chart-2: #6A8CA3;
-  --chart-3: #2D7DD2;
-  --chart-4: #1C5FA8;
-  --chart-5: #8CA0B3;
+  --chart-1: #FCA5A5;
+  --chart-2: #F87171;
+  --chart-3: #E31E24;
+  --chart-4: #B91C1C;
+  --chart-5: #7F1D1D;
 
-  --sidebar: #13293D; /* midnight blue */
-  --sidebar-foreground: #FFFFFF;
-  --sidebar-primary: #2D7DD2;
+  --sidebar: #111827; /* deep gray */
+  --sidebar-foreground: #F9FAFB;
+  --sidebar-primary: #E31E24;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #6A8CA3;
-  --sidebar-accent-foreground: #FFFFFF;
-  --sidebar-border: rgba(255, 255, 255, 0.06);
-  --sidebar-ring: #2D7DD2;
+  --sidebar-accent: #374151;
+  --sidebar-accent-foreground: #F9FAFB;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #E31E24;
 }
 
 
@@ -196,7 +196,7 @@
   }
 
   .glass-button {
-    @apply bg-blue-600 text-white rounded-xl px-4 py-2 transition;
+    @apply bg-red-600 text-white rounded-xl px-4 py-2 transition;
   }
 
   .glass-button:hover {
@@ -204,7 +204,7 @@
   }
 
   .glass-strong {
-    @apply bg-blue-700 text-white;
+    @apply bg-red-700 text-white;
   }
 
   /* Converted to light theme */
@@ -246,14 +246,14 @@
     transform: translateY(-2px);
   }
 
-  .blue-gradient-text {
-    background: linear-gradient(to right, #003B6D, #6699CC);
+  .red-gradient-text {
+    background: linear-gradient(to right, #A01418, #E31E24);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
-  .deep-blue-bg {
-    @apply bg-[#EBEDF3];
+  .deep-red-bg {
+    @apply bg-[#FEE2E2];
   }
 
   /* Fix select options in light theme */

@@ -164,7 +164,7 @@ export default function AcademicDashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
+          <div className="w-16 h-16 border-4 border-red-500/20 border-t-blue-500 rounded-full animate-spin" />
           <h2 className="text-xl font-bold text-gray-900">Loading Academic Data...</h2>
         </div>
       </div>
@@ -176,12 +176,12 @@ export default function AcademicDashboard() {
     : 0
 
   return (
-    <div className="min-h-screen bg-gray-50 flex font-sans text-gray-900 selection:bg-blue-100">
+    <div className="min-h-screen bg-gray-50 flex font-sans text-gray-900 selection:bg-red-100">
       
       {/* 📱 Mobile Header */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-100 flex items-center justify-between px-4 z-50">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg"><GraduationCap className="w-4 h-4 text-white" /></div>
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-red-600 to-indigo-600 flex items-center justify-center shadow-lg"><GraduationCap className="w-4 h-4 text-white" /></div>
           <span className="font-bold text-lg">Academic</span>
         </div>
         <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 text-gray-600 bg-gray-50 rounded-xl"><Menu className="w-5 h-5" /></button>
@@ -190,7 +190,7 @@ export default function AcademicDashboard() {
       {/* 🚀 SIDEBAR */}
       <aside className={`fixed md:sticky top-0 left-0 h-screen w-[280px] bg-white border-r border-gray-100 flex flex-col transition-transform duration-300 z-40 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         <div className="h-20 flex items-center gap-3 px-6 border-b border-gray-50">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-red-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-red-500/20">
             <GraduationCap className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -250,7 +250,7 @@ export default function AcademicDashboard() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {[
                 { label: 'Total Batches',   value: batches.length,   color: 'from-emerald-500 to-cyan-500',   icon: CalendarDays },
-                { label: 'Total Students',  value: students.length,  color: 'from-blue-500 to-indigo-500',    icon: Users },
+                { label: 'Total Students',  value: students.length,  color: 'from-red-500 to-indigo-500',    icon: Users },
                 { label: 'Total Courses',   value: courses.length,   color: 'from-purple-500 to-pink-500',    icon: BookOpen },
                 { label: 'Lecturers',       value: lecturers.length, color: 'from-amber-500 to-orange-500',   icon: GraduationCap },
                 { label: 'Attendance Rate', value: `${attendanceRate}%`, color: 'from-green-500 to-emerald-600', icon: BarChart3 },
@@ -275,14 +275,14 @@ export default function AcademicDashboard() {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
                 className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center"><Layers className="w-4 h-4 text-blue-600" /></div>
+                  <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center"><Layers className="w-4 h-4 text-red-600" /></div>
                   <h3 className="font-bold text-gray-900">Enrollment Status</h3>
                 </div>
                 <div className="space-y-3">
                   {[
                     { label: 'Confirmed', value: enrollmentStats.confirmed, color: 'bg-emerald-500', bg: 'bg-emerald-50', text: 'text-emerald-700' },
                     { label: 'Pending', value: enrollmentStats.pending, color: 'bg-amber-500', bg: 'bg-amber-50', text: 'text-amber-700' },
-                    { label: 'Completed', value: enrollmentStats.completed, color: 'bg-blue-500', bg: 'bg-blue-50', text: 'text-blue-700' },
+                    { label: 'Completed', value: enrollmentStats.completed, color: 'bg-red-500', bg: 'bg-red-50', text: 'text-red-700' },
                   ].map(s => {
                     const total = enrollmentStats.confirmed + enrollmentStats.pending + enrollmentStats.completed
                     const pct = total > 0 ? Math.round((s.value / total) * 100) : 0
@@ -337,14 +337,14 @@ export default function AcademicDashboard() {
                 <div className="space-y-2">
                   {[
                     { label: 'Manage Batches', tab: 'batches', icon: CalendarDays, color: 'from-emerald-500 to-cyan-500' },
-                    { label: 'View Students', tab: 'students', icon: Users, color: 'from-blue-500 to-indigo-500' },
+                    { label: 'View Students', tab: 'students', icon: Users, color: 'from-red-500 to-indigo-500' },
                     { label: 'Course Catalog', tab: 'courses', icon: BookOpen, color: 'from-purple-500 to-pink-500' },
                     { label: 'Lecturer Panel', tab: 'lecturers', icon: GraduationCap, color: 'from-amber-500 to-orange-500' },
                   ].map(action => (
                     <button
                       key={action.tab}
                       onClick={() => setActiveTab(action.tab)}
-                      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-50 hover:bg-blue-50 border border-transparent hover:border-blue-100 transition-all text-left group"
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-50 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all text-left group"
                     >
                       <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${action.color} flex items-center justify-center text-white shadow-sm`}>
                         <action.icon className="w-4 h-4" />
@@ -381,7 +381,7 @@ export default function AcademicDashboard() {
                         <span className="text-xs font-medium text-gray-500">{batch.enrolled_count || 0} students</span>
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
                           batch.status === 'active' ? 'bg-green-100 text-green-700' :
-                          batch.status === 'completed' ? 'bg-blue-100 text-blue-700' :
+                          batch.status === 'completed' ? 'bg-red-100 text-red-700' :
                           'bg-amber-100 text-amber-700'
                         }`}>{batch.status || 'upcoming'}</span>
                       </div>

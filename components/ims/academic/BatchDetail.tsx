@@ -89,7 +89,7 @@ export default function BatchDetail({ batchId, onBack, onRefresh }: { batchId: s
     setShowStudentPicker(false); toast.success("Students updated"); onRefresh()
   }
 
-  const statusColors: Record<string, string> = { active: "bg-green-100 text-green-700", completed: "bg-blue-100 text-blue-700", upcoming: "bg-yellow-100 text-yellow-700" }
+  const statusColors: Record<string, string> = { active: "bg-green-100 text-green-700", completed: "bg-red-100 text-red-700", upcoming: "bg-yellow-100 text-yellow-700" }
   const inputCls = "w-full bg-gray-50 text-gray-900 px-3 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm"
 
   return (
@@ -136,7 +136,7 @@ export default function BatchDetail({ batchId, onBack, onRefresh }: { batchId: s
             { label: "Students", value: batchStudents.length, color: "text-emerald-700", bg: "bg-emerald-50" },
             { label: "Attendance Rate", value: `${attRate}%`, color: attRate >= 75 ? "text-green-700" : "text-red-600", bg: attRate >= 75 ? "bg-green-50" : "bg-red-50" },
             { label: "Assessments", value: assessments.length, color: "text-purple-700", bg: "bg-purple-50" },
-            { label: "Status", value: batch.status, color: "text-blue-700", bg: "bg-blue-50" },
+            { label: "Status", value: batch.status, color: "text-red-700", bg: "bg-red-50" },
           ].map(c => (
             <div key={c.label} className="bg-white border border-gray-200 rounded-2xl p-4">
               <p className="text-[10px] text-gray-400 uppercase font-bold">{c.label}</p>

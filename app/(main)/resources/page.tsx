@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
 const TYPE_META: Record<string, { icon: any; color: string; badge: string }> = {
-  ebook:    { icon: BookOpen, color: "text-blue-600",  badge: "bg-blue-100 text-blue-800" },
+  ebook:    { icon: BookOpen, color: "text-red-600",  badge: "bg-red-100 text-red-800" },
   video:    { icon: Video,    color: "text-red-600",   badge: "bg-red-100 text-red-800" },
   guide:    { icon: FileText, color: "text-green-600", badge: "bg-green-100 text-green-800" },
   document: { icon: Link2,    color: "text-gray-600",  badge: "bg-gray-100 text-gray-700" },
@@ -57,7 +57,7 @@ export default function ResourcesPage() {
           {TYPES.map(t => (
             <button key={t} onClick={() => setFilter(t)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all capitalize ${
-                filter === t ? "bg-blue-600 text-white" : "bg-white text-gray-600 border hover:border-blue-300"
+                filter === t ? "bg-red-600 text-white" : "bg-white text-gray-600 border hover:border-red-300"
               }`}>
               {t === "all" ? "All Types" : t}
             </button>

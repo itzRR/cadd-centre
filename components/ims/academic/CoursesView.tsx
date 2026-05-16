@@ -196,7 +196,7 @@ export default function CoursesView() {
             <h2 className="text-xl font-bold text-gray-900">Courses</h2>
             {canManage && (
               <button onClick={() => { setEditingCourse(null); setForm(emptyForm); setShowModal(true) }}
-                className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">
+                className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-red-700 transition-all shadow-lg shadow-red-500/20">
                 <Plus className="w-4 h-4" /> Add Course
               </button>
             )}
@@ -212,7 +212,7 @@ export default function CoursesView() {
             <div className="flex items-center gap-3">
               <h2 className="text-xl font-bold text-gray-900">Modules</h2>
               <select value={selectedCourseForModules} onChange={e => setSelectedCourseForModules(e.target.value)}
-                className="px-3 py-2 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:border-blue-500">
+                className="px-3 py-2 text-sm border border-gray-200 rounded-xl bg-white focus:outline-none focus:border-red-500">
                 <option value="">-- Select Course --</option>
                 {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
@@ -275,7 +275,7 @@ export default function CoursesView() {
                             topics: (mod.topics || []).join(', ')
                           })
                           setShowModuleModal(true)
-                        }} className="p-2 hover:bg-blue-50 text-gray-400 hover:text-blue-600 rounded-lg transition-colors">
+                        }} className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-600 rounded-lg transition-colors">
                           <Edit className="w-4 h-4" />
                         </button>
                         <button onClick={() => handleDeleteModule(mod.id)} className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-600 rounded-lg transition-colors">
@@ -383,7 +383,7 @@ export default function CoursesView() {
             </div>
             <div className="p-6 border-t border-gray-100 flex justify-end gap-3 shrink-0">
               <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl font-medium">Cancel</button>
-              <button type="submit" form="course-form" className="px-4 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700">{editingCourse ? 'Save Changes' : 'Create Course'}</button>
+              <button type="submit" form="course-form" className="px-4 py-2 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700">{editingCourse ? 'Save Changes' : 'Create Course'}</button>
             </div>
           </div>
         </div>

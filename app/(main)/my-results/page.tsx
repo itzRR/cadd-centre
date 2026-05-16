@@ -11,14 +11,14 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
 const GRADE_COLORS: Record<string, string> = {
   A: "bg-green-100 text-green-800",
-  B: "bg-blue-100 text-blue-800",
+  B: "bg-red-100 text-red-800",
   C: "bg-yellow-100 text-yellow-800",
   D: "bg-orange-100 text-orange-800",
   F: "bg-red-100 text-red-800",
 }
 
 const TYPE_COLORS: Record<string, string> = {
-  module_test:   "bg-blue-100 text-blue-800",
+  module_test:   "bg-red-100 text-red-800",
   practical:     "bg-orange-100 text-orange-800",
   final_project: "bg-purple-100 text-purple-800",
 }
@@ -79,7 +79,7 @@ export default function MyResultsPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-5 border-b">
             <h2 className="font-bold text-gray-900 flex items-center gap-2">
-              <BarChart3 className="h-5 w-5 text-blue-600" /> Assessment Records
+              <BarChart3 className="h-5 w-5 text-red-600" /> Assessment Records
             </h2>
           </div>
 

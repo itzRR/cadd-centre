@@ -30,16 +30,16 @@ export default function ProfilePage() {
   if (isLoading) return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
       <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-        className="w-12 h-12 border-t-2 border-blue-600 border-solid rounded-full mb-4" />
+        className="w-12 h-12 border-t-2 border-red-600 border-solid rounded-full mb-4" />
       <p className="text-gray-400 text-sm font-bold uppercase tracking-widest animate-pulse">Loading Profile...</p>
     </div>
   )
 
   return (
-    <div className="min-h-screen bg-gray-50 selection:bg-blue-500/20">
+    <div className="min-h-screen bg-gray-50 selection:bg-red-500/20">
       {/* Subtle blobs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-100 blur-[120px] rounded-full opacity-50" />
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-red-100 blur-[120px] rounded-full opacity-50" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-sky-100 blur-[100px] rounded-full opacity-30" />
       </div>
 
@@ -50,7 +50,7 @@ export default function ProfilePage() {
           className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4">
             <Link href="/dashboard"
-              className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all group">
+              className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:text-red-600 hover:border-red-200 hover:bg-red-50 transition-all group">
               <ChevronLeft className="h-5 w-5 group-hover:-translate-x-0.5 transition-transform" />
             </Link>
             <div>
@@ -58,9 +58,9 @@ export default function ProfilePage() {
               <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mt-0.5">Personal Identity Hub</p>
             </div>
           </div>
-          <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-full">
-            <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Active Session</span>
+          <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-red-50 border border-red-200 rounded-full">
+            <Sparkles className="w-3.5 h-3.5 text-red-500" />
+            <span className="text-[10px] font-bold text-red-600 uppercase tracking-widest">Active Session</span>
           </div>
         </motion.div>
 
