@@ -948,13 +948,15 @@ export function generateBatchCode(
  * Example: ACAD12MAY26MG01
  */
 export function generateStudentId(batchCode: string, sequenceNumber: number): string {
-  return `${batchCode}${String(sequenceNumber).padStart(2, '0')}`
+  const cleanBatchCode = batchCode.replace(/[^A-Za-z0-9]/g, '').toUpperCase()
+  return `${cleanBatchCode}${String(sequenceNumber).padStart(2, '0')}`
 }
 
 export async function getNextStudentSequence(batchCode: string): Promise<number> {
+  const cleanBatchCode = batchCode.replace(/[^A-Za-z0-9]/g, '').toUpperCase()
   const [{ data: seqProfiles }, { data: seqStudents }] = await Promise.all([
-    supabase.from('profiles').select('student_id').like('student_id', `${batchCode}%`).order('student_id', { ascending: false }).limit(1),
-    supabase.from('students').select('student_id').like('student_id', `${batchCode}%`).order('student_id', { ascending: false }).limit(1),
+    supabase.from('profiles').select('student_id').like('student_id', `${cleanBatchCode}%`).order('student_id', { ascending: false }).limit(1),
+    supabase.from('students').select('student_id').like('student_id', `${cleanBatchCode}%`).order('student_id', { ascending: false }).limit(1),
   ])
 
   const allIds = [...(seqProfiles || []), ...(seqStudents || [])]
