@@ -301,6 +301,14 @@ export async function updateEnrollmentStatus(id: string, status: string) {
   return data
 }
 
+export async function updateEnrollmentBatch(id: string, batchId: string | null) {
+  const { data, error } = await supabase
+    .from('enrollments').update({ batch_id: batchId, updated_at: new Date().toISOString() })
+    .eq('id', id).select().single()
+  if (error) throw error
+  return data
+}
+
 export async function deleteEnrollment(id: string) {
   const { error } = await supabase.from('enrollments').delete().eq('id', id)
   if (error) throw error

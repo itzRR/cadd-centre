@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { Edit, Trash2, Plus, UserPlus, AlertTriangle, Search, Filter, CheckCircle, Users, Award, User } from "lucide-react"
 import { motion } from "framer-motion"
 import CDMDataTable, { CDMColumn, CDMAction } from "@/components/ims/CDMDataTable"
-import { getStudents, getEnrollments, getCourses, getBatches, enrollStudent, deleteEnrollment, updateEnrollmentStatus, updateStudentProfile } from "@/lib/data"
+import { getStudents, getEnrollments, getCourses, getBatches, enrollStudent, deleteEnrollment, updateEnrollmentStatus, updateStudentProfile, updateEnrollmentBatch } from "@/lib/data"
 import { getCurrentUser } from "@/lib/auth"
 import AcademicLeadConfirmationsView from "@/components/ims/academic/LeadConfirmationsView"
 import { disableStudent } from "@/lib/ims-data"
@@ -39,8 +39,26 @@ export default function StudentsView() {
   
   const [showDisablePrompt, setShowDisablePrompt] = useState<{ id: string, name: string } | null>(null)
   const [disableReason, setDisableReason] = useState("")
+  const [showBatchModal, setShowBatchModal] = useState<any>(null)
 
   useEffect(() => { loadData() }, [])
+
+  const handleChangeBatchSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!showBatchModal) return
+    setSaving(true)
+    try {
+      await updateEnrollmentBatch(showBatchModal.enrollment_id, enrollForm.batch_id || null)
+      toast.success("Batch updated successfully")
+      setShowBatchModal(null)
+      setEnrollForm({ ...enrollForm, batch_id: '' })
+      loadData()
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update batch")
+    } finally {
+      setSaving(false)
+    }
+  }
 
   const loadData = async () => {
     setLoading(true)
@@ -288,6 +306,15 @@ export default function StudentsView() {
       onClick: (r) => r.enrollment_id ? setShowEditModal(r) : toast.info("Student not enrolled yet")
     },
     {
+      label: "Change Batch",
+      icon: Users,
+      onClick: (r) => {
+        if (!r.enrollment_id) return toast.info("Student not enrolled yet")
+        setShowBatchModal(r)
+        setEnrollForm(prev => ({ ...prev, batch_id: r.batch_id || '' }))
+      }
+    },
+    {
       label: "Disable Account",
       icon: ShieldOff,
       show: (r: any) => !r.disabled,
@@ -400,6 +427,39 @@ export default function StudentsView() {
             searchPlaceholder="Search by ID, Name, or Batch..."
             exportFileName="Students"
           />
+
+          {/* CHANGE BATCH MODAL */}
+          {showBatchModal && (
+            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm">
+              <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                  <h3 className="text-lg font-bold text-gray-900">Change Batch - {showBatchModal.student_name}</h3>
+                  <button onClick={() => setShowBatchModal(null)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+                </div>
+                <form onSubmit={handleChangeBatchSubmit} className="p-6 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">New Batch</label>
+                    <select
+                      value={enrollForm.batch_id || ''}
+                      onChange={e => setEnrollForm({ ...enrollForm, batch_id: e.target.value })}
+                      className="w-full px-3 py-2.5 border rounded-xl bg-gray-50 focus:outline-none focus:border-emerald-500"
+                    >
+                      <option value="">-- No Batch (Remove from current) --</option>
+                      {batches.filter((b: any) => b.course_id === showBatchModal.course_id).map((b: any) => (
+                        <option key={b.id} value={b.id}>{b.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+                    <button type="button" onClick={() => setShowBatchModal(null)} className="px-4 py-2 text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200">Cancel</button>
+                    <button type="submit" disabled={saving} className="px-4 py-2 text-white bg-emerald-600 rounded-xl hover:bg-emerald-700 disabled:opacity-50">
+                      {saving ? "Saving..." : "Update Batch"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
 
           {/* ENROLL STUDENT MODAL */}
           {showEnrollModal && (
