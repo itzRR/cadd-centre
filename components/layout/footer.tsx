@@ -40,7 +40,7 @@ export function Footer() {
           <div>
             <h3 className="font-bold text-sm uppercase tracking-wider text-gray-400 mb-5">Categories</h3>
             <ul className="space-y-3">
-              {["Web Development", "Data Science", "UI/UX Design", "Mobile Development", "Cybersecurity"].map((cat) => (
+              {["Architecture & BIM", "Civil Engineering", "Mechanical CAD", "Project Management", "Interior Design"].map((cat) => (
                 <li key={cat}>
                   <Link href={`/courses?category=${cat}`} className="text-gray-500 font-medium hover:text-red-600 text-sm transition-all duration-300 inline-block hover:translate-x-1">{cat}</Link>
                 </li>
