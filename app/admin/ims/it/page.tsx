@@ -53,7 +53,12 @@ export default function ITDashboardPage() {
 
   // SOC Live Metrics
   const [socFailedLogins, setSocFailedLogins] = useState(0)
-  const [socBlockedIPs, setSocBlockedIPs] = useState(0)
+  const [blockedIPsList, setBlockedIPsList] = useState<{ip: string, reason: string, date: string}[]>([
+    { ip: '192.168.1.104', reason: 'Multiple failed login attempts', date: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString() },
+    { ip: '45.33.22.11', reason: 'Suspicious API scraping', date: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString() }
+  ])
+  const [showBlockedIPsModal, setShowBlockedIPsModal] = useState(false)
+  const [newIPToBlock, setNewIPToBlock] = useState("")
 
   const loadData = useCallback(async () => {
     setLoading(true)
@@ -464,9 +469,15 @@ export default function ITDashboardPage() {
                       <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-2">Failed Logins (24h)</h3>
                       <p className="text-4xl font-black text-gray-900 font-mono transition-all">{socFailedLogins}</p>
                     </div>
-                    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-                      <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-2">Blocked IPs</h3>
-                      <p className="text-4xl font-black text-gray-900 font-mono transition-all">{socBlockedIPs}</p>
+                    <div 
+                      onClick={() => setShowBlockedIPsModal(true)}
+                      className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 cursor-pointer hover:border-red-300 hover:shadow-md transition-all group"
+                    >
+                      <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-2 flex justify-between items-center">
+                        Blocked IPs
+                        <span className="text-[10px] text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">Manage</span>
+                      </h3>
+                      <p className="text-4xl font-black text-gray-900 font-mono transition-all">{blockedIPsList.length}</p>
                     </div>
                   </div>
 
@@ -665,6 +676,101 @@ export default function ITDashboardPage() {
                     ))}
                   </div>
                 )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+      {/* Blocked IPs Modal */}
+      <AnimatePresence>
+        {showBlockedIPsModal && (
+          <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[85vh]">
+              <div className="bg-slate-900 px-6 py-4 flex justify-between items-center text-white shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-red-500/20 rounded-xl flex items-center justify-center text-red-400 border border-red-500/30">
+                    <Shield className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg">Firewall: Blocked IPs</h3>
+                    <p className="text-xs text-slate-400">Manage network access restrictions</p>
+                  </div>
+                </div>
+                <button onClick={() => setShowBlockedIPsModal(false)} className="p-2 hover:bg-white/10 rounded-lg text-gray-300 hover:text-white transition-colors">
+                  <X size={20} />
+                </button>
+              </div>
+              
+              <div className="p-6 overflow-y-auto flex-1 custom-scrollbar bg-gray-50 flex flex-col gap-6">
+                
+                {/* Add New IP Form */}
+                <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row items-end gap-4">
+                  <div className="flex-1 space-y-1.5 w-full">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Block New IP Address</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. 192.168.1.1" 
+                      value={newIPToBlock}
+                      onChange={(e) => setNewIPToBlock(e.target.value)}
+                      className="w-full h-11 px-4 bg-gray-50 border border-gray-200 rounded-xl text-sm font-mono focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-all"
+                    />
+                  </div>
+                  <button 
+                    onClick={() => {
+                      if(!newIPToBlock) return;
+                      setBlockedIPsList([{ip: newIPToBlock, reason: 'Manual block by admin', date: new Date().toISOString()}, ...blockedIPsList]);
+                      setNewIPToBlock("");
+                      toast.success(`IP ${newIPToBlock} has been blocked successfully.`);
+                    }}
+                    className="h-11 px-6 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-sm shadow-md shadow-red-600/20 transition-all active:scale-[0.98] w-full sm:w-auto"
+                  >
+                    Block IP
+                  </button>
+                </div>
+
+                {/* List */}
+                <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-50 border-b border-gray-100 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                      <tr>
+                        <th className="py-4 px-5 text-left">IP Address</th>
+                        <th className="py-4 px-5 text-left">Reason</th>
+                        <th className="py-4 px-5 text-left">Date Blocked</th>
+                        <th className="py-4 px-5 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-50">
+                      {blockedIPsList.length === 0 ? (
+                        <tr>
+                          <td colSpan={4} className="py-12 text-center">
+                            <Shield className="w-8 h-8 text-gray-300 mx-auto mb-3" />
+                            <p className="text-gray-500 font-bold">No IPs are currently blocked.</p>
+                          </td>
+                        </tr>
+                      ) : (
+                        blockedIPsList.map((item, i) => (
+                          <tr key={i} className="hover:bg-gray-50/80 transition-colors">
+                            <td className="py-4 px-5 font-mono font-bold text-gray-900">{item.ip}</td>
+                            <td className="py-4 px-5 text-gray-500 font-medium text-xs">{item.reason}</td>
+                            <td className="py-4 px-5 text-[11px] font-bold text-gray-400 uppercase tracking-wider">{format(new Date(item.date), 'MMM d, HH:mm')}</td>
+                            <td className="py-4 px-5 text-right">
+                              <button 
+                                onClick={() => {
+                                  setBlockedIPsList(prev => prev.filter(b => b.ip !== item.ip));
+                                  toast.success(`IP ${item.ip} has been unblocked.`);
+                                }}
+                                className="text-xs font-bold text-gray-500 hover:text-emerald-600 border border-gray-200 hover:border-emerald-200 hover:bg-emerald-50 px-3 py-1.5 rounded-lg transition-all"
+                              >
+                                Unblock
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
               </div>
             </motion.div>
           </div>
