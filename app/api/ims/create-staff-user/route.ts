@@ -11,6 +11,8 @@ const getSupabaseAdmin = () => createClient(
 
 export async function POST(req: NextRequest) {
   try {
+    const supabaseAdmin = getSupabaseAdmin()
+
     // Verify the caller is an authenticated admin
     const authHeader = req.headers.get("authorization")
     if (!authHeader) {
@@ -19,6 +21,17 @@ export async function POST(req: NextRequest) {
 
     if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
       return NextResponse.json({ error: "Server Configuration Error: SUPABASE_SERVICE_ROLE_KEY is missing. Please restart your Next.js server." }, { status: 500 })
+    }
+
+    const token = authHeader.replace("Bearer ", "")
+    const { data: { user }, error: verificationError } = await supabaseAdmin.auth.getUser(token)
+    if (verificationError || !user) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 })
+    }
+
+    const { data: callerProfile } = await supabaseAdmin.from('profiles').select('role').eq('id', user.id).single()
+    if (!callerProfile || !['admin', 'super_admin'].includes(callerProfile.role)) {
+      return NextResponse.json({ error: "Forbidden: Only admins can create users" }, { status: 403 })
     }
 
     const body = await req.json()
@@ -36,8 +49,6 @@ export async function POST(req: NextRequest) {
     if (!email || !password || !name) {
       return NextResponse.json({ error: "Email, password and name are required" }, { status: 400 })
     }
-
-    const supabaseAdmin = getSupabaseAdmin()
 
     // Generate a deterministic random avatar based on the user's name
     const generatedAvatarUrl = `https://api.dicebear.com/7.x/lorelei/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9`
