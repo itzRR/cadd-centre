@@ -133,7 +133,7 @@ export default function MarketingDashboard() {
         <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 text-gray-600 bg-gray-50 rounded-xl"><Menu className="w-5 h-5" /></button>
       </div>
 
-      <div className="flex relative">
+      <div className="flex relative w-full">
         {/* Mobile Overlay */}
         <div 
           className={`fixed inset-0 bg-black/60 z-40 md:hidden transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} 

@@ -371,7 +371,7 @@ export default function FinanceDashboard() {
         </div>
       </motion.header>
 
-      <div className="flex relative">
+      <div className="flex relative w-full">
         {/* Mobile Overlay */}
         <div 
           className={`fixed inset-0 bg-black/60 z-40 md:hidden transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} 
