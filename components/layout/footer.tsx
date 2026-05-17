@@ -1,7 +1,21 @@
 import Link from "next/link"
 import { GraduationCap, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react"
+import { getCourses } from "@/lib/data"
 
-export function Footer() {
+export async function Footer() {
+  let categories: string[] = []
+  try {
+    const courses = await getCourses(true)
+    const allCats = courses.map(c => c.category).filter(Boolean)
+    categories = [...new Set(allCats)].slice(0, 5)
+  } catch (error) {
+    console.error("Failed to load footer categories:", error)
+  }
+
+  if (categories.length === 0) {
+    categories = ["Architecture & BIM", "Civil Engineering", "Mechanical CAD", "Project Management", "Interior Design"]
+  }
+
   return (
     <footer className="bg-white border-t border-gray-100 relative overflow-hidden z-20">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-red-500/20 to-transparent" />
@@ -40,7 +54,7 @@ export function Footer() {
           <div>
             <h3 className="font-bold text-sm uppercase tracking-wider text-gray-400 mb-5">Categories</h3>
             <ul className="space-y-3">
-              {["Architecture & BIM", "Civil Engineering", "Mechanical CAD", "Project Management", "Interior Design"].map((cat) => (
+              {categories.map((cat) => (
                 <li key={cat}>
                   <Link href={`/courses?category=${cat}`} className="text-gray-500 font-medium hover:text-red-600 text-sm transition-all duration-300 inline-block hover:translate-x-1">{cat}</Link>
                 </li>
