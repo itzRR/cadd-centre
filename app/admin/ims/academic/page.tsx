@@ -9,13 +9,13 @@ import {
   GraduationCap, Users, BookOpen, CalendarDays,
   CheckCircle, List, Calendar, User, LogOut,
   Building2, Menu, Clock, TrendingUp, BarChart3,
-  Activity, Layers
+  Activity, Layers, Award
 } from "lucide-react"
 
 import { supabase } from "@/lib/supabase"
 import { getCurrentUser, signOut } from "@/lib/auth"
 import { getLeadConfirmations } from "@/lib/ims-data"
-import { getLecturersProfiles } from "@/lib/data"
+import { getLecturersProfiles, getLecturerPerformance } from "@/lib/data"
 import type { ImsAcademicStudent, Lecturer } from "@/types"
 
 import SriLankaCalendar from "@/components/ims/SriLankaCalendar"
@@ -47,26 +47,35 @@ export default function AcademicDashboard() {
   const [enrollmentStats, setEnrollmentStats] = useState({ confirmed: 0, pending: 0, completed: 0 })
   const [loading, setLoading] = useState(true)
   const [showLoadingAnimation, setShowLoadingAnimation] = useState(true)
+  
+  // Advanced Insights Data
+  const [enrollmentData, setEnrollmentData] = useState<any[]>([])
+  const [attendanceData, setAttendanceData] = useState<any[]>([])
+  const [lecturerPerformance, setLecturerPerformance] = useState<any[]>([])
 
   const loadData = useCallback(async () => {
     setLoading(true)
     try {
       const [
         { data: stu }, { data: cou }, { data: bat }, { data: enr }, 
-        { data: attData }, cu, lecs, lcData
+        { data: attData }, cu, lecs, lcData, perfData
       ] = await Promise.all([
         supabase.from("students").select("*"),
         supabase.from("courses").select("*").order("created_at", { ascending: false }),
         supabase.from("batches").select("*").eq("is_active", true).order("created_at", { ascending: false }),
-        supabase.from("enrollments").select("course_id, batch_id, status"),
-        supabase.from("attendance").select("status"),
+        supabase.from("enrollments").select("id, course_id, batch_id, status, user_id"),
+        supabase.from("attendance").select("status, enrollment_id"),
         getCurrentUser(),
         getLecturersProfiles(),
         getLeadConfirmations('finance_confirmed'),
+        getLecturerPerformance()
       ])
       
       const enrollments = enr || []
       const attendance = attData || []
+      setEnrollmentData(enrollments)
+      setAttendanceData(attendance)
+      setLecturerPerformance(perfData || [])
       setStudents(stu || [])
       setCourses((cou || []).map((c: any) => ({ 
         ...c, 
@@ -174,6 +183,40 @@ export default function AcademicDashboard() {
   const attendanceRate = attendanceStats.total > 0 
     ? Math.round((attendanceStats.present / attendanceStats.total) * 100) 
     : 0
+
+  // ── AI AT-RISK STUDENTS ENGINE ──
+  const getAtRiskStudents = () => {
+    const enrMap = new Map();
+    enrollmentData.forEach((e: any) => enrMap.set(e.id, e.user_id));
+
+    const studentStats = new Map();
+    attendanceData.forEach((a: any) => {
+       const uid = enrMap.get(a.enrollment_id);
+       if (!uid) return;
+       if (!studentStats.has(uid)) studentStats.set(uid, { total: 0, absent: 0 });
+       const st = studentStats.get(uid);
+       st.total++;
+       if (a.status === 'absent' || a.status === 'late') st.absent++;
+    });
+
+    const riskStudents: any[] = [];
+    studentStats.forEach((st, uid) => {
+      if (st.total >= 3) { // Only calculate if they have at least 3 records
+        const riskScore = (st.absent / st.total) * 100;
+        if (riskScore >= 30) { // High risk if 30%+ absent/late
+           const stu = students.find((s:any) => s.id === uid);
+           if (stu) {
+              riskStudents.push({ ...stu, riskScore: Math.round(riskScore), absentCount: st.absent, totalClasses: st.total });
+           }
+        }
+      }
+    });
+
+    riskStudents.sort((a,b) => b.riskScore - a.riskScore);
+    return riskStudents.slice(0, 3);
+  }
+
+  const atRiskStudents = getAtRiskStudents();
 
   return (
     <div className="min-h-screen bg-gray-50 flex font-sans text-gray-900 selection:bg-red-100">
@@ -372,8 +415,117 @@ export default function AcademicDashboard() {
               </motion.div>
             </div>
 
+            {/* ══════════════════════════════════════ */}
+            {/* ADVANCED INSIGHTS & LEADERBOARDS */}
+            {/* ══════════════════════════════════════ */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              
+              {/* Gamified Staff Leaderboard */}
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }}
+                className="bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.12)] relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-500/20 to-transparent rounded-bl-full -mr-8 -mt-8" />
+                
+                <div className="flex items-center gap-3 mb-6 relative z-10">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
+                    <Award className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black text-white">Top Performers</h3>
+                    <p className="text-xs text-slate-400 font-medium">Staff Gamification Leaderboard</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4 relative z-10">
+                  {lecturerPerformance.slice(0, 3).map((lecturer, index) => {
+                    const isGold = index === 0;
+                    const isSilver = index === 1;
+                    const isBronze = index === 2;
+                    return (
+                      <div key={lecturer.id} className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-lg flex-shrink-0 shadow-lg ${
+                          isGold ? 'bg-gradient-to-br from-yellow-300 to-amber-500 text-slate-900 shadow-amber-500/20' :
+                          isSilver ? 'bg-gradient-to-br from-slate-300 to-slate-400 text-slate-900 shadow-slate-400/20' :
+                          'bg-gradient-to-br from-orange-300 to-orange-400 text-slate-900 shadow-orange-400/20'
+                        }`}>
+                          #{index + 1}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-bold text-white truncate text-sm">{lecturer.full_name}</h4>
+                          <div className="flex items-center gap-3 mt-1">
+                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                              <CalendarDays className="w-3 h-3 text-emerald-400" /> {lecturer.attendance_rate}% ATT
+                            </span>
+                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                              <BookOpen className="w-3 h-3 text-cyan-400" /> {lecturer.assigned_batches} BATCHES
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                  {lecturerPerformance.length === 0 && (
+                    <div className="text-center py-6">
+                      <p className="text-slate-500 text-sm italic">Not enough data to calculate top performers.</p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+
+              {/* AI Predictive Analytics */}
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }}
+                className="bg-white p-6 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-red-500/10 to-transparent rounded-bl-full -mr-8 -mt-8" />
+                
+                <div className="flex items-center justify-between mb-6 relative z-10">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center shadow-lg shadow-red-500/20 relative">
+                      <div className="absolute inset-0 bg-red-500 rounded-xl animate-ping opacity-20" />
+                      <Activity className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-black text-gray-900 flex items-center gap-2">AI Insights <span className="bg-red-100 text-red-600 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-widest">Beta</span></h3>
+                      <p className="text-xs text-gray-500 font-medium">Dropout Risk Prediction</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4 relative z-10">
+                  {atRiskStudents.length > 0 ? (
+                    atRiskStudents.map((student) => (
+                      <div key={student.id} className="p-4 rounded-xl border border-red-100 bg-red-50/50 flex flex-col gap-3">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="font-bold text-gray-900 text-sm">{student.full_name}</h4>
+                            <p className="text-xs text-gray-500 font-medium">{student.student_id || 'ID Pending'}</p>
+                          </div>
+                          <span className="px-2.5 py-1 bg-red-100 text-red-700 text-xs font-black rounded-lg border border-red-200">
+                            {student.riskScore}% RISK
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                           <div className="h-1.5 flex-1 bg-gray-200 rounded-full overflow-hidden">
+                             <div className="h-full bg-red-500 rounded-full" style={{ width: `${student.riskScore}%` }} />
+                           </div>
+                        </div>
+                        <p className="text-[10px] text-gray-500"><strong>{student.absentCount}</strong> absences out of <strong>{student.totalClasses}</strong> classes.</p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-8 text-center bg-emerald-50 rounded-xl border border-emerald-100">
+                      <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mb-3">
+                        <CheckCircle className="w-6 h-6 text-emerald-600" />
+                      </div>
+                      <p className="text-sm font-bold text-emerald-800">No At-Risk Students Detected</p>
+                      <p className="text-xs text-emerald-600 mt-1">Attendance patterns look healthy.</p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+
+            </div>
+
             {/* Recent Batches Quick View */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}
               className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
