@@ -72,8 +72,8 @@ export function Navbar() {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
       isScrolled
-        ? "bg-white/80 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-b border-white/20"
-        : "bg-white/50 backdrop-blur-md border-b border-white/10"
+        ? "bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border-b border-gray-100"
+        : "bg-white/40 backdrop-blur-md border-b border-white/50"
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={`flex items-center justify-between transition-all duration-500 ${isScrolled ? "h-16" : "h-20"}`}>
@@ -88,10 +88,10 @@ export function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
                   pathname === item.href
-                    ? "bg-red-50 text-red-700"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    ? "bg-red-50 text-red-700 shadow-sm"
+                    : "text-gray-600 hover:bg-gray-100/80 hover:text-gray-900"
                 }`}
               >
                 {item.name}
@@ -156,7 +156,7 @@ export function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button asChild size="sm" className="bg-red-600 hover:bg-red-700 text-white shadow-md">
+              <Button asChild className="bg-gray-900 hover:bg-black text-white shadow-md rounded-full px-6 font-bold transition-transform hover:scale-105">
                 <Link href="/auth/login">Sign In</Link>
               </Button>
             )}

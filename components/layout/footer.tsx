@@ -3,15 +3,16 @@ import { GraduationCap, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instag
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 py-16">
+    <footer className="bg-white border-t border-gray-100 relative overflow-hidden z-20">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-red-500/20 to-transparent" />
+      <div className="max-w-7xl mx-auto px-4 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-5">
               <img src="/cadd-logo.png" alt="CADD Centre Logo" className="h-10 w-auto object-contain" />
             </div>
-            <p className="text-gray-500 text-sm leading-relaxed mb-5">
+            <p className="text-gray-500 text-sm leading-relaxed mb-6 font-medium">
               Sri Lanka&apos;s premier education platform, empowering learners with world-class courses and events.
             </p>
             <div className="flex gap-3">
@@ -29,7 +30,7 @@ export function Footer() {
             <ul className="space-y-3">
               {[["Home", "/"], ["Courses", "/courses"], ["Events", "/events"], ["About", "/about"], ["Contact", "/contact"]].map(([name, href]) => (
                 <li key={name}>
-                  <Link href={href} className="text-gray-500 hover:text-red-600 text-sm transition-colors hover:translate-x-1 inline-block">{name}</Link>
+                  <Link href={href} className="text-gray-500 font-medium hover:text-red-600 text-sm transition-all duration-300 hover:translate-x-1 inline-block">{name}</Link>
                 </li>
               ))}
             </ul>
@@ -41,7 +42,7 @@ export function Footer() {
             <ul className="space-y-3">
               {["Web Development", "Data Science", "UI/UX Design", "Mobile Development", "Cybersecurity"].map((cat) => (
                 <li key={cat}>
-                  <Link href={`/courses?category=${cat}`} className="text-gray-500 hover:text-red-600 text-sm transition-colors">{cat}</Link>
+                  <Link href={`/courses?category=${cat}`} className="text-gray-500 font-medium hover:text-red-600 text-sm transition-all duration-300 inline-block hover:translate-x-1">{cat}</Link>
                 </li>
               ))}
             </ul>

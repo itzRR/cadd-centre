@@ -137,7 +137,7 @@ export default function HomePage() {
 
           <div className="animate-marquee flex whitespace-nowrap hover:[animation-play-state:paused] items-center">
             {[...Array(2)].map((_, i) => (
-              <div key={i} className="flex items-center gap-16 md:gap-32 px-8 md:px-16">
+              <div key={i} className="flex items-center gap-16 md:gap-32 px-8 md:px-16 flex-shrink-0 min-w-max">
                 {[
                   "https://caddcentre.lk/wp-content/uploads/2024/06/1-1.jpg",
                   "https://caddcentre.lk/wp-content/uploads/2024/06/3-2.jpg",
