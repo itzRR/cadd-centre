@@ -422,16 +422,16 @@ export default function AcademicDashboard() {
               
               {/* Gamified Staff Leaderboard */}
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }}
-                className="bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.12)] relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-500/20 to-transparent rounded-bl-full -mr-8 -mt-8" />
+                className="bg-white p-6 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-500/10 to-transparent rounded-bl-full -mr-8 -mt-8" />
                 
                 <div className="flex items-center gap-3 mb-6 relative z-10">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
                     <Award className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-black text-white">Top Performers</h3>
-                    <p className="text-xs text-slate-400 font-medium">Staff Gamification Leaderboard</p>
+                    <h3 className="text-lg font-black text-gray-900">Top Performers</h3>
+                    <p className="text-xs text-gray-500 font-medium">Staff Gamification Leaderboard</p>
                   </div>
                 </div>
 
@@ -441,22 +441,22 @@ export default function AcademicDashboard() {
                     const isSilver = index === 1;
                     const isBronze = index === 2;
                     return (
-                      <div key={lecturer.id} className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-lg flex-shrink-0 shadow-lg ${
+                      <div key={lecturer.id} className="flex items-center gap-4 p-3 rounded-xl bg-gray-50 border border-gray-100 hover:bg-amber-50/50 hover:border-amber-100 transition-colors">
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-lg flex-shrink-0 shadow-sm ${
                           isGold ? 'bg-gradient-to-br from-yellow-300 to-amber-500 text-slate-900 shadow-amber-500/20' :
-                          isSilver ? 'bg-gradient-to-br from-slate-300 to-slate-400 text-slate-900 shadow-slate-400/20' :
-                          'bg-gradient-to-br from-orange-300 to-orange-400 text-slate-900 shadow-orange-400/20'
+                          isSilver ? 'bg-gradient-to-br from-slate-200 to-slate-300 text-slate-800' :
+                          'bg-gradient-to-br from-orange-200 to-orange-300 text-slate-800'
                         }`}>
                           #{index + 1}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-bold text-white truncate text-sm">{lecturer.full_name}</h4>
+                          <h4 className="font-bold text-gray-900 truncate text-sm">{lecturer.full_name}</h4>
                           <div className="flex items-center gap-3 mt-1">
-                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
-                              <CalendarDays className="w-3 h-3 text-emerald-400" /> {lecturer.attendance_rate}% ATT
+                            <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                              <CalendarDays className="w-3 h-3 text-emerald-500" /> {lecturer.attendance_rate}% ATT
                             </span>
-                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
-                              <BookOpen className="w-3 h-3 text-cyan-400" /> {lecturer.assigned_batches} BATCHES
+                            <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider flex items-center gap-1">
+                              <BookOpen className="w-3 h-3 text-cyan-500" /> {lecturer.assigned_batches} BATCHES
                             </span>
                           </div>
                         </div>
@@ -465,7 +465,7 @@ export default function AcademicDashboard() {
                   })}
                   {lecturerPerformance.length === 0 && (
                     <div className="text-center py-6">
-                      <p className="text-slate-500 text-sm italic">Not enough data to calculate top performers.</p>
+                      <p className="text-gray-400 text-sm italic">Not enough data to calculate top performers.</p>
                     </div>
                   )}
                 </div>

@@ -764,9 +764,14 @@ export async function getLecturerPerformance() {
   const { data: progress } = await supabase
     .from('module_progress')
     .select('score, practical_score, theory_score, completed_at')
+  const { data: activeBatches } = await supabase
+    .from('batches')
+    .select('id')
+    .eq('is_active', true)
+  const activeBatchIds = new Set((activeBatches || []).map(b => b.id))
 
   return (lecturers || []).map((lecturer: any) => {
-    const lecturerAllocs = (allocations || []).filter((a: any) => a.lecturer_id === lecturer.id)
+    const lecturerAllocs = (allocations || []).filter((a: any) => a.lecturer_id === lecturer.id && activeBatchIds.has(a.batch_id))
     const lecturerAttendance = (attendance || []).filter((a: any) => a.marked_by === lecturer.id)
     const presentCount = lecturerAttendance.filter((a: any) => a.status === 'present').length
     const avgAttendance = lecturerAttendance.length ? Math.round((presentCount / lecturerAttendance.length) * 100) : 0
