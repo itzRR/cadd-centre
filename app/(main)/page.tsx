@@ -336,24 +336,25 @@ export default function HomePage() {
          </div>
       </section>
 
-      {/* ── PREMIUM CTA ─────────────────────────────────────────────── */}
+      {/* ── PREMIUM CTA (Light Glowing Effect) ────────────────────── */}
       <section className="py-24 px-4 relative z-20 pb-32">
         <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="bg-[#0F172A] rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.2)]">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="bg-white rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.06)] border border-gray-100">
             
-            {/* Glowing Orbs inside CTA */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-600/20 blur-[100px] rounded-full pointer-events-none mix-blend-screen" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-600/20 blur-[100px] rounded-full pointer-events-none mix-blend-screen" />
+            {/* Light Glowing Orbs for the 'Pull' effect */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-50 via-white to-transparent blur-[60px] rounded-full pointer-events-none -z-10" />
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-cyan-50 blur-[80px] rounded-full pointer-events-none -z-10" />
+            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-pink-50 blur-[80px] rounded-full pointer-events-none -z-10" />
             
             <div className="relative z-10 max-w-3xl mx-auto">
-              <h2 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight tracking-tighter">Start Building<br />Your Legacy.</h2>
-              <p className="text-lg md:text-xl text-gray-400 mb-12 font-medium">Join a global network of professionals. Enroll today and take the first step towards mastery.</p>
+              <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 leading-tight tracking-tighter">Start Building<br />Your Legacy.</h2>
+              <p className="text-lg md:text-xl text-gray-500 mb-12 font-medium">Join a global network of professionals. Enroll today and take the first step towards mastery.</p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/courses" className="inline-flex items-center justify-center bg-white text-gray-900 hover:bg-gray-100 rounded-full px-10 h-16 text-sm font-black uppercase tracking-widest transition-all duration-300 hover:scale-105 shadow-xl">
+                <Link href="/courses" className="inline-flex items-center justify-center bg-red-600 text-white hover:bg-red-700 rounded-full px-10 h-16 text-sm font-black uppercase tracking-widest transition-all duration-300 hover:scale-105 shadow-xl shadow-red-500/20">
                   Explore Courses
                 </Link>
-                <Link href="/contact" className="inline-flex items-center justify-center border border-white/20 text-white hover:bg-white/10 rounded-full px-10 h-16 text-sm font-black uppercase tracking-widest backdrop-blur-md transition-all duration-300">
+                <Link href="/contact" className="inline-flex items-center justify-center bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-full px-10 h-16 text-sm font-black uppercase tracking-widest transition-all duration-300 shadow-sm">
                   Talk to an Advisor
                 </Link>
               </div>
