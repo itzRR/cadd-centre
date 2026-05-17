@@ -6,7 +6,7 @@ import type {
   HrLeaveRequest, HrSalaryPayout, HrPerformanceReview, HrRoster,
   OpsTask, OpsMinuteTracker, OpsMinuteTrackerTask,
   ImsLoginHistory, ImsSystemCommand, IMSDashboardStats, UserRole,
-  ImsAcademicStudent, Lecturer, LeadConfirmation, LeadConfirmationStage
+  Lecturer, LeadConfirmation, LeadConfirmationStage
 } from '@/types'
 import { STAFF_ROLES } from '@/types'
 
@@ -567,44 +567,7 @@ export async function disableStudent(studentId: string, disabled: boolean, reaso
   if (error) throw error
 }
 
-// ── ACADEMIC RESULTS ─────────────────────────────────────────
-
-export interface AcademicResult {
-  id: string
-  student_id: string
-  student_name: string
-  course_id: string
-  exam_name: string
-  score: number
-  max_score: number
-  passed: boolean
-  date: string
-  created_at: string
-}
-
-export async function getAcademicResults(): Promise<AcademicResult[]> {
-  const { data, error } = await supabase
-    .from('ims_academic_results')
-    .select('*')
-    .order('created_at', { ascending: false })
-  if (error) throw error
-  return data || []
-}
-
-export async function createAcademicResult(result: Omit<AcademicResult, 'id' | 'created_at' | 'passed'>): Promise<AcademicResult> {
-  const { data, error } = await supabase
-    .from('ims_academic_results')
-    .insert({ ...result, passed: result.score >= result.max_score * 0.5 })
-    .select()
-    .single()
-  if (error) throw error
-  return data
-}
-
-export async function deleteAcademicResult(id: string): Promise<void> {
-  const { error } = await supabase.from('ims_academic_results').delete().eq('id', id)
-  if (error) throw error
-}
+// Removed ims_academic_results in Phase 2 DB Consolidation
 
 // ── WORK CALENDAR EVENTS ─────────────────────────────────────
 
@@ -987,31 +950,7 @@ export async function getNextStudentSequence(batchCode: string): Promise<number>
   return 1
 }
 
-// ── IMS ACADEMIC STUDENTS ────────────────────────────────────
-
-export async function getImsAcademicStudents(): Promise<ImsAcademicStudent[]> {
-  const { data, error } = await supabase
-    .from('ims_academic_students')
-    .select('*')
-    .order('created_at', { ascending: false })
-  if (error) throw error
-  return data || []
-}
-
-export async function createImsAcademicStudent(student: Omit<ImsAcademicStudent, 'id' | 'created_at' | 'updated_at'>): Promise<ImsAcademicStudent> {
-  const { data, error } = await supabase
-    .from('ims_academic_students')
-    .insert(student)
-    .select()
-    .single()
-  if (error) throw error
-  return data
-}
-
-export async function deleteImsAcademicStudent(id: string): Promise<void> {
-  const { error } = await supabase.from('ims_academic_students').delete().eq('id', id)
-  if (error) throw error
-}
+// Removed ims_academic_students in Phase 2 DB Consolidation
 
 // ── ADDITIONAL REAL-TIME SUBSCRIPTIONS ────────────────────────
 
@@ -1037,16 +976,7 @@ export function subscribeToHrLeaveRequests(callback: (requests: HrLeaveRequest[]
   return (): void => { supabase.removeChannel(channel) }
 }
 
-export function subscribeToAcademicStudents(callback: (students: ImsAcademicStudent[]) => void): () => void {
-  const channel = supabase
-    .channel('ims_academic_students_changes')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'ims_academic_students' }, async () => {
-      const students = await getImsAcademicStudents()
-      callback(students)
-    })
-    .subscribe()
-  return (): void => { supabase.removeChannel(channel) }
-}
+// Removed subscribeToAcademicStudents
 
 // ── LECTURERS ────────────────────────────────────────────────
 

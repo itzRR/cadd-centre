@@ -433,8 +433,8 @@ export default function StudentsView() {
             <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm">
               <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-                  <h3 className="text-lg font-bold text-gray-900">Change Batch - {showBatchModal.student_name}</h3>
-                  <button onClick={() => setShowBatchModal(null)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+                  <h3 className="text-lg font-bold text-gray-900">Change Batch - {showBatchModal.full_name}</h3>
+                  <button type="button" onClick={() => setShowBatchModal(null)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
                 </div>
                 <form onSubmit={handleChangeBatchSubmit} className="p-6 space-y-4">
                   <div>
@@ -445,8 +445,12 @@ export default function StudentsView() {
                       className="w-full px-3 py-2.5 border rounded-xl bg-gray-50 focus:outline-none focus:border-emerald-500"
                     >
                       <option value="">-- No Batch (Remove from current) --</option>
-                      {batches.filter((b: any) => b.course_id === showBatchModal.course_id).map((b: any) => (
-                        <option key={b.id} value={b.id}>{b.name}</option>
+                      {batches
+                        .filter((b: any) => !showBatchModal.course_id || b.course_id === showBatchModal.course_id)
+                        .map((b: any) => (
+                          <option key={b.id} value={b.id}>
+                            {b.courses?.title ? `${b.courses.title} - ${b.name}` : b.name}
+                          </option>
                       ))}
                     </select>
                   </div>

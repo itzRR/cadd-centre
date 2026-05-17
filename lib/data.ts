@@ -693,36 +693,7 @@ export async function checkUserEventRegistration(userId: string, eventId: string
 }
 
 
-// ── STUDENT LEADS ───────────────────────────────────────────────────────────
-
-export async function getStudentLeads() {
-  const { data, error } = await supabase
-    .from('student_leads')
-    .select('*, profiles!student_leads_assigned_to_fkey(full_name, email)')
-    .order('created_at', { ascending: false })
-  if (error) throw error
-  return data || []
-}
-
-export async function createStudentLead(lead: {
-  full_name: string; email: string; phone?: string; interested_course?: string
-  preferred_level?: string; status?: string; notes?: string; assigned_to?: string
-}) {
-  const { data, error } = await supabase.from('student_leads').insert(lead).select().single()
-  if (error) throw error
-  return data
-}
-
-export async function updateStudentLead(id: string, updates: Record<string, unknown>) {
-  const { data, error } = await supabase
-    .from('student_leads')
-    .update({ ...updates, updated_at: new Date().toISOString() })
-    .eq('id', id)
-    .select()
-    .single()
-  if (error) throw error
-  return data
-}
+// Removed student_leads functions in Phase 2 DB Consolidation
 
 // ── ACADEMIC RECORDS ────────────────────────────────────────────────────────
 
