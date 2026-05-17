@@ -16,12 +16,15 @@ import { getCourseBySlug } from "@/lib/data"
 import { formatCurrency } from "@/lib/utils"
 import { sanitizeName, isValidName, isValidEmail, isValidSriLankanPhone, formatSriLankanPhone } from "@/lib/validation"
 import { supabase } from "@/lib/supabase"
+import { getCurrentUser } from "@/lib/auth"
+import { toast } from "sonner"
 import type { Course } from "@/types"
 
 export default function CourseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
   const [course, setCourse] = useState<Course | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [currentUser, setCurrentUser] = useState<any>(null)
 
   // Enquiry modal state
   const [showEnquiry, setShowEnquiry] = useState(false)
@@ -36,6 +39,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
 
   useEffect(() => {
     getCourseBySlug(slug).then(c => { setCourse(c); setIsLoading(false) })
+    getCurrentUser().then(u => setCurrentUser(u))
   }, [slug])
 
   // Validation
@@ -72,6 +76,27 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
       setSubmitError(err.message || "Something went wrong. Please try again.")
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  const [submittingDirect, setSubmittingDirect] = useState(false)
+  const handleDirectEnrollment = async () => {
+    setSubmittingDirect(true)
+    try {
+      const { error } = await supabase.from("marketing_leads").insert({
+        name: currentUser.name || "Logged In Student",
+        email: currentUser.email || null,
+        source: "Website (Logged In)",
+        course_interested: course?.title || "Unknown",
+        status: "New",
+      })
+      if (error) throw error
+      setSubmitSuccess(true)
+      setShowEnquiry(true)
+    } catch (err: any) {
+      toast.error(err.message || "Failed to process enrollment")
+    } finally {
+      setSubmittingDirect(false)
     }
   }
 
@@ -138,10 +163,21 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
 
               <div className="space-y-3">
                 <Button
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-base py-6"
-                  onClick={() => setShowEnquiry(true)}
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-base py-6 flex items-center justify-center"
+                  onClick={() => {
+                    if (currentUser) {
+                      handleDirectEnrollment()
+                    } else {
+                      setShowEnquiry(true)
+                    }
+                  }}
+                  disabled={submittingDirect}
                 >
-                  <Sparkles className="h-4 w-4 mr-2" /> Enquire Now
+                  {submittingDirect ? (
+                    <><motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white mr-2" /> Processing...</>
+                  ) : (
+                    <><Sparkles className="h-4 w-4 mr-2" /> {currentUser ? "Enroll Now" : "Enquire Now"}</>
+                  )}
                 </Button>
                 <p className="text-xs text-gray-500 text-center">
                   Submit your details & our team will contact you
