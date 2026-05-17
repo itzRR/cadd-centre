@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { LogOut, DollarSign, FileText, TrendingDown, TrendingUp, Plus, Trash2, X, Search, BarChart3, Menu, Download, CreditCard, Receipt, List, Calendar, CalendarDays, Clock, User, Building2, GraduationCap, Megaphone, Users, UserCog, Terminal, ExternalLink } from 'lucide-react';
@@ -273,6 +273,48 @@ export default function FinanceDashboard() {
   const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0);
   const netProfit = totalIncome - totalExpenses;
 
+  // Real chart data calculations
+  const last6MonthsData = useMemo(() => {
+    const data = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(d.getMonth() - i);
+      const monthStr = format(d, 'MMM');
+      const year = d.getFullYear();
+      const monthNum = d.getMonth();
+
+      const monthIncome = payments
+        .filter(p => {
+          const pd = new Date(p.date);
+          return pd.getMonth() === monthNum && pd.getFullYear() === year;
+        })
+        .reduce((sum, p) => sum + p.amount, 0);
+
+      const monthExpense = expenses
+        .filter(e => {
+          const ed = new Date(e.date);
+          return ed.getMonth() === monthNum && ed.getFullYear() === year;
+        })
+        .reduce((sum, e) => sum + e.amount, 0);
+
+      data.push({ name: monthStr, income: monthIncome, expense: monthExpense });
+    }
+    return data;
+  }, [payments, expenses]);
+
+  const expensePieData = useMemo(() => {
+    const categories = ['Utilities', 'Rent', 'Salaries', 'Marketing', 'Equipment', 'Maintenance', 'Other'];
+    const data = categories.map(cat => ({
+      name: cat,
+      value: expenses.filter(e => e.category === cat).reduce((sum, e) => sum + e.amount, 0)
+    })).filter(d => d.value > 0);
+    
+    if (data.length === 0) return [{ name: 'No Expenses', value: 1 }];
+    return data;
+  }, [expenses]);
+  
+  const pieColors = ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899', '#6B7280'];
+
 
   const pendingLeadCount = leadConfirmations.length;
 
@@ -485,15 +527,7 @@ export default function FinanceDashboard() {
                   </div>
                   <div className="h-[300px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={[
-                        { name: 'Jan', income: 4000, expense: 2400 },
-                        { name: 'Feb', income: 3000, expense: 1398 },
-                        { name: 'Mar', income: 2000, expense: 9800 },
-                        { name: 'Apr', income: 2780, expense: 3908 },
-                        { name: 'May', income: 1890, expense: 4800 },
-                        { name: 'Jun', income: 2390, expense: 3800 },
-                        { name: 'Jul', income: totalIncome, expense: totalExpenses },
-                      ]}>
+                      <AreaChart data={last6MonthsData}>
                         <defs>
                           <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
@@ -524,14 +558,9 @@ export default function FinanceDashboard() {
                   <div className="h-[300px] w-full flex items-center justify-center">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
-                        <Pie data={[
-                          { name: 'Rent', value: 400 },
-                          { name: 'Utilities', value: 300 },
-                          { name: 'Salaries', value: 300 },
-                          { name: 'Marketing', value: 200 }
-                        ]} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={5} dataKey="value">
-                          {['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B'].map((color, index) => (
-                            <Cell key={`cell-${index}`} fill={color} />
+                        <Pie data={expensePieData} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={5} dataKey="value">
+                          {expensePieData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
                           ))}
                         </Pie>
                         <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
@@ -699,31 +728,108 @@ export default function FinanceDashboard() {
 
           {/* ── REPORTS ── */}
           {activeTab === 'reports' && (
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold text-gray-900">Profit & Loss Report</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white border border-gray-200 p-6 rounded-2xl border border-green-200 bg-green-500/5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 bg-green-100 rounded-lg text-green-700"><TrendingUp className="w-5 h-5" /></div>
-                    <p className="text-gray-600 font-semibold">Total Revenue</p>
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold text-gray-900">Profit & Loss Report</h2>
+                <button onClick={exportFinance} className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition-colors">
+                  <Download className="w-4 h-4" /> Export Report
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white p-6 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 flex flex-col justify-between h-32 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-emerald-400/20 to-transparent rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
+                  <div className="flex items-center gap-2 relative z-10">
+                    <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600"><TrendingUp className="w-4 h-4" /></div>
+                    <p className="text-sm font-bold text-gray-500 uppercase tracking-wider">Total Revenue</p>
                   </div>
-                  <h3 className="text-3xl font-black text-green-700">LKR {totalIncome.toLocaleString()}</h3>
+                  <h3 className="text-3xl font-black text-gray-900 relative z-10">LKR {totalIncome.toLocaleString()}</h3>
                 </div>
-                <div className="bg-white border border-gray-200 p-6 rounded-2xl border border-red-200 bg-red-500/5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 bg-red-100 rounded-lg text-red-600"><TrendingDown className="w-5 h-5" /></div>
-                    <p className="text-gray-600 font-semibold">Total Expenses</p>
+                
+                <div className="bg-white p-6 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 flex flex-col justify-between h-32 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-rose-400/20 to-transparent rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
+                  <div className="flex items-center gap-2 relative z-10">
+                    <div className="p-2 bg-rose-100 rounded-lg text-rose-600"><TrendingDown className="w-4 h-4" /></div>
+                    <p className="text-sm font-bold text-gray-500 uppercase tracking-wider">Total Expenses</p>
                   </div>
-                  <h3 className="text-3xl font-black text-red-600">LKR {totalExpenses.toLocaleString()}</h3>
+                  <h3 className="text-3xl font-black text-gray-900 relative z-10">LKR {totalExpenses.toLocaleString()}</h3>
                 </div>
-                <div className={`bg-white border border-gray-200 p-6 rounded-2xl border ${netProfit >= 0 ? 'border-red-500/20 bg-red-500/5' : 'border-orange-500/20 bg-orange-500/5'}`}>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className={`p-2 rounded-lg ${netProfit >= 0 ? 'bg-red-500/20 text-red-600' : 'bg-orange-500/20 text-orange-700'}`}><DollarSign className="w-5 h-5" /></div>
-                    <p className="text-gray-600 font-semibold">Net Profit</p>
+                
+                <div className="bg-slate-950 p-6 rounded-2xl shadow-xl border border-slate-800 flex flex-col justify-between h-32 relative overflow-hidden group">
+                  <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${netProfit >= 0 ? 'from-emerald-500/30' : 'from-rose-500/30'} to-transparent rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110`} />
+                  <div className="flex items-center gap-2 relative z-10">
+                    <div className={`p-2 rounded-lg ${netProfit >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}><DollarSign className="w-4 h-4" /></div>
+                    <p className="text-sm font-bold text-slate-400 uppercase tracking-wider">Net Profit</p>
                   </div>
-                  <h3 className={`text-3xl font-black ${netProfit >= 0 ? 'text-red-600' : 'text-orange-700'}`}>LKR {netProfit.toLocaleString()}</h3>
+                  <h3 className="text-3xl font-black text-white relative z-10">LKR {netProfit.toLocaleString()}</h3>
                 </div>
               </div>
+
+              {/* Monthly Breakdown Table */}
+              <div className="bg-white rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 overflow-hidden">
+                 <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                   <h3 className="font-bold text-gray-900">6-Month Financial Summary</h3>
+                 </div>
+                 <div className="overflow-x-auto">
+                   <table className="w-full text-left border-collapse">
+                     <thead>
+                       <tr className="bg-gray-50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500 font-bold">
+                         <th className="px-6 py-4">Month</th>
+                         <th className="px-6 py-4">Revenue</th>
+                         <th className="px-6 py-4">Expenses</th>
+                         <th className="px-6 py-4">Net Profit</th>
+                         <th className="px-6 py-4">Margin</th>
+                       </tr>
+                     </thead>
+                     <tbody className="divide-y divide-gray-100">
+                        {last6MonthsData.map((data, idx) => {
+                          const profit = data.income - data.expense;
+                          const margin = data.income > 0 ? ((profit / data.income) * 100).toFixed(1) : 0;
+                          return (
+                            <tr key={idx} className="hover:bg-gray-50/80 transition-colors">
+                              <td className="px-6 py-4 font-bold text-gray-900">{data.name}</td>
+                              <td className="px-6 py-4 text-emerald-600 font-semibold">LKR {data.income.toLocaleString()}</td>
+                              <td className="px-6 py-4 text-rose-500 font-semibold">LKR {data.expense.toLocaleString()}</td>
+                              <td className={`px-6 py-4 font-bold ${profit >= 0 ? 'text-gray-900' : 'text-rose-600'}`}>LKR {profit.toLocaleString()}</td>
+                              <td className="px-6 py-4">
+                                <span className={`px-2.5 py-1 rounded-md text-xs font-bold ${profit >= 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
+                                  {profit >= 0 ? '+' : ''}{margin}%
+                                </span>
+                              </td>
+                            </tr>
+                          )
+                        })}
+                     </tbody>
+                   </table>
+                 </div>
+              </div>
+
+              {/* Expense Categories Detailed */}
+              <div className="bg-white rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                  <h3 className="font-bold text-gray-900">Expense Distribution</h3>
+                </div>
+                <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
+                   {expensePieData.map((cat, idx) => (
+                     <div key={idx} className="space-y-2">
+                       <div className="flex justify-between items-center text-sm">
+                         <span className="font-semibold text-gray-600 flex items-center gap-2">
+                           <span className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: pieColors[idx % pieColors.length] }}></span>
+                           {cat.name}
+                         </span>
+                         <span className="font-bold text-gray-900">LKR {cat.value.toLocaleString()}</span>
+                       </div>
+                       <div className="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                         <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${totalExpenses > 0 ? (cat.value / totalExpenses) * 100 : 0}%`, backgroundColor: pieColors[idx % pieColors.length] }}></div>
+                       </div>
+                       <p className="text-[10px] text-gray-400 text-right font-bold tracking-wider">
+                         {totalExpenses > 0 ? ((cat.value / totalExpenses) * 100).toFixed(1) : 0}%
+                       </p>
+                     </div>
+                   ))}
+                </div>
+              </div>
+
             </div>
           )}
 
