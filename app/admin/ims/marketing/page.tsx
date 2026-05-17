@@ -133,50 +133,64 @@ export default function MarketingDashboard() {
         <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 text-gray-600 bg-gray-50 rounded-xl"><Menu className="w-5 h-5" /></button>
       </div>
 
-      {/* 🚀 SIDEBAR */}
-      <aside className={`fixed md:sticky top-0 left-0 h-screen w-[280px] bg-white border-r border-gray-100 flex flex-col transition-transform duration-300 z-40 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-        <div className="h-20 flex items-center gap-3 px-6 border-b border-gray-50">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
-            <Megaphone className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h1 className="font-bold text-lg leading-tight tracking-tight text-gray-900">Marketing</h1>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Scholar Sync</p>
-          </div>
-        </div>
+      <div className="flex relative">
+        {/* Mobile Overlay */}
+        <div 
+          className={`fixed inset-0 bg-black/60 z-40 md:hidden transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} 
+          onClick={() => setMobileMenuOpen(false)} 
+        />
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-hide">
-          {navSections.map(section => (
-            <div key={section.label}>
-              <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest px-2 mb-1.5">{section.label}</p>
-              <div className="space-y-0.5">
-                {section.items.map(item => (
-                  <motion.button key={item.id} whileHover={{ x: 2 }} whileTap={{ scale: 0.97 }}
-                    onClick={() => { setActiveTab(item.id); setMobileMenuOpen(false); }}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-sm relative ${
-                      activeTab === item.id ? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-lg shadow-orange-500/20' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}>
-                    {activeTab === item.id && <motion.div layoutId="mkt-active-pill" className="absolute left-0 top-0 bottom-0 w-0.5 bg-white rounded-full" />}
-                    <item.icon className={`w-4 h-4 flex-shrink-0 ${activeTab === item.id ? 'text-white' : 'text-gray-500'}`} />
-                    <span className="flex-1 text-left font-medium">{item.label}</span>
-                    {item.badge > 0 && (
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${activeTab === item.id ? 'bg-white/20 text-white' : 'bg-red-100 text-red-600'}`}>
-                        {item.badge}
-                      </span>
-                    )}
-                  </motion.button>
-                ))}
-              </div>
+        {/* 🚀 SIDEBAR */}
+        <aside className={`fixed md:sticky top-0 left-0 h-screen w-[280px] bg-slate-950 border-r border-slate-800 flex flex-col transition-transform duration-300 z-50 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+          {mobileMenuOpen && (
+            <div className="flex justify-end p-3 md:hidden">
+              <button onClick={() => setMobileMenuOpen(false)} className="text-slate-400 hover:text-white transition-colors">
+                <Menu size={20} className="hidden" /> {/* just placeholder */}
+                <span className="text-2xl leading-none">&times;</span>
+              </button>
             </div>
-          ))}
-        </div>
+          )}
 
-        <div className="p-4 border-t border-gray-50">
-          <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 rounded-xl transition-colors">
-            <LogOut className="w-4 h-4" /> Logout
-          </button>
-        </div>
-      </aside>
+          <div className="h-20 flex items-center gap-3 px-6 border-b border-white/10">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
+              <Megaphone className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="font-bold text-lg leading-tight tracking-tight text-orange-400">Marketing</h1>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Scholar Sync</p>
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto py-4 px-3 space-y-6 scrollbar-hide">
+            {navSections.map(section => (
+              <div key={section.label}>
+                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest px-3 mb-2">{section.label}</p>
+                <div className="space-y-1">
+                  {section.items.map(item => (
+                    <button
+                      key={item.id}
+                      onClick={() => { setActiveTab(item.id); setMobileMenuOpen(false); }}
+                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-sm relative group ${
+                        activeTab === item.id
+                          ? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-lg shadow-orange-500/20'
+                          : item.badge > 0
+                            ? 'text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20'
+                            : 'text-slate-300 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      {activeTab === item.id && (
+                        <motion.div layoutId="mkt-active-pill" className="absolute left-0 top-0 bottom-0 w-0.5 bg-white rounded-full" />
+                      )}
+                      <item.icon className={`w-4 h-4 flex-shrink-0 ${activeTab === item.id ? 'text-white' : item.badge > 0 ? 'text-yellow-400' : 'text-slate-400 group-hover:text-white transition-colors'}`} />
+                      <span className="flex-1 text-left font-medium">{item.label}</span>
+                      {item.badge > 0 && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-yellow-500/20 text-yellow-300">{item.badge}</span>}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
 
       {/* 🌟 MAIN CONTENT */}
       <main className="flex-1 p-4 md:p-6 min-h-[calc(100vh-80px)] overflow-auto space-y-5 bg-gray-50 mt-16 md:mt-0">
@@ -268,6 +282,7 @@ export default function MarketingDashboard() {
         )}
 
       </main>
+      </div>
     </div>
   )
 }

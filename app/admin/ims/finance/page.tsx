@@ -373,18 +373,24 @@ export default function FinanceDashboard() {
 
       <div className="flex relative">
         {/* Mobile Overlay */}
-        {mobileMenuOpen && (
-          <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setMobileMenuOpen(false)} />
-        )}
-        {/* Sidebar */}
-        <motion.aside initial={{ x: -100 }} animate={{ x: 0 }}
-          className={`bg-white border-r border-gray-200 h-screen z-50 w-60 flex flex-col flex-shrink-0 ${mobileMenuOpen ? 'fixed inset-y-0 left-0' : 'hidden md:flex sticky top-0'}`}>
-          {mobileMenuOpen && <div className="flex justify-end p-3 md:hidden"><button onClick={() => setMobileMenuOpen(false)} className="text-gray-900"><X size={20} /></button></div>}
+        <div 
+          className={`fixed inset-0 bg-black/60 z-40 md:hidden transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} 
+          onClick={() => setMobileMenuOpen(false)} 
+        />
 
-          {/* Profile Card */}
-          <div className="px-4 pt-5 pb-4 border-b border-gray-100">
+        <aside className={`fixed md:sticky top-0 left-0 h-screen w-[280px] bg-slate-950 border-r border-slate-800 flex flex-col transition-transform duration-300 z-50 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+          {mobileMenuOpen && (
+            <div className="flex justify-end p-3 md:hidden">
+              <button onClick={() => setMobileMenuOpen(false)} className="text-slate-400 hover:text-white transition-colors">
+                <Menu size={20} className="hidden" /> {/* just placeholder */}
+                <span className="text-2xl leading-none">&times;</span>
+              </button>
+            </div>
+          )}
+
+          <div className="px-5 pt-6 pb-5 border-b border-white/10">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-violet-500 flex items-center justify-center text-gray-900 font-bold text-sm flex-shrink-0 overflow-hidden">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-violet-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0 overflow-hidden shadow-lg shadow-violet-500/20">
                 {currentUser?.avatar_url ? (
                   <img src={currentUser.avatar_url} alt="" className="w-full h-full object-cover" />
                 ) : (
@@ -392,60 +398,56 @@ export default function FinanceDashboard() {
                 )}
               </div>
               <div className="min-w-0">
-                <p className="text-red-600 text-xs font-semibold">Finance Dept.</p>
-                <p className="text-gray-400 text-[10px] mt-0.5">CCL Taskflow</p>
+                <p className="text-red-400 text-sm font-bold truncate">Finance Dept.</p>
+                <p className="text-slate-400 text-[10px] mt-0.5 uppercase tracking-widest font-bold">CCL Taskflow</p>
               </div>
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-2">
-              <div className="bg-gray-100 rounded-lg p-2 text-center border border-gray-200">
-                <p className="font-bold text-sm text-green-700">LKR {(totalIncome/1000).toFixed(0)}k</p>
-                <p className="text-gray-400 text-[10px]">Income</p>
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <div className="bg-white/5 rounded-xl p-2.5 text-center border border-white/10">
+                <p className="font-bold text-sm text-green-400">{(totalIncome/1000).toFixed(0)}k</p>
+                <p className="text-slate-400 text-[10px] uppercase tracking-wider font-semibold mt-0.5">Income</p>
               </div>
-              <div className="bg-gray-100 rounded-lg p-2 text-center border border-gray-200">
-                <p className="font-bold text-sm text-red-600">LKR {(totalExpenses/1000).toFixed(0)}k</p>
-                <p className="text-gray-400 text-[10px]">Expense</p>
+              <div className="bg-white/5 rounded-xl p-2.5 text-center border border-white/10">
+                <p className="font-bold text-sm text-red-400">{(totalExpenses/1000).toFixed(0)}k</p>
+                <p className="text-slate-400 text-[10px] uppercase tracking-wider font-semibold mt-0.5">Expense</p>
               </div>
             </div>
           </div>
 
-          {/* Nav Sections */}
-          <div className="flex-1 overflow-y-auto py-3 px-3 space-y-4">
+          <div className="flex-1 overflow-y-auto py-4 px-3 space-y-5 scrollbar-hide">
             {navSections.map(section => (
               <div key={section.label}>
-                <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest px-2 mb-1.5">{section.label}</p>
-                <div className="space-y-0.5">
+                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest px-3 mb-2">{section.label}</p>
+                <div className="space-y-1">
                   {section.items.map(item => (
-                    <motion.button
+                    <button
                       key={item.id}
-                      whileHover={{ x: 2 }}
-                      whileTap={{ scale: 0.97 }}
                       onClick={() => { setActiveTab(item.id); setMobileMenuOpen(false); }}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-sm relative ${
+                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-sm relative group ${
                         activeTab === item.id
-                          ? 'bg-gradient-to-r from-red-600 to-violet-600 text-gray-900 shadow-lg shadow-red-500/20'
+                          ? 'bg-gradient-to-r from-red-500 to-violet-500 text-white shadow-lg shadow-violet-500/20'
                           : (item as any).urgent
-                            ? 'text-yellow-300 bg-yellow-500/10 hover:bg-yellow-100 border border-yellow-200'
-                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                            ? 'text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/20'
+                            : 'text-slate-300 hover:text-white hover:bg-white/5'
                       }`}
                     >
                       {activeTab === item.id && (
                         <motion.div layoutId="fin-active-pill" className="absolute left-0 top-0 bottom-0 w-0.5 bg-white rounded-full" />
                       )}
-                      <item.icon className={`w-4 h-4 flex-shrink-0 ${activeTab === item.id ? 'text-gray-900' : (item as any).urgent ? 'text-yellow-300' : 'text-gray-500'}`} />
+                      <item.icon className={`w-4 h-4 flex-shrink-0 ${activeTab === item.id ? 'text-white' : (item as any).urgent ? 'text-yellow-400' : 'text-slate-400 group-hover:text-white transition-colors'}`} />
                       <span className="flex-1 text-left font-medium">{item.label}</span>
                       {item.badge !== undefined && item.badge > 0 && (
-                        <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${activeTab === item.id ? 'bg-gray-900 text-white' : 'bg-rose-500 text-white'}`}>
+                        <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${activeTab === item.id ? 'bg-white/20 text-white' : 'bg-rose-500 text-white'}`}>
                           {item.badge}
                         </span>
                       )}
-                    </motion.button>
+                    </button>
                   ))}
                 </div>
               </div>
             ))}
-
           </div>
-        </motion.aside>
+        </aside>
 
         <main className="flex-1 p-4 md:p-6 min-h-[calc(100vh-80px)] overflow-auto space-y-5 bg-gray-50">
 

@@ -209,24 +209,56 @@ export default function ITDashboardPage() {
       </header>
 
       <div className="flex relative w-full">
-        {mobileMenuOpen && <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setMobileMenuOpen(false)} />}
+        {/* Mobile Overlay */}
+        <div 
+          className={`fixed inset-0 bg-black/60 z-40 md:hidden transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} 
+          onClick={() => setMobileMenuOpen(false)} 
+        />
 
         {/* Sidebar */}
-        <aside className={`bg-white border-r border-gray-200 min-h-[calc(100vh-88px)] z-50 w-64 flex flex-col flex-shrink-0 ${mobileMenuOpen ? 'fixed inset-y-0 left-0 mt-[88px]' : 'hidden md:flex sticky top-[88px]'}`}>
-          <div className="flex-1 overflow-y-auto py-6 px-4 space-y-8">
+        <aside className={`fixed md:sticky top-[88px] left-0 h-[calc(100vh-88px)] w-[280px] bg-slate-950 border-r border-slate-800 flex flex-col transition-transform duration-300 z-50 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+          {mobileMenuOpen && (
+            <div className="flex justify-end p-3 md:hidden">
+              <button onClick={() => setMobileMenuOpen(false)} className="text-slate-400 hover:text-white transition-colors">
+                <Menu size={20} className="hidden" /> {/* just placeholder */}
+                <span className="text-2xl leading-none">&times;</span>
+              </button>
+            </div>
+          )}
+
+          <div className="px-5 pt-6 pb-5 border-b border-white/10 hidden md:block">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0 overflow-hidden shadow-lg shadow-blue-500/20">
+                {currentUser?.avatar_url ? (
+                  <img src={currentUser.avatar_url} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  currentUser?.name?.charAt(0).toUpperCase() || 'I'
+                )}
+              </div>
+              <div className="min-w-0">
+                <p className="text-blue-400 text-sm font-bold truncate">System Admin</p>
+                <p className="text-slate-400 text-[10px] mt-0.5 uppercase tracking-widest font-bold">CCL Taskflow</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto py-6 px-4 space-y-8 scrollbar-hide">
             {navSections.map(section => (
               <div key={section.label}>
-                <p className="text-gray-400 text-xs font-black uppercase tracking-[0.2em] mb-3 px-2">{section.label}</p>
+                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 px-3">{section.label}</p>
                 <div className="space-y-1">
                   {section.items.map(item => (
                     <button key={item.id} onClick={() => { setActiveTab(item.id); setMobileMenuOpen(false) }}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-sm font-bold ${
+                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-sm relative group font-bold ${
                         activeTab === item.id
-                          ? 'bg-blue-50 text-blue-700 border border-blue-100/50'
-                          : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20'
+                          : 'text-slate-300 hover:text-white hover:bg-white/5'
                       }`}>
-                      <item.icon className={`w-4 h-4 ${activeTab === item.id ? 'text-blue-600' : 'text-gray-400'}`} />
-                      {item.label}
+                      {activeTab === item.id && (
+                        <motion.div layoutId="it-active-pill" className="absolute left-0 top-0 bottom-0 w-0.5 bg-white rounded-full" />
+                      )}
+                      <item.icon className={`w-4 h-4 flex-shrink-0 ${activeTab === item.id ? 'text-white' : 'text-slate-400 group-hover:text-white transition-colors'}`} />
+                      <span className="flex-1 text-left">{item.label}</span>
                     </button>
                   ))}
                 </div>
