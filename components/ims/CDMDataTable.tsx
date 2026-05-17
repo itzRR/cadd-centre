@@ -376,7 +376,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
                       </td>
                     ))}
                     {actions && actions.length > 0 && (
-                      <td className={`${px} ${py} text-right relative`}>
+                      <td className={`${px} ${py} text-right relative ${openActionRow === rowId ? 'z-[60]' : 'z-0'}`}>
                         {actions.length <= 2 ? (
                           <div className="flex items-center justify-end gap-1">
                             {actions.filter(a => !a.show || a.show(row)).map((action, ai) => {
@@ -415,7 +415,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
-                                    className={`absolute right-0 z-20 bg-white border border-gray-200 rounded-xl shadow-lg py-1 min-w-max ${i >= paginated.length - 2 && i >= 2 ? 'bottom-8 origin-bottom-right' : 'top-8 origin-top-right'}`}
+                                    className={`absolute right-6 z-[70] bg-white border border-gray-200 rounded-xl shadow-lg py-1 min-w-[160px] ${i >= paginated.length - 2 && i >= 2 ? 'bottom-full mb-1 origin-bottom-right' : 'top-full mt-1 origin-top-right'}`}
                                   >
                                     {actions.filter(a => !a.show || a.show(row)).map((action, ai) => {
                                       const Icon = action.icon
