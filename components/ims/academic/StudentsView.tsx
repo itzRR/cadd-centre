@@ -446,10 +446,10 @@ export default function StudentsView() {
                     >
                       <option value="">-- No Batch (Remove from current) --</option>
                       {batches
-                        .filter((b: any) => !showBatchModal.course_id || b.course_id === showBatchModal.course_id)
+                        .filter((b: any) => (!showBatchModal.course_id || b.course_id === showBatchModal.course_id) && (b.is_active || b.id === showBatchModal.batch_id))
                         .map((b: any) => (
                           <option key={b.id} value={b.id}>
-                            {b.courses?.title ? `${b.courses.title} - ${b.name}` : b.name}
+                            {b.courses?.title ? `${b.courses.title} - ${b.name}` : b.name} {!b.is_active ? '(Inactive)' : ''}
                           </option>
                       ))}
                     </select>
