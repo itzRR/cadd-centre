@@ -39,7 +39,7 @@ export default function LeadPipelineView({ leads, staff, currentUser, onRefresh 
     e.preventDefault()
 
     const phoneRegex = /^(0|\+94)[0-9]{9}$/
-    if (!phoneRegex.test(form.contact)) {
+    if (form.contact && !phoneRegex.test(form.contact)) {
       toast.error("Invalid phone number format. Use 07XXXXXXXX or +947XXXXXXXX")
       return
     }
@@ -53,7 +53,14 @@ export default function LeadPipelineView({ leads, staff, currentUser, onRefresh 
     }
 
     try {
-      const payload = { ...form, updated_at: new Date().toISOString() }
+      const payload: any = { ...form, updated_at: new Date().toISOString() }
+      
+      // Strip related objects that shouldn't be saved to the database directly
+      delete payload.assignee
+      delete payload.follow_ups
+      delete payload.id // ensure we don't try to update id
+      delete payload.created_at
+
       if (editingLead) {
         const { error } = await supabase.from("marketing_leads").update(payload).eq("id", editingLead.id)
         if (error) throw error
@@ -258,7 +265,7 @@ export default function LeadPipelineView({ leads, staff, currentUser, onRefresh 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Contact</label>
-                  <input required value={form.contact} onChange={e => setForm({...form, contact: e.target.value})} className="w-full px-3 py-2 border rounded-xl" />
+                  <input value={form.contact} onChange={e => setForm({...form, contact: e.target.value})} className="w-full px-3 py-2 border rounded-xl" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
