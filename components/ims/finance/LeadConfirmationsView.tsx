@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { CheckCircle, DollarSign, X, AlertCircle, Clock, CreditCard, ArrowRight } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import CDMDataTable, { CDMColumn, CDMAction } from "@/components/ims/CDMDataTable"
-import { getLeadConfirmations, confirmLeadPaymentFinance } from "@/lib/ims-data"
+import { getLeadConfirmations, confirmLeadPaymentFinance, deleteLeadConfirmation } from "@/lib/ims-data"
 import type { LeadConfirmation } from "@/types"
 
 const PAYMENT_METHODS = ["Cash", "Bank Transfer", "Online", "Cheque"] as const
@@ -28,8 +28,8 @@ export default function FinanceLeadConfirmationsView({ currentUser, onRefresh }:
   const loadData = async () => {
     setLoading(true)
     try {
-      // Get leads at marketing_confirmed stage (waiting for finance verification)
-      const data = await getLeadConfirmations('marketing_confirmed')
+      // Get leads at marketing_confirmed stage (waiting for finance verification) and finance_confirmed (verified)
+      const data = await getLeadConfirmations(['marketing_confirmed', 'finance_confirmed'])
       setConfirmations(data)
     } catch (e: any) {
       toast.error("Failed to load confirmations: " + e.message)
@@ -63,6 +63,18 @@ export default function FinanceLeadConfirmationsView({ currentUser, onRefresh }:
       toast.error(e.message)
     } finally {
       setConfirming(false)
+    }
+  }
+
+  const handleDelete = async (row: LeadConfirmation) => {
+    if (!window.confirm(`Are you sure you want to delete this confirmation record for ${row.lead_name}?`)) return;
+    try {
+      await deleteLeadConfirmation(row.id)
+      toast.success("Record deleted successfully.")
+      loadData()
+      if (onRefresh) onRefresh()
+    } catch (e: any) {
+      toast.error("Failed to delete: " + e.message)
     }
   }
 
@@ -115,11 +127,20 @@ export default function FinanceLeadConfirmationsView({ currentUser, onRefresh }:
     {
       key: "stage",
       label: "Status",
-      render: () => (
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-lg border border-amber-200">
-          <AlertCircle className="w-3 h-3" /> Awaiting Verification
-        </span>
-      )
+      render: (val) => {
+        if (val === 'marketing_confirmed') {
+          return (
+            <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-lg border border-amber-200">
+              <AlertCircle className="w-3 h-3" /> Awaiting Verification
+            </span>
+          )
+        }
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-lg border border-emerald-200">
+            <CheckCircle className="w-3 h-3" /> Verified
+          </span>
+        )
+      }
     },
   ]
 
@@ -128,12 +149,19 @@ export default function FinanceLeadConfirmationsView({ currentUser, onRefresh }:
       label: "Verify Payment",
       icon: CheckCircle,
       variant: "success",
+      show: (row) => row.stage === 'marketing_confirmed',
       onClick: (row) => {
         setSelectedLead(row)
         setForm({ amount: row.payment_amount || 0, method: "Cash" })
         setShowModal(true)
       }
     },
+    {
+      label: "Delete",
+      icon: X,
+      variant: "danger",
+      onClick: (row) => handleDelete(row)
+    }
   ]
 
   return (

@@ -1154,6 +1154,18 @@ export async function confirmItAccount(
 
 
 
+// -------------------------------------------------------------
+// DELETE CONFIRMATION
+// -------------------------------------------------------------
+export async function deleteLeadConfirmation(confirmationId: string) {
+  const { error } = await supabase
+    .from('lead_confirmations')
+    .delete()
+    .eq('id', confirmationId);
+    
+  if (error) throw new Error(error.message);
+}
+
 // ── REALTIME SUBSCRIPTIONS (new) ─────────────────────────────
 
 export function subscribeToLecturers(callback: (lecturers: any[]) => void): () => void {

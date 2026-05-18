@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from "react"
 import { toast } from "sonner"
 import {
-  CheckCircle, Users, Clock, Mail, Lock, Key, ArrowRight, Activity
+  CheckCircle, Users, Clock, Mail, Lock, Key, ArrowRight, Activity, X, Trash2
 } from "lucide-react"
 import CDMDataTable, { CDMColumn, CDMAction } from "@/components/ims/CDMDataTable"
-import { getLeadConfirmations, confirmItAccount } from "@/lib/ims-data"
+import { getLeadConfirmations, confirmItAccount, deleteLeadConfirmation } from "@/lib/ims-data"
 import type { LeadConfirmation } from "@/types"
 
 interface ItAccountConfirmationsProps {
@@ -17,6 +17,10 @@ interface ItAccountConfirmationsProps {
 export default function ItAccountConfirmations({ currentUser, onRefresh }: ItAccountConfirmationsProps) {
   const [confirmations, setConfirmations] = useState<LeadConfirmation[]>([])
   const [loading, setLoading] = useState(true)
+  
+  // Modal state
+  const [showDetailsModal, setShowDetailsModal] = useState(false)
+  const [selectedLead, setSelectedLead] = useState<LeadConfirmation | null>(null)
 
   const loadData = async () => {
     setLoading(true)
@@ -46,6 +50,18 @@ export default function ItAccountConfirmations({ currentUser, onRefresh }: ItAcc
       if (onRefresh) onRefresh()
     } catch (e: any) {
       toast.error(e.message)
+    }
+  }
+
+  const handleDelete = async (row: LeadConfirmation) => {
+    if (!window.confirm(`Are you sure you want to delete this confirmation record for ${row.lead_name}?`)) return;
+    try {
+      await deleteLeadConfirmation(row.id)
+      toast.success("Record deleted successfully.")
+      loadData()
+      if (onRefresh) onRefresh()
+    } catch (e: any) {
+      toast.error("Failed to delete: " + e.message)
     }
   }
 
@@ -97,12 +113,26 @@ export default function ItAccountConfirmations({ currentUser, onRefresh }: ItAcc
 
   const actions: CDMAction<LeadConfirmation>[] = [
     { 
+      label: "View Details", 
+      icon: Activity, 
+      onClick: (row) => {
+        setSelectedLead(row)
+        setShowDetailsModal(true)
+      }
+    },
+    { 
       label: "Confirm & Transfer", 
       icon: CheckCircle, 
       variant: "success", 
-      onClick: (row) => handleConfirmAccount(row),
-      // Only show for pending
+      show: (row) => row.stage === 'it_pending',
+      onClick: (row) => handleConfirmAccount(row)
     },
+    {
+      label: "Delete",
+      icon: Trash2,
+      variant: "danger",
+      onClick: (row) => handleDelete(row)
+    }
   ]
 
   return (
@@ -131,6 +161,93 @@ export default function ItAccountConfirmations({ currentUser, onRefresh }: ItAcc
         emptyMessage="No account creation requests pending" 
         emptyIcon={CheckCircle} 
       />
+
+      {/* DETAILS MODAL */}
+      {showDetailsModal && selectedLead && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <Users className="w-5 h-5 text-blue-600" />
+                Student Details
+              </h3>
+              <button onClick={() => setShowDetailsModal(false)} className="text-gray-400 hover:text-gray-600 p-1">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Student Name</label>
+                  <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{selectedLead.lead_name || 'N/A'}</div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Student ID</label>
+                  <div className="font-mono font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{selectedLead.student_id || 'N/A'}</div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Contact / Email</label>
+                  <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{selectedLead.email || selectedLead.contact || 'N/A'}</div>
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Course Enrolled</label>
+                  <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">{selectedLead.course_interested || 'N/A'}</div>
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Status</label>
+                  <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">
+                    {selectedLead.stage === 'it_pending' ? 'Pending IT Account Creation' : 
+                     selectedLead.stage === 'it_confirmed' ? 'IT Account Created (Transferred to Academic)' : 
+                     selectedLead.stage}
+                  </div>
+                </div>
+                {selectedLead.marketing_confirmed_at && (
+                  <div className="col-span-2">
+                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Marketing Confirmed At</label>
+                    <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">
+                      {new Date(selectedLead.marketing_confirmed_at).toLocaleString()}
+                    </div>
+                  </div>
+                )}
+                {selectedLead.finance_confirmed_at && (
+                  <div className="col-span-2">
+                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Finance Confirmed At</label>
+                    <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">
+                      {new Date(selectedLead.finance_confirmed_at).toLocaleString()}
+                    </div>
+                  </div>
+                )}
+                {selectedLead.it_confirmed_at && (
+                  <div className="col-span-2">
+                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">IT Confirmed At</label>
+                    <div className="font-medium text-gray-900 bg-gray-50 px-3 py-2 rounded-xl border border-gray-100">
+                      {new Date(selectedLead.it_confirmed_at).toLocaleString()}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3 flex-shrink-0">
+              <button onClick={() => setShowDetailsModal(false)} className="px-5 py-2.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-xl font-medium shadow-sm transition-all">
+                Close
+              </button>
+              {selectedLead.stage === 'it_pending' && (
+                <button 
+                  onClick={() => {
+                    setShowDetailsModal(false);
+                    handleConfirmAccount(selectedLead);
+                  }}
+                  className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold shadow-lg hover:opacity-90 transition-all flex items-center gap-2"
+                >
+                  <CheckCircle className="w-4 h-4" /> Confirm & Transfer
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
