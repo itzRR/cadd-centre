@@ -365,16 +365,16 @@ export default function FinanceDashboard() {
   );
 
   return (
-    <div className="min-h-screen deep-red-bg">
+    <div className="min-h-screen bg-gray-50 flex font-sans text-gray-900 selection:bg-red-100">
       <AnimatePresence>
         {showLoadingAnimation && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gray-900/90 backdrop-blur-md">
             <motion.div animate={{ rotate: 360, scale: [1, 1.15, 1] }} transition={{ duration: 3, repeat: Infinity }}
               className="w-24 h-24 bg-gradient-to-r from-red-500 to-violet-500 rounded-full flex items-center justify-center mb-6">
-              <DollarSign className="w-12 h-12 text-gray-900" />
+              <DollarSign className="w-12 h-12 text-white" />
             </motion.div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">CADD Centre - Finance</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">CADD Centre - Finance</h2>
             <div className="w-64 h-1.5 bg-gray-700 rounded-full overflow-hidden">
               <motion.div className="h-full bg-gradient-to-r from-red-500 to-violet-400"
                 initial={{ width: 0 }} animate={{ width: '100%' }} transition={{ duration: 3 }} />
@@ -383,35 +383,14 @@ export default function FinanceDashboard() {
         )}
       </AnimatePresence>
 
-      {/* Header */}
-      <motion.header initial={{ y: -100 }} animate={{ y: 0 }} className="bg-white border-b border-gray-200 shadow-sm p-4 md:p-6 flex flex-wrap gap-4 items-center justify-between">
-        <div className="flex items-center gap-3">
-          <button className="md:hidden text-gray-900" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-          <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-violet-500 rounded-xl flex items-center justify-center shrink-0">
-            <DollarSign className="w-6 h-6 text-gray-900" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-red-600">Finance Dashboard</h1>
-            <p className="text-gray-500 text-sm hidden md:block">CADD Centre - {currentUser?.name}</p>
-          </div>
+      {/* 📱 Mobile Header */}
+      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-100 flex items-center justify-between px-4 z-50">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-red-500 to-violet-500 flex items-center justify-center shadow-lg"><DollarSign className="w-4 h-4 text-white" /></div>
+          <span className="font-bold text-lg">Finance</span>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <QuickGuide
-            guideKey="finance_dashboard"
-            dashboardName="Finance"
-            accentGradient="from-red-500 to-violet-500"
-            steps={financeGuideSteps}
-          />
-          {['admin', 'super_admin'].includes(currentUser?.role) && <button onClick={() => router.push('/admin/ims')} className="text-gray-600 hover:text-gray-900 px-3 py-2 border border-gray-200 rounded-xl text-sm font-medium">Back to Admin</button>}
-          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-            onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl border border-gray-200 hover:bg-red-500/30 text-sm md:text-base">
-            <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">Logout</span>
-          </motion.button>
-        </div>
-      </motion.header>
+        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 text-gray-600 bg-gray-50 rounded-xl"><Menu className="w-5 h-5" /></button>
+      </div>
 
       <div className="flex relative w-full">
         {/* Mobile Overlay */}
@@ -420,11 +399,11 @@ export default function FinanceDashboard() {
           onClick={() => setMobileMenuOpen(false)} 
         />
 
+        {/* 🚀 SIDEBAR */}
         <aside className={`fixed md:sticky top-0 left-0 h-screen w-[280px] bg-slate-950 border-r border-slate-800 flex flex-col transition-transform duration-300 z-50 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
           {mobileMenuOpen && (
             <div className="flex justify-end p-3 md:hidden">
               <button onClick={() => setMobileMenuOpen(false)} className="text-slate-400 hover:text-white transition-colors">
-                <Menu size={20} className="hidden" /> {/* just placeholder */}
                 <span className="text-2xl leading-none">&times;</span>
               </button>
             </div>
@@ -491,7 +470,29 @@ export default function FinanceDashboard() {
           </div>
         </aside>
 
-        <main className="flex-1 p-4 md:p-6 min-h-[calc(100vh-80px)] overflow-auto space-y-5 bg-gray-50">
+        <main className="flex-1 p-4 md:p-6 min-h-[calc(100vh-80px)] overflow-auto space-y-6 bg-gray-50 mt-16 md:mt-0">
+
+          {/* Desktop Header Actions */}
+          <div className="hidden md:flex items-center justify-between bg-white p-4 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 mb-6">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">Welcome back, {currentUser?.name || 'Finance Team'}</h2>
+              <p className="text-sm text-gray-500">Here's what's happening with the finances today.</p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <QuickGuide
+                guideKey="finance_dashboard"
+                dashboardName="Finance"
+                accentGradient="from-red-500 to-violet-500"
+                steps={financeGuideSteps}
+              />
+              {['admin', 'super_admin'].includes(currentUser?.role) && <button onClick={() => router.push('/admin/ims')} className="text-gray-600 hover:bg-gray-50 px-4 py-2 border border-gray-200 rounded-xl text-sm font-bold transition-colors">Admin Panel</button>}
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-xl font-bold text-sm transition-colors">
+                <LogOut className="w-4 h-4" /> <span>Logout</span>
+              </motion.button>
+            </div>
+          </div>
 
           {/* 📊 OVERVIEW 📊 */}
           {activeTab === 'overview' && (

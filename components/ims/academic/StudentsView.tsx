@@ -14,7 +14,11 @@ import { ShieldOff, ShieldCheck } from "lucide-react"
 // Only academic_head and admins can manage students. academic_officer is READ ONLY here.
 const MANAGE_ROLES = ['admin', 'super_admin', 'academic_head']
 
-export default function StudentsView() {
+interface StudentsViewProps {
+  leadConfirmationCount?: number;
+}
+
+export default function StudentsView({ leadConfirmationCount = 0 }: StudentsViewProps) {
   const [activeSubTab, setActiveSubTab] = useState<'students' | 'lead-confirmations'>('students')
   const [students, setStudents] = useState<any[]>([])
   const [enrollments, setEnrollments] = useState<any[]>([])
@@ -353,6 +357,11 @@ export default function StudentsView() {
           }`}
         >
           <CheckCircle className="w-4 h-4" /> Lead Confirmations
+          {leadConfirmationCount > 0 && (
+            <span className="px-1.5 py-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold">
+              {leadConfirmationCount}
+            </span>
+          )}
         </button>
       </div>
 

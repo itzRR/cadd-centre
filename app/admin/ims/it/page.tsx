@@ -9,7 +9,7 @@ import {
   RefreshCw, Wifi, Database, Server, BarChart3, Lock, AlertTriangle,
   LogOut, Menu, X, User, CalendarDays, FileText, Terminal, Network, Calendar, UserPlus
 } from "lucide-react"
-import { getAllProfiles, getLoginHistory, getSystemCommands } from "@/lib/ims-data"
+import { getAllProfiles, getLoginHistory, getSystemCommands, getLeadConfirmations } from "@/lib/ims-data"
 import { getCurrentUser, signOut } from "@/lib/auth"
 import type { Profile, ImsLoginHistory, ImsSystemCommand } from "@/types"
 import SriLankaCalendar from "@/components/ims/SriLankaCalendar"
@@ -30,6 +30,7 @@ export default function ITDashboardPage() {
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("overview")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [pendingRequestsCount, setPendingRequestsCount] = useState(0)
 
   // Modals & Terminal
   const [viewingLogsFor, setViewingLogsFor] = useState<Profile | null>(null)
@@ -64,14 +65,21 @@ export default function ITDashboardPage() {
   const loadData = useCallback(async () => {
     setLoading(true)
     try {
-      const [p, l, c, u, s] = await Promise.all([
+      const [p, l, c, u, s, pendingReqs] = await Promise.all([
         getAllProfiles(), getLoginHistory(), getSystemCommands(), getCurrentUser(),
-        fetch('/api/ims/storage').then(r => r.json()).catch(() => null)
+        fetch('/api/ims/storage').then(r => r.json()).catch(() => null),
+        getLeadConfirmations(['it_pending'])
       ])
-      setProfiles(p); setLoginLogs(l); setCommands(c); setCurrentUser(u)
-      if (s?.success) setStorageData(s)
-    } catch (e: any) { toast.error(e.message) }
-    finally { setLoading(false) }
+      setProfiles(p)
+      setLoginLogs(l)
+      setCommands(c)
+      setCurrentUser(u)
+      setStorageData(s)
+      setPendingRequestsCount(pendingReqs.length)
+    } catch (error) {
+      console.error(error)
+      toast.error("Failed to load IT systems data")
+    } finally { setLoading(false) }
   }, [])
 
   useEffect(() => { loadData() }, [loadData])
@@ -163,7 +171,7 @@ export default function ITDashboardPage() {
   const navSections = [
     { label: '🖥 IT Operations', items: [
       { id: 'overview', label: 'System Overview', icon: Monitor },
-      { id: 'account-confirmations', label: 'Account Requests', icon: UserPlus },
+      { id: 'account-confirmations', label: 'Account Requests', icon: UserPlus, badge: pendingRequestsCount },
       { id: 'infrastructure', label: 'Infrastructure', icon: Server },
       { id: 'security', label: 'Security & SOC', icon: Shield },
       { id: 'users-audit', label: 'User Audit', icon: Users },
@@ -266,6 +274,13 @@ export default function ITDashboardPage() {
                       )}
                       <item.icon className={`w-4 h-4 flex-shrink-0 ${activeTab === item.id ? 'text-white' : 'text-slate-400 group-hover:text-white transition-colors'}`} />
                       <span className="flex-1 text-left">{item.label}</span>
+                      {item.badge !== undefined && item.badge > 0 && (
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                          activeTab === item.id ? 'bg-white text-blue-600' : 'bg-blue-600 text-white'
+                        }`}>
+                          {item.badge}
+                        </span>
+                      )}
                     </button>
                   ))}
                 </div>
