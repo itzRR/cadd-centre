@@ -11,7 +11,7 @@ import CDMDataTable, { CDMColumn, CDMAction } from "@/components/ims/CDMDataTabl
 import {
   getLeadConfirmations, confirmLeadAsStudent,
   generateStudentId, getNextStudentSequence,
-  confirmLeadPayment
+  confirmLeadPayment, requestItAccountCreation
 } from "@/lib/ims-data"
 import { getBatches, getCourses } from "@/lib/data"
 import type { LeadConfirmation } from "@/types"
@@ -46,7 +46,7 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
     setLoading(true)
     try {
       const [data, bat, cou] = await Promise.all([
-        getLeadConfirmations('finance_confirmed'),
+        getLeadConfirmations(['finance_confirmed', 'it_pending', 'it_confirmed']),
         getBatches(true),
         getCourses(true),
       ])
@@ -64,12 +64,12 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
 
   const handleOpenModal = async (row: LeadConfirmation) => {
     setSelectedLead(row)
-    setSelectedBatchId("")
-    setGeneratedStudentId("")
-    setAcademicEmail("")
-    setAcademicPassword("")
-    setEmailGenerated(false)
-    setStep(1)
+    setSelectedBatchId(row.batch_id || "")
+    setGeneratedStudentId(row.student_id || "")
+    setAcademicEmail(row.academic_email || "")
+    setAcademicPassword(row.academic_password || "")
+    setEmailGenerated(!!row.academic_email)
+    setStep(row.stage === 'it_confirmed' ? 2 : 1)
     setShowModal(true)
   }
 
@@ -101,10 +101,31 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
     }
   }
 
-  // Move to step 2 (confirm credentials)
-  const handleProceedToConfirm = () => {
+  const handleProceedToConfirm = async () => {
     if (!selectedBatchId || !emailGenerated) return toast.error("Please select a batch first")
-    setStep(2)
+    if (selectedLead?.stage === 'finance_confirmed') {
+      // Send to IT instead of proceeding
+      setAllocating(true)
+      try {
+        await requestItAccountCreation(
+          selectedLead.id,
+          selectedBatchId,
+          generatedStudentId,
+          academicEmail,
+          academicPassword
+        )
+        toast.success("Account creation requested from IT department.")
+        setShowModal(false)
+        loadData()
+        if (onRefresh) onRefresh()
+      } catch (e: any) {
+        toast.error(e.message)
+      } finally {
+        setAllocating(false)
+      }
+    } else {
+      setStep(2)
+    }
   }
 
 
@@ -211,11 +232,23 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
     },
     {
       key: "stage", label: "Status",
-      render: () => (
-        <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-50 text-red-700 text-xs font-bold rounded-lg border border-red-200">
-          <GraduationCap className="w-3 h-3" /> Ready to Enroll
-        </span>
-      )
+      render: (val) => {
+        if (val === 'it_pending') return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-lg border border-amber-200">
+            <Clock className="w-3 h-3" /> Awaiting IT
+          </span>
+        )
+        if (val === 'it_confirmed') return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-lg border border-blue-200">
+            <GraduationCap className="w-3 h-3" /> Ready to Enroll
+          </span>
+        )
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-50 text-red-700 text-xs font-bold rounded-lg border border-red-200">
+            <Mail className="w-3 h-3" /> Needs IT Account
+          </span>
+        )
+      }
     },
   ]
 
@@ -347,10 +380,17 @@ export default function AcademicLeadConfirmationsView({ currentUser, onRefresh }
 
                     <div className="pt-2 flex gap-3 border-t border-gray-100">
                       <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-3 text-gray-600 hover:bg-gray-100 rounded-xl font-medium transition-colors">Cancel</button>
-                      <button type="submit" disabled={!selectedBatchId || !emailGenerated}
-                        className="flex-1 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl font-bold shadow-lg shadow-purple-500/20 hover:opacity-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50">
-                        <ArrowRight className="w-4 h-4" /> Proceed to Confirm
-                      </button>
+                      {selectedLead?.stage === 'it_pending' ? (
+                        <button type="button" disabled
+                          className="flex-1 py-3 bg-gray-200 text-gray-500 rounded-xl font-bold flex items-center justify-center gap-2 cursor-not-allowed">
+                          <Clock className="w-4 h-4" /> Awaiting IT Confirmation
+                        </button>
+                      ) : (
+                        <button type="submit" disabled={!selectedBatchId || !emailGenerated || allocating}
+                          className="flex-1 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl font-bold shadow-lg shadow-purple-500/20 hover:opacity-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50">
+                          {allocating ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><ArrowRight className="w-4 h-4" /> {selectedLead?.stage === 'finance_confirmed' ? 'Send to IT Department' : 'Proceed to Confirm'}</>}
+                        </button>
+                      )}
                     </div>
                   </div>
                 )}

@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import {
   Monitor, Cpu, Users, Shield, Activity, HardDrive, Clock,
   RefreshCw, Wifi, Database, Server, BarChart3, Lock, AlertTriangle,
-  LogOut, Menu, X, User, CalendarDays, FileText, Terminal, Network, Calendar
+  LogOut, Menu, X, User, CalendarDays, FileText, Terminal, Network, Calendar, UserPlus
 } from "lucide-react"
 import { getAllProfiles, getLoginHistory, getSystemCommands } from "@/lib/ims-data"
 import { getCurrentUser, signOut } from "@/lib/auth"
@@ -18,6 +18,7 @@ import ProfileSection from "@/components/ims/ProfileSection"
 import LeaveRequestsView from "@/components/ims/LeaveRequestsView"
 import { useRouter } from "next/navigation"
 import IMSTasksPage from "../tasks/page"
+import ItAccountConfirmations from "@/components/ims/it/ItAccountConfirmations"
 
 export default function ITDashboardPage() {
   const router = useRouter()
@@ -162,6 +163,7 @@ export default function ITDashboardPage() {
   const navSections = [
     { label: '🖥 IT Operations', items: [
       { id: 'overview', label: 'System Overview', icon: Monitor },
+      { id: 'account-confirmations', label: 'Account Requests', icon: UserPlus },
       { id: 'infrastructure', label: 'Infrastructure', icon: Server },
       { id: 'security', label: 'Security & SOC', icon: Shield },
       { id: 'users-audit', label: 'User Audit', icon: Users },
@@ -613,6 +615,11 @@ export default function ITDashboardPage() {
                     <div ref={terminalEndRef} />
                   </div>
                 </div>
+              )}
+
+              {/* ACCOUNT CONFIRMATIONS TAB */}
+              {activeTab === 'account-confirmations' && (
+                <ItAccountConfirmations currentUser={currentUser} onRefresh={loadData} />
               )}
 
               {/* PERSONAL TABS */}

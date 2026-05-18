@@ -630,7 +630,7 @@ export interface Lecturer {
 }
 
 // ── LEAD CONFIRMATION (Cross-dashboard workflow) ────────────
-export type LeadConfirmationStage = 'marketing_confirmed' | 'finance_confirmed' | 'academic_confirmed'
+export type LeadConfirmationStage = 'marketing_confirmed' | 'finance_confirmed' | 'it_pending' | 'it_confirmed' | 'academic_confirmed'
 
 export interface LeadConfirmation {
   id: string
@@ -644,12 +644,16 @@ export interface LeadConfirmation {
   marketing_confirmed_at: string | null
   finance_confirmed_by: string | null
   finance_confirmed_at: string | null
+  it_confirmed_by: string | null
+  it_confirmed_at: string | null
   academic_confirmed_by: string | null
   academic_confirmed_at: string | null
   payment_amount: number | null
   payment_method: string | null
   batch_id: string | null
   student_id: string | null
+  academic_email: string | null
+  academic_password: string | null
   notes: string | null
   created_at: string
   updated_at: string

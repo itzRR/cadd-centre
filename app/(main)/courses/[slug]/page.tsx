@@ -86,7 +86,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ slug: s
       const { error } = await supabase.from("marketing_leads").insert({
         name: currentUser.name || "Logged In Student",
         email: currentUser.email || null,
-        source: "Website (Logged In)",
+        source: "Website",
         course_interested: course?.title || "Unknown",
         status: "New",
       })

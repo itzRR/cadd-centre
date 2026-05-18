@@ -1017,12 +1017,18 @@ export async function deleteLecturer(id: string): Promise<void> {
 
 // ── LEAD CONFIRMATIONS (Cross-dashboard pipeline) ────────────
 
-export async function getLeadConfirmations(stage?: LeadConfirmationStage): Promise<LeadConfirmation[]> {
+export async function getLeadConfirmations(stage?: LeadConfirmationStage | LeadConfirmationStage[]): Promise<LeadConfirmation[]> {
   let query = supabase
     .from('lead_confirmations')
     .select('*')
     .order('created_at', { ascending: false })
-  if (stage) query = query.eq('stage', stage)
+  if (stage) {
+    if (Array.isArray(stage)) {
+      query = query.in('stage', stage)
+    } else {
+      query = query.eq('stage', stage)
+    }
+  }
   const { data, error } = await query
   if (error) throw error
   return data || []
@@ -1095,6 +1101,48 @@ export async function confirmLeadAsStudent(
       academic_confirmed_at: new Date().toISOString(),
       batch_id: batchId,
       student_id: studentId,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', confirmationId)
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function requestItAccountCreation(
+  confirmationId: string,
+  batchId: string,
+  studentId: string,
+  academicEmail: string,
+  academicPassword: string
+): Promise<LeadConfirmation> {
+  const { data, error } = await supabase
+    .from('lead_confirmations')
+    .update({
+      stage: 'it_pending',
+      batch_id: batchId,
+      student_id: studentId,
+      academic_email: academicEmail,
+      academic_password: academicPassword,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', confirmationId)
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function confirmItAccount(
+  confirmationId: string, confirmedBy: string
+): Promise<LeadConfirmation> {
+  const { data, error } = await supabase
+    .from('lead_confirmations')
+    .update({
+      stage: 'it_confirmed',
+      it_confirmed_by: confirmedBy,
+      it_confirmed_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     })
     .eq('id', confirmationId)
