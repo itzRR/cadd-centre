@@ -1938,6 +1938,20 @@ COMMENT ON TABLE public.ims_academic_students IS 'IMS-managed student records (p
 COMMENT ON TABLE public.ims_academic_results IS 'IMS-side exam/result tracking';
 COMMENT ON TABLE public.lecturers IS 'Standalone IMS lecturer directory';
 COMMENT ON TABLE public.notifications IS 'In-app notification system';
+
+-- 3. Allow enrollments.user_id to reference EITHER profiles OR students
+-- We change the FK to reference auth.users directly (parent of both tables)
+ALTER TABLE public.enrollments DROP CONSTRAINT IF EXISTS enrollments_user_id_fkey;
+ALTER TABLE public.enrollments
+  ADD CONSTRAINT enrollments_user_id_fkey
+  FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+
+-- 3b. Same fix for certificates.user_id (was referencing profiles, breaking for students)
+ALTER TABLE public.certificates DROP CONSTRAINT IF EXISTS certificates_user_id_fkey;
+ALTER TABLE public.certificates
+  ADD CONSTRAINT certificates_user_id_fkey
+  FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+
 COMMENT ON TABLE public.system_settings IS 'Key-value system configuration';
 COMMENT ON TABLE public.feature_flags IS 'Feature toggle system for gradual rollout';
 COMMENT ON TABLE public.file_uploads IS 'Centralized file/document storage metadata';
