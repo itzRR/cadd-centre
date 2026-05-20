@@ -565,7 +565,7 @@ export default function AcademicDashboard() {
         {/* MODULAR VIEWS */}
         {/* ══════════════════════════════════════ */}
         {activeTab === 'batches' && <BatchesView courses={courses.map(c => ({ id: c.id, name: c.name }))} lecturers={lecturers} />}
-        {activeTab === 'students' && <StudentsView />}
+        {activeTab === 'students' && <StudentsView leadConfirmationCount={leadConfirmationCount} />}
         {activeTab === 'lecturers' && <LecturersView />}
         {activeTab === 'courses' && <CoursesView />}
 
