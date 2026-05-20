@@ -49,7 +49,7 @@ export default function MarketingDashboard() {
         getMarketingLeads(), getMarketingCampaigns(), getAllProfiles(), getCurrentUser()
       ])
       setLeads(l); setCampaigns(c)
-      setStaff(s.filter(p => ["admin","super_admin","branch_manager","marketing_staff", "marketing_head", "marketing_officer"].includes(p.role)))
+      setStaff(s.filter(p => ["admin","super_admin","marketing_head", "marketing_officer", "staff"].includes(p.role)))
       setCurrentUser(u)
     } catch (e: any) { toast.error("Load failed: " + e.message) }
     finally { setLoading(false) }

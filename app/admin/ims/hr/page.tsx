@@ -46,7 +46,7 @@ import { confirmDialog } from "@/components/ui/global-confirm-dialog"
 
 const DEPARTMENTS = ["Academic", "Marketing", "Finance", "HR", "IT", "Operations"]
 const LEAVE_TYPES = ["Annual", "Sick", "Emergency", "Maternity/Paternity", "Other"]
-const ROLES = ["admin", "super_admin", "branch_manager", "marketing_staff", "academic_staff", "finance_officer", "hr_officer", "staff"]
+const ROLES = ["admin", "super_admin", "academic_head", "academic_officer", "finance_head", "finance_officer", "marketing_head", "marketing_officer", "hr_head", "hr_officer", "it_head", "it_officer", "lecturer", "staff"]
 const CONTRACT_TYPES = ["Full-time", "Part-time", "Contract", "Intern"]
 const EMPLOYEE_STATUSES = ["Active", "Inactive", "On Leave", "Terminated"]
 
