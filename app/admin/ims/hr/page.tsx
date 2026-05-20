@@ -81,7 +81,7 @@ export default function HRDashboard() {
   const emptyPayout = { user_id: "", employee_name: "", month: format(new Date(), "yyyy-MM"), amount: 0, paid_on: format(new Date(), "yyyy-MM-dd"), notes: "", created_by: null }
   const [payoutForm, setPayoutForm] = useState(emptyPayout)
 
-  const emptyReview = { employee_id: "", employee_name: "", quarter: `Q${Math.ceil((new Date().getMonth() + 1) / 3)} ${new Date().getFullYear()}`, score: 80, notes: "", reviewed_by: null }
+  const emptyReview: HrPerformanceReview = { id: "", employee_id: "", employee_name: "", quarter: `Q${Math.ceil((new Date().getMonth() + 1) / 3)} ${new Date().getFullYear()}`, score: 8, notes: "", reviewed_by: null }
   const [reviewForm, setReviewForm] = useState(emptyReview)
 
   const emptyUserForm = { 
@@ -1306,8 +1306,8 @@ export default function HRDashboard() {
                     className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-500" />
                 </div>
                 <div>
-                  <label className="block text-gray-600 text-sm mb-1">Score (0–100): {reviewForm.score}</label>
-                  <input type="range" min={0} max={100} value={reviewForm.score} onChange={e => setReviewForm(p => ({ ...p, score: Number(e.target.value) }))}
+                  <label className="block text-gray-600 text-sm mb-1">Score (0–10): {reviewForm.score}</label>
+                  <input type="range" min={0} max={10} value={reviewForm.score} onChange={e => setReviewForm(p => ({ ...p, score: Number(e.target.value) }))}
                     className="w-full accent-purple-500" />
                   <div className="flex justify-between text-xs text-gray-400 mt-1"><span>Poor</span><span>Excellent</span></div>
                 </div>
