@@ -171,19 +171,20 @@ export default function HRDashboard() {
   }
 
   const handleDeleteLeave = async (id: string) => {
-    if (confirm("Delete this leave request?")) {
-      try {
-        await deleteHrLeaveRequestAction(id); setLeaves(prev => prev.filter(l => l.id !== id)); toast.success("Deleted") }
-    catch (e: any) { toast.error(e.message) }
+    if (!(await confirmDialog("Delete this leave request?"))) return
+    try {
+      await deleteHrLeaveRequestAction(id)
+      setLeaves(prev => prev.filter(l => l.id !== id))
+      toast.success("Deleted")
+    } catch (e: any) { toast.error(e.message) }
   }
-}
 
   // ── Salary CRUD ──
   const handlePayoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!payoutForm.user_id || payoutForm.amount <= 0) return toast.error("Employee and amount required")
     try {
-      const created = await createHrSalaryPayoutAction({ ...payoutForm, created_by: currentUser?.id })
+      const created = await createHrSalaryPayoutAction({ ...payoutForm, created_by: currentUser?.id || null })
       setPayouts(prev => [created, ...prev])
       toast.success("Salary payout recorded")
       setShowPayoutModal(false); setPayoutForm(emptyPayout)
@@ -191,19 +192,20 @@ export default function HRDashboard() {
   }
 
   const handleDeletePayout = async (id: string) => {
-    if (confirm("Delete this payout record?")) {
-      try {
-        await deleteHrSalaryPayoutAction(id); setPayouts(prev => prev.filter(p => p.id !== id)); toast.success("Deleted") }
-    catch (e: any) { toast.error(e.message) }
+    if (!(await confirmDialog("Delete this payout record?"))) return
+    try {
+      await deleteHrSalaryPayoutAction(id)
+      setPayouts(prev => prev.filter(p => p.id !== id))
+      toast.success("Deleted")
+    } catch (e: any) { toast.error(e.message) }
   }
-}
 
   // ── Performance CRUD ──
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!reviewForm.employee_id) return toast.error("Employee required")
     try {
-      const created = await createHrPerformanceReviewAction({ ...reviewForm, reviewed_by: currentUser?.id })
+      const created = await createHrPerformanceReviewAction({ ...reviewForm, reviewed_by: currentUser?.id || null })
       setReviews(prev => [created, ...prev])
       toast.success("Review saved")
       setShowReviewModal(false); setReviewForm(emptyReview)
@@ -211,12 +213,13 @@ export default function HRDashboard() {
   }
 
   const handleDeleteReview = async (id: string) => {
-    if (confirm("Delete this review record?")) {
-      try {
-        await deleteHrPerformanceReviewAction(id); setReviews(prev => prev.filter(r => r.id !== id)); toast.success("Deleted") }
-    catch (e: any) { toast.error(e.message) }
+    if (!(await confirmDialog("Delete this review record?"))) return
+    try {
+      await deleteHrPerformanceReviewAction(id)
+      setReviews(prev => prev.filter(r => r.id !== id))
+      toast.success("Deleted")
+    } catch (e: any) { toast.error(e.message) }
   }
-}
 
   // ── Employee Management ──
   const [showDisablePrompt, setShowDisablePrompt] = useState<{ id: string, name: string } | null>(null)
