@@ -12,20 +12,20 @@ const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
 
 export async function getHrSalaryPayoutsAction() {
   const user = await getServerCurrentUser()
-  if (!user || user.role === 'student') throw new Error("Unauthorized")
+  if (!user || user.role === 'student') return { data: null, error: "Unauthorized" }
 
   const { data, error } = await supabaseAdmin
     .from('hr_salary_payouts')
     .select('*')
     .order('created_at', { ascending: false })
   
-  if (error) throw new Error(error.message)
-  return data || []
+  if (error) return { data: null, error: error.message }
+  return { data: data || [], error: null }
 }
 
 export async function createHrSalaryPayoutAction(payout: any) {
   const user = await getServerCurrentUser()
-  if (!user || user.role === 'student') throw new Error("Unauthorized")
+  if (!user || user.role === 'student') return { data: null, error: "Unauthorized" }
 
   const { data, error } = await supabaseAdmin
     .from('hr_salary_payouts')
@@ -33,34 +33,35 @@ export async function createHrSalaryPayoutAction(payout: any) {
     .select()
     .single()
   
-  if (error) throw new Error(error.message)
-  return data
+  if (error) return { data: null, error: error.message }
+  return { data, error: null }
 }
 
 export async function deleteHrSalaryPayoutAction(id: string) {
   const user = await getServerCurrentUser()
-  if (!user || user.role === 'student') throw new Error("Unauthorized")
+  if (!user || user.role === 'student') return { error: "Unauthorized" }
 
   const { error } = await supabaseAdmin.from('hr_salary_payouts').delete().eq('id', id)
-  if (error) throw new Error(error.message)
+  if (error) return { error: error.message }
+  return { error: null }
 }
 
 export async function getHrPerformanceReviewsAction() {
   const user = await getServerCurrentUser()
-  if (!user || user.role === 'student') throw new Error("Unauthorized")
+  if (!user || user.role === 'student') return { data: null, error: "Unauthorized" }
 
   const { data, error } = await supabaseAdmin
     .from('hr_performance_reviews')
     .select('*')
     .order('created_at', { ascending: false })
   
-  if (error) throw new Error(error.message)
-  return data || []
+  if (error) return { data: null, error: error.message }
+  return { data: data || [], error: null }
 }
 
 export async function createHrPerformanceReviewAction(review: any) {
   const user = await getServerCurrentUser()
-  if (!user || user.role === 'student') throw new Error("Unauthorized")
+  if (!user || user.role === 'student') return { data: null, error: "Unauthorized" }
 
   const { data, error } = await supabaseAdmin
     .from('hr_performance_reviews')
@@ -68,34 +69,35 @@ export async function createHrPerformanceReviewAction(review: any) {
     .select()
     .single()
   
-  if (error) throw new Error(error.message)
-  return data
+  if (error) return { data: null, error: error.message }
+  return { data, error: null }
 }
 
 export async function deleteHrPerformanceReviewAction(id: string) {
   const user = await getServerCurrentUser()
-  if (!user || user.role === 'student') throw new Error("Unauthorized")
+  if (!user || user.role === 'student') return { error: "Unauthorized" }
 
   const { error } = await supabaseAdmin.from('hr_performance_reviews').delete().eq('id', id)
-  if (error) throw new Error(error.message)
+  if (error) return { error: error.message }
+  return { error: null }
 }
 
 export async function getHrLeaveRequestsAction() {
   const user = await getServerCurrentUser()
-  if (!user || user.role === 'student') throw new Error("Unauthorized")
+  if (!user || user.role === 'student') return { data: null, error: "Unauthorized" }
 
   const { data, error } = await supabaseAdmin
     .from('hr_leave_requests')
     .select('*')
     .order('created_at', { ascending: false })
   
-  if (error) throw new Error(error.message)
-  return data || []
+  if (error) return { data: null, error: error.message }
+  return { data: data || [], error: null }
 }
 
 export async function createHrLeaveRequestAction(leave: any) {
   const user = await getServerCurrentUser()
-  if (!user || user.role === 'student') throw new Error("Unauthorized")
+  if (!user || user.role === 'student') return { data: null, error: "Unauthorized" }
 
   const { data, error } = await supabaseAdmin
     .from('hr_leave_requests')
@@ -103,13 +105,13 @@ export async function createHrLeaveRequestAction(leave: any) {
     .select()
     .single()
   
-  if (error) throw new Error(error.message)
-  return data
+  if (error) return { data: null, error: error.message }
+  return { data, error: null }
 }
 
 export async function updateHrLeaveRequestAction(id: string, updates: any) {
   const user = await getServerCurrentUser()
-  if (!user || user.role === 'student') throw new Error("Unauthorized")
+  if (!user || user.role === 'student') return { data: null, error: "Unauthorized" }
 
   const { data, error } = await supabaseAdmin
     .from('hr_leave_requests')
@@ -118,14 +120,15 @@ export async function updateHrLeaveRequestAction(id: string, updates: any) {
     .select()
     .single()
   
-  if (error) throw new Error(error.message)
-  return data
+  if (error) return { data: null, error: error.message }
+  return { data, error: null }
 }
 
 export async function deleteHrLeaveRequestAction(id: string) {
   const user = await getServerCurrentUser()
-  if (!user || user.role === 'student') throw new Error("Unauthorized")
+  if (!user || user.role === 'student') return { error: "Unauthorized" }
 
   const { error } = await supabaseAdmin.from('hr_leave_requests').delete().eq('id', id)
-  if (error) throw new Error(error.message)
+  if (error) return { error: error.message }
+  return { error: null }
 }

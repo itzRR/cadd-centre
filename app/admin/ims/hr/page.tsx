@@ -106,12 +106,19 @@ export default function HRDashboard() {
   const loadData = useCallback(async () => {
     setLoading(true)
     try {
-        const [e, l, p, r, u] = await Promise.all([
-          getAllProfiles(), getHrLeaveRequestsAction(),
-      getHrSalaryPayoutsAction(),
-      getHrPerformanceReviewsAction(), getCurrentUser()
-        ])
-        setEmployees(e.filter(prof => prof.role !== 'student')); setLeaves(l); setPayouts(p); setReviews(r); setCurrentUser(u)
+      const [lData, pData, rData] = await Promise.all([
+        getHrLeaveRequestsAction(),
+        getHrSalaryPayoutsAction(),
+        getHrPerformanceReviewsAction()
+      ])
+      
+      const currentUserData = await getCurrentUser()
+      
+      setEmployees(e.filter(prof => prof.role !== 'student'))
+      setLeaves(lData.data || [])
+      setPayouts(pData.data || [])
+      setReviews(rData.data || [])
+      setCurrentUser(currentUserData)
     } catch (err: any) { toast.error(err.message) }
     finally { setLoading(false) }
   }, [])
@@ -155,7 +162,8 @@ export default function HRDashboard() {
     e.preventDefault()
     if (!leaveForm.employee_name.trim() || !leaveForm.from_date || !leaveForm.to_date) return toast.error("All required fields needed")
     try {
-      const created = await createHrLeaveRequestAction({ ...leaveForm })
+      const { data: created, error } = await createHrLeaveRequestAction({ ...leaveForm })
+      if (error) return toast.error(error)
       setLeaves(prev => [created, ...prev])
       toast.success("Leave request submitted")
       setShowLeaveModal(false); setLeaveForm(emptyLeave)
@@ -164,7 +172,8 @@ export default function HRDashboard() {
 
   const handleLeaveStatusChange = async (id: string, status: "Approved" | "Rejected") => {
     try {
-      const updated = await updateHrLeaveRequestAction(id, { status, reviewed_by: currentUser?.id })
+      const { data: updated, error } = await updateHrLeaveRequestAction(id, { status, reviewed_by: currentUser?.id })
+      if (error) return toast.error(error)
       setLeaves(prev => prev.map(l => l.id === id ? updated : l))
       toast.success(`Leave ${status.toLowerCase()}`)
     } catch (e: any) { toast.error(e.message) }
@@ -173,7 +182,8 @@ export default function HRDashboard() {
   const handleDeleteLeave = async (id: string) => {
     if (!(await confirmDialog("Delete this leave request?"))) return
     try {
-      await deleteHrLeaveRequestAction(id)
+      const { error } = await deleteHrLeaveRequestAction(id)
+      if (error) return toast.error(error)
       setLeaves(prev => prev.filter(l => l.id !== id))
       toast.success("Deleted")
     } catch (e: any) { toast.error(e.message) }
@@ -184,7 +194,8 @@ export default function HRDashboard() {
     e.preventDefault()
     if (!payoutForm.user_id || payoutForm.amount <= 0) return toast.error("Employee and amount required")
     try {
-      const created = await createHrSalaryPayoutAction({ ...payoutForm, created_by: currentUser?.id || null })
+      const { data: created, error } = await createHrSalaryPayoutAction({ ...payoutForm, created_by: currentUser?.id || null })
+      if (error) return toast.error(error)
       setPayouts(prev => [created, ...prev])
       toast.success("Salary payout recorded")
       setShowPayoutModal(false); setPayoutForm(emptyPayout)
@@ -194,7 +205,8 @@ export default function HRDashboard() {
   const handleDeletePayout = async (id: string) => {
     if (!(await confirmDialog("Delete this payout record?"))) return
     try {
-      await deleteHrSalaryPayoutAction(id)
+      const { error } = await deleteHrSalaryPayoutAction(id)
+      if (error) return toast.error(error)
       setPayouts(prev => prev.filter(p => p.id !== id))
       toast.success("Deleted")
     } catch (e: any) { toast.error(e.message) }
@@ -205,7 +217,8 @@ export default function HRDashboard() {
     e.preventDefault()
     if (!reviewForm.employee_id) return toast.error("Employee required")
     try {
-      const created = await createHrPerformanceReviewAction({ ...reviewForm, reviewed_by: currentUser?.id || null })
+      const { data: created, error } = await createHrPerformanceReviewAction({ ...reviewForm, reviewed_by: currentUser?.id || null })
+      if (error) return toast.error(error)
       setReviews(prev => [created, ...prev])
       toast.success("Review saved")
       setShowReviewModal(false); setReviewForm(emptyReview)
@@ -215,7 +228,8 @@ export default function HRDashboard() {
   const handleDeleteReview = async (id: string) => {
     if (!(await confirmDialog("Delete this review record?"))) return
     try {
-      await deleteHrPerformanceReviewAction(id)
+      const { error } = await deleteHrPerformanceReviewAction(id)
+      if (error) return toast.error(error)
       setReviews(prev => prev.filter(r => r.id !== id))
       toast.success("Deleted")
     } catch (e: any) { toast.error(e.message) }
