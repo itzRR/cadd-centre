@@ -3,7 +3,7 @@ import { supabase } from './supabase'
 // ── COURSES ──────────────────────────────────────────────────────────────────
 
 export async function getCourses(activeOnly = true) {
-  let query = supabase.from('courses').select('*').order('created_at', { ascending: false })
+  let query = supabase.from('courses').select('*').is('deleted_at', null).order('created_at', { ascending: false })
   if (activeOnly) query = query.eq('is_active', true)
   const { data, error } = await query
   if (error) throw error
@@ -13,6 +13,7 @@ export async function getCourses(activeOnly = true) {
 export async function getFeaturedCourses() {
   const { data, error } = await supabase
     .from('courses').select('*')
+    .is('deleted_at', null)
     .eq('is_active', true).eq('is_featured', true)
     .order('created_at', { ascending: false }).limit(6)
   if (error) throw error
