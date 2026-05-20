@@ -166,7 +166,7 @@ export default function CertificatesPage() {
                   <option value="">-- Select a batch --</option>
                   {batches.map(b => (
                     <option key={b.id} value={b.id}>
-                      {b.courses?.title ? `${b.courses.title} – ` : ''}{b.name}
+                      {b.courses?.title ? `${b.courses.title} – ` : ''}{b.name} {!b.is_active ? '(Inactive)' : ''}
                     </option>
                   ))}
                 </select>

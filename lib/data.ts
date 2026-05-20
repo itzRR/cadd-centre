@@ -118,7 +118,7 @@ export async function deleteModule(id: string) {
 // ── BATCHES ──────────────────────────────────────────────────────────────────
 
 export async function getBatches(activeOnly = true) {
-  let query = supabase.from('batches').select('*, courses(title, level), lecturer_allocations(lecturer_id, profiles(full_name))').order('start_date', { ascending: false })
+  let query = supabase.from('batches').select('*, courses(title, level), lecturer_allocations(lecturer_id, profiles(full_name))').is('deleted_at', null).order('start_date', { ascending: false })
   if (activeOnly) query = query.eq('is_active', true)
   const { data, error } = await query
   if (error) throw error
