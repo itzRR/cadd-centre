@@ -361,7 +361,7 @@ export default function IMSUsersPage() {
       </div>
 
       {/* Role Summary */}
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-7 gap-4">
         {[
           { role: "all",             label: "All Users", count: staffProfiles.length },
           { role: "admin",           label: "Admins",    count: (roleGroups["admin"] || 0) + (roleGroups["super_admin"] || 0) },
@@ -369,6 +369,7 @@ export default function IMSUsersPage() {
           { role: "marketing_head",  label: "Marketing", count: (roleGroups["marketing_head"] || 0) + (roleGroups["marketing_officer"] || 0) },
           { role: "finance_head",    label: "Finance",   count: (roleGroups["finance_head"] || 0) + (roleGroups["finance_officer"] || 0) },
           { role: "hr_head",         label: "HR",        count: (roleGroups["hr_head"] || 0) + (roleGroups["hr_officer"] || 0) },
+          { role: "it_head",         label: "IT",        count: (roleGroups["it_head"] || 0) + (roleGroups["it_officer"] || 0) },
         ].map(g => (
           <div key={g.role} onClick={() => setFilterRole(g.role)}
             className={`cursor-pointer p-4 rounded-2xl border transition-all ${filterRole === g.role ? 'bg-cyan-500/20 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.15)]' : 'bg-gray-100 border-gray-200 hover:border-white/30 hover:bg-gray-100'}`}>
