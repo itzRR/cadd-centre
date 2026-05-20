@@ -4,7 +4,7 @@ import React, { useState, useMemo, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Search, ChevronDown, ChevronUp, ChevronsUpDown,
-  ChevronLeft, ChevronRight, Download, Columns3,
+  ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Download, Columns3,
   Filter, X, MoreHorizontal
 } from "lucide-react"
 import * as XLSX from "xlsx"
@@ -473,16 +473,15 @@ export default function CDMDataTable<T extends Record<string, any>>({
               <button
                 onClick={() => setPage(0)}
                 disabled={page === 0}
-                className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center justify-center"
                 title="First page"
               >
-                <ChevronLeft className="w-4 h-4" />
-                <ChevronLeft className="w-4 h-4 -ml-2.5" />
+                <ChevronsLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setPage(p => Math.max(0, p - 1))}
                 disabled={page === 0}
-                className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center justify-center"
                 title="Previous"
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -493,7 +492,7 @@ export default function CDMDataTable<T extends Record<string, any>>({
               <button
                 onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                 disabled={page >= totalPages - 1}
-                className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center justify-center"
                 title="Next"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -501,11 +500,10 @@ export default function CDMDataTable<T extends Record<string, any>>({
               <button
                 onClick={() => setPage(totalPages - 1)}
                 disabled={page >= totalPages - 1}
-                className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center justify-center"
                 title="Last page"
               >
-                <ChevronRight className="w-4 h-4" />
-                <ChevronRight className="w-4 h-4 -ml-2.5" />
+                <ChevronsRight className="w-4 h-4" />
               </button>
             </div>
           )}
