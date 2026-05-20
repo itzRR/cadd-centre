@@ -62,127 +62,7 @@ const ROLE_COLORS: Record<string, string> = {
   lecturer:          "bg-yellow-100 text-yellow-700 border-yellow-200",
 }
 
-// ── Permission Checkbox Grid ─────────────────────────────────
-
-interface PermissionGridProps {
-  role: UserRole
-  grantedPermissions: Permission[]
-  onChange: (perms: Permission[]) => void
-  readOnly?: boolean
-}
-
-function PermissionGrid({ role, grantedPermissions, onChange, readOnly }: PermissionGridProps) {
-  const basePerms = ROLE_BASE_PERMISSIONS[role] || []
-  const groups = ['IMS', 'ASMS', 'Tasks'] as const
-
-  const togglePerm = (key: Permission) => {
-    if (readOnly) return
-    if (grantedPermissions.includes(key)) {
-      onChange(grantedPermissions.filter(p => p !== key))
-    } else {
-      onChange([...grantedPermissions, key])
-    }
-  }
-
-  return (
-    <div className="space-y-6">
-      {groups.map(group => {
-        let items = PERMISSION_DEFS.filter(d => d.group === group)
-        
-        // Hide cross-department and advanced permissions for non-admin roles
-        if (!['admin', 'super_admin'].includes(role)) {
-          let hidePerms = ['ims_overview', 'ims_marketing', 'ims_academic', 'ims_finance', 'ims_hr', 'ims_control_panel', 'asms_full', 'ims_users']
-          
-          if (role === 'hr_officer') hidePerms = hidePerms.filter(p => p !== 'ims_users')
-          // Remove the academic_manager special case — no longer exists
-            
-          items = items.filter(d => !hidePerms.includes(d.key))
-        }
-        
-        // Don't render empty groups
-        if (items.length === 0) return null
-
-        return (
-          <div key={group} className="space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{group}</p>
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-            </div>
-            <div className="grid grid-cols-1 gap-2">
-              {items.map(def => {
-                const isBase = basePerms.includes(def.key)
-                const isGranted = isBase || grantedPermissions.includes(def.key)
-                const isExtra = !isBase && grantedPermissions.includes(def.key)
-
-                return (
-                  <motion.label
-                    key={def.key}
-                    whileHover={!isBase ? { scale: 1.01, x: 4 } : {}}
-                    whileTap={!isBase ? { scale: 0.99 } : {}}
-                    className={`flex items-start gap-3 p-3 rounded-2xl border cursor-pointer transition-all duration-300 ${
-                      isBase
-                        ? 'bg-red-500/10 border-red-500/20 opacity-80 cursor-default'
-                        : isExtra
-                          ? 'bg-emerald-500/10 border-emerald-500/30 shadow-lg shadow-emerald-500/5'
-                          : 'bg-gray-200 border-gray-100 hover:border-gray-200 hover:bg-gray-100'
-                    }`}
-                    onClick={() => !isBase && togglePerm(def.key)}
-                  >
-                    <div className="flex-shrink-0 mt-0.5">
-                      {isBase ? (
-                        <div className="w-5 h-5 rounded-lg bg-red-500 flex items-center justify-center shadow-lg shadow-red-500/30">
-                          <Lock className="h-3 w-3 text-gray-900" />
-                        </div>
-                      ) : (
-                        <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all duration-500 ${
-                          isGranted
-                            ? 'bg-emerald-500 border-emerald-500 shadow-lg shadow-emerald-500/30'
-                            : 'border-gray-200 bg-gray-100'
-                        }`}>
-                          {isGranted && (
-                            <motion.svg initial={{ scale: 0, rotate: -45 }} animate={{ scale: 1, rotate: 0 }} className="w-3 h-3 text-gray-900" fill="none" viewBox="0 0 12 12">
-                              <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </motion.svg>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className={`text-sm font-bold transition-colors ${isGranted ? 'text-gray-900' : 'text-gray-600'}`}>{def.label}</span>
-                        {isBase && (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-red-500/20 text-red-600 font-bold border border-red-500/20 uppercase tracking-tighter">
-                            Default
-                          </span>
-                        )}
-                        {isExtra && (
-                          <motion.span initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} className="text-[9px] px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-700 font-bold border border-emerald-500/20 uppercase tracking-tighter">
-                            Granted
-                          </motion.span>
-                        )}
-                      </div>
-                      <p className="text-[11px] text-gray-400 mt-0.5 leading-relaxed">{def.description}</p>
-                    </div>
-                  </motion.label>
-                )
-              })}
-            </div>
-          </div>
-        )
-      })}
-
-      <div className="flex items-center gap-3 bg-red-500/5 p-4 rounded-2xl border border-red-500/10">
-        <Info className="h-5 w-5 flex-shrink-0 text-red-600" />
-        <p className="text-[11px] text-gray-500 leading-relaxed">
-          <strong className="text-red-600">Blue/Lock</strong> permissions are fixed for this role. 
-          <br />
-          <strong className="text-emerald-700">Emerald</strong> permissions are custom overrides granted to this specific user.
-        </p>
-      </div>
-    </div>
-  )
-}
+import { PermissionGrid } from "@/components/ims/PermissionGrid"
 
 // ── Main Page ────────────────────────────────────────────────
 
@@ -684,7 +564,11 @@ export default function IMSUsersPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-gray-600">System Role *</label>
-                    <select value={createForm.role} onChange={e => setCreateForm(p => ({ ...p, role: e.target.value as UserRole }))}
+                    <select value={createForm.role} onChange={e => {
+                        const newRole = e.target.value as UserRole;
+                        const newAccessLevel = ['admin', 'super_admin'].includes(newRole) || newRole.endsWith('_head') ? 2 : 1;
+                        setCreateForm(p => ({ ...p, role: newRole, access_level: newAccessLevel }));
+                      }}
                       className="w-full bg-gray-100 border border-gray-200 rounded-xl px-4 py-2.5 text-gray-900 focus:outline-none focus:border-cyan-500">
                       {IMS_ROLES.map(r => <option key={r} value={r} className="bg-white text-gray-900">{r.replace(/_/g, ' ')}</option>)}
                     </select>
@@ -864,37 +748,17 @@ export default function IMSUsersPage() {
               {/* Role & Access */}
               <div>
                 <h3 className="text-xs font-bold text-cyan-700 mb-3 uppercase tracking-wider flex items-center gap-2"><ShieldPlus className="h-3.5 w-3.5" /> Role & Access</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">System Role</label>
-                    <select value={editForm.role} onChange={e => setEditForm(p => ({ ...p, role: e.target.value as UserRole, permissions: [] }))}
+                    <select value={editForm.role} onChange={e => {
+                        const newRole = e.target.value as UserRole;
+                        const newAccessLevel = ['admin', 'super_admin'].includes(newRole) || newRole.endsWith('_head') ? 2 : 1;
+                        setEditForm(p => ({ ...p, role: newRole, access_level: newAccessLevel, permissions: [] }));
+                      }}
                       className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-cyan-500">
                       {IMS_ROLES.map(r => <option key={r} value={r}>{r.replace(/_/g, " ")}</option>)}
                     </select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">Access Level</label>
-                    <div className="flex gap-2">
-                      {[{v:1,label:"Standard"},{v:2,label:"Head"}].map(lvl => (
-                        <button key={lvl.v} type="button" onClick={() => {
-                          setEditForm(p => {
-                            const newPerms = new Set(p.permissions);
-                            let newPosition = p.position;
-                            if (lvl.v === 2) {
-                              newPerms.add("task_delete" as Permission);
-                              if (['hr_officer', 'admin', 'super_admin'].includes(p.role)) {
-                                newPerms.add("ims_users" as Permission);
-                              }
-                              if (p.department) newPosition = `Head of ${p.department}`;
-                            }
-                            return { ...p, access_level: lvl.v, permissions: Array.from(newPerms), position: newPosition };
-                          });
-                        }}
-                          className={`flex-1 py-2.5 rounded-xl text-xs font-bold border transition-all ${editForm.access_level === lvl.v ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-700' : 'bg-gray-100 border-gray-200 text-gray-400'}`}>
-                          {lvl.label}
-                        </button>
-                      ))}
-                    </div>
                   </div>
                 </div>
               </div>
@@ -912,6 +776,7 @@ export default function IMSUsersPage() {
                       role={editForm.role}
                       grantedPermissions={editForm.permissions}
                       onChange={p => setEditForm(prev => ({ ...prev, permissions: p }))}
+                      currentUserRole={currentUser?.role || ''}
                     />
                   </div>
                 )}

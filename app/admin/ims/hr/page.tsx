@@ -38,6 +38,7 @@ import { sanitizeName, isValidName, isValidEmail } from "@/lib/validation"
 import { FieldError } from "@/components/ui/field-error"
 import type { Profile, HrLeaveRequest, HrSalaryPayout, HrPerformanceReview, HrRoster, UserRole, Permission } from "@/types"
 import SriLankaCalendar from "@/components/ims/SriLankaCalendar"
+import { PermissionGrid } from "@/components/ims/PermissionGrid"
 import StaffAttendance from "@/components/ims/StaffAttendance"
 import ProfileSection from "@/components/ims/ProfileSection"
 import LeaveRequestsView from "@/components/ims/LeaveRequestsView"
@@ -977,7 +978,11 @@ export default function HRDashboard() {
                     </div>
                     <div>
                       <label className="block text-gray-600 text-xs font-bold uppercase mb-1">Role</label>
-                      <select value={userForm.role} onChange={e => setUserForm(p => ({ ...p, role: e.target.value as UserRole }))}
+                      <select value={userForm.role} onChange={e => {
+                          const newRole = e.target.value as UserRole;
+                          const newAccessLevel = ['admin', 'super_admin'].includes(newRole) || newRole.endsWith('_head') ? 2 : 1;
+                          setUserForm(p => ({ ...p, role: newRole, access_level: newAccessLevel, permissions: [] }));
+                        }}
                         className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-500">
                         {ROLES.map(r => <option key={r} value={r}>{r.replace(/_/g,' ')}</option>)}
                       </select>
@@ -1008,55 +1013,19 @@ export default function HRDashboard() {
                         {EMPLOYEE_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
                       </select>
                     </div>
-                    <div>
-                      <label className="block text-gray-600 text-xs font-bold uppercase mb-1">Access Level</label>
-                      <div className="grid grid-cols-2 gap-2">
-                        <button type="button" onClick={() => setUserForm(p => ({ ...p, access_level: 1 }))}
-                          className={`px-3 py-2 rounded-xl font-semibold flex justify-center items-center gap-1.5 border transition-all text-sm ${userForm.access_level === 1 ? "bg-red-500/20 border-red-500/50 text-red-600" : "bg-gray-100 border-gray-200 text-gray-500"}`}>
-                          <User className="w-3.5 h-3.5" /> Staff
-                        </button>
-                        <button type="button" onClick={() => setUserForm(p => {
-                          const newPerms = new Set(p.permissions);
-                          let newPosition = p.position;
-                          if (['hr_officer', 'admin', 'super_admin', 'branch_manager'].includes(p.role)) {
-                            newPerms.add("ims_users" as Permission);
-                          }
-                          newPerms.add("task_delete" as Permission);
-                          if (p.department) newPosition = `Head of ${p.department}`;
-                          return { ...p, access_level: 2, permissions: Array.from(newPerms), position: newPosition };
-                        })}
-                          className={`px-3 py-2 rounded-xl font-semibold flex justify-center items-center gap-1.5 border transition-all text-sm ${userForm.access_level === 2 ? "bg-orange-500/20 border-orange-500/50 text-orange-700" : "bg-gray-100 border-gray-200 text-gray-500"}`}>
-                          <span>👑</span> Head
-                        </button>
-                      </div>
-                    </div>
                   </div>
                 </div>
 
                 {/* Permissions */}
                 <div>
-                  <h3 className="text-purple-600 font-bold text-sm mb-3 flex items-center gap-2 border-b border-gray-200 pb-2"><ShieldPlus className="w-4 h-4" /> Permissions</h3>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    {[
-                      { id: "task_delete", label: "Can Delete Tasks" },
-                      { id: "ims_users", label: "Can Add Users" },
-                      { id: "ims_roster", label: "Can View All Attendance" },
-                      { id: "ims_hr", label: "Can Approve Leaves" },
-                      { id: "ims_finance", label: "Can Manage Payroll" },
-                      { id: "ims_overview", label: "Can View Reports" },
-                    ].map(perm => (
-                      <label key={perm.id} className="flex items-center gap-2 cursor-pointer text-gray-700 hover:text-gray-900">
-                        <input type="checkbox"
-                          checked={userForm.permissions.includes(perm.id as Permission)}
-                          onChange={(e) => {
-                            if (e.target.checked) setUserForm(p => ({ ...p, permissions: [...p.permissions, perm.id as Permission] }))
-                            else setUserForm(p => ({ ...p, permissions: p.permissions.filter(x => x !== perm.id) }))
-                          }}
-                          className="rounded bg-gray-100 border-gray-200 text-purple-500 focus:ring-purple-500"
-                        />
-                        {perm.label}
-                      </label>
-                    ))}
+                  <h3 className="text-purple-600 font-bold text-sm mb-3 flex items-center gap-2 border-b border-gray-200 pb-2"><ShieldPlus className="w-4 h-4" /> Granular Permissions</h3>
+                  <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-inner">
+                    <PermissionGrid
+                      role={userForm.role}
+                      grantedPermissions={userForm.permissions}
+                      onChange={p => setUserForm(prev => ({ ...prev, permissions: p }))}
+                      currentUserRole={currentUser?.role || ''}
+                    />
                   </div>
                 </div>
 
