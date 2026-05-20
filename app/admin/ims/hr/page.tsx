@@ -65,8 +65,7 @@ export default function HRDashboard() {
   const [showLoadingAnimation, setShowLoadingAnimation] = useState(true)
   const [search, setSearch] = useState("")
 
-  const isHead = currentUser?.role === "admin" || currentUser?.role === "super_admin" ||
-    currentUser?.role === "branch_manager" || currentUser?.role === "hr_officer" || currentUser?.access_level >= 2 || currentUser?.permissions?.includes("ims_users")
+  const isHead = currentUser ? hasPermission(currentUser.role as UserRole, currentUser.permissions, 'ims_users') : false;
 
   // Modals
   const [showLeaveModal, setShowLeaveModal] = useState(false)

@@ -485,12 +485,6 @@ export default function ProfileSection({ userData, onUpdateProfile }: { userData
                   <div><p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Last Active</p><p className="text-sm font-bold text-gray-900">{localUser.last_active ? format(new Date(localUser.last_active), 'MMM d, yyyy') : 'Recently'}</p></div>
                 </div>
                 
-                {localUser.access_level !== undefined && (
-                  <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-50 transition-colors">
-                    <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 shrink-0"><Key className="w-4 h-4" /></div>
-                    <div><p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Access Level</p><p className="text-sm font-bold text-gray-900">Level {localUser.access_level}</p></div>
-                  </div>
-                )}
 
                 {(localUser as any).epf_number && (
                   <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-50 transition-colors">

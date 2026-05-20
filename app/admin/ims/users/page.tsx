@@ -135,9 +135,8 @@ export default function IMSUsersPage() {
 
   useEffect(() => { loadData() }, [loadData])
 
-  const isAdmin = currentUser?.role === "admin" || currentUser?.role === "super_admin" || currentUser?.role === "hr_officer" || currentUser?.permissions?.includes("ims_users")
-  const canGrantPermissions = currentUser?.role === "admin" || currentUser?.role === "super_admin"
-
+  const isAdmin = currentUser ? hasPermission(currentUser.role as UserRole, currentUser.permissions, 'ims_users') : false;
+  const canGrantPermissions = isAdmin;
   // Create form validation errors
   const createErrors: Record<string, string> = {}
   if (createTouched.name && !createForm.name.trim()) {
