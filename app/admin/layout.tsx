@@ -47,9 +47,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const isImsPage = pathname.startsWith('/admin/ims')
   // Only dept dashboards with their OWN built-in sidebars render full-page
   const isFullPageIms = pathname.match(/^\/admin\/ims(\/(finance|hr|academic|marketing|it))?$/)
+  // Certificate & transcript editors also have their own sidebar layout
+  const isCertEditor = pathname.match(/^\/admin\/certificates\/(certificate|transcript)\//)
 
-  if (isFullPageIms) {
-    return <div className="bg-gray-50 min-h-screen">{children}</div>
+  if (isFullPageIms || isCertEditor) {
+    return <div className="bg-gray-50 min-h-screen print:bg-white print:p-0">{children}</div>
   }
 
   return (

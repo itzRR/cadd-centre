@@ -56,7 +56,27 @@ export async function updateCourse(id: string, updates: Partial<{
 }
 
 export async function deleteCourse(id: string) {
-  const { error } = await supabase.from('courses').delete().eq('id', id)
+  // Check for dependent batches
+  const { count: batchCount } = await supabase
+    .from('batches').select('*', { count: 'exact', head: true })
+    .eq('course_id', id).eq('is_active', true)
+  if (batchCount && batchCount > 0) {
+    throw new Error(`Cannot delete this course — it has ${batchCount} active batch${batchCount > 1 ? 'es' : ''}. Please deactivate or reassign them first.`)
+  }
+
+  // Check for active enrollments
+  const { count: enrollCount } = await supabase
+    .from('enrollments').select('*', { count: 'exact', head: true })
+    .eq('course_id', id).in('status', ['confirmed', 'pending'])
+  if (enrollCount && enrollCount > 0) {
+    throw new Error(`Cannot delete this course — it has ${enrollCount} active enrollment${enrollCount > 1 ? 's' : ''}. Please complete or cancel them first.`)
+  }
+
+  // Soft delete instead of hard delete to avoid FK constraint violations
+  const { error } = await supabase
+    .from('courses')
+    .update({ is_active: false, deleted_at: new Date().toISOString() })
+    .eq('id', id)
   if (error) throw error
 }
 

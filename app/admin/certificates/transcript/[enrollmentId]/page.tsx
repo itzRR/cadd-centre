@@ -150,7 +150,7 @@ export default function TranscriptPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row print:block font-sans">
+    <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row print:block print:bg-white font-sans">
       
       {/* ── SETTINGS SIDEBAR (HIDDEN ON PRINT) ── */}
       <div className="w-full md:w-80 bg-white border-r border-gray-200 p-6 overflow-y-auto print:hidden shadow-lg z-10 shrink-0 h-screen sticky top-0 custom-scrollbar">
@@ -217,13 +217,13 @@ export default function TranscriptPage() {
               <p className="text-xs font-bold text-gray-500 uppercase">Left Signature</p>
               <input type="text" value={settings.signature1Name} onChange={e => setSettings(p => ({ ...p, signature1Name: e.target.value }))} placeholder="Name" className="w-full border rounded-lg px-3 py-1.5 text-sm" />
               <input type="text" value={settings.signature1Title} onChange={e => setSettings(p => ({ ...p, signature1Title: e.target.value }))} placeholder="Title" className="w-full border rounded-lg px-3 py-1.5 text-sm" />
-              <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'signature1Image')} className="text-[10px] w-full" />
+              <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'signature1Image')} className="text-xs w-full text-gray-500 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100" />
             </div>
             <div className="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-3">
               <p className="text-xs font-bold text-gray-500 uppercase">Right Signature</p>
               <input type="text" value={settings.signature2Name} onChange={e => setSettings(p => ({ ...p, signature2Name: e.target.value }))} placeholder="Name" className="w-full border rounded-lg px-3 py-1.5 text-sm" />
               <input type="text" value={settings.signature2Title} onChange={e => setSettings(p => ({ ...p, signature2Title: e.target.value }))} placeholder="Title" className="w-full border rounded-lg px-3 py-1.5 text-sm" />
-              <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'signature2Image')} className="text-[10px] w-full" />
+              <input type="file" accept="image/*" onChange={e => handleImageUpload(e, 'signature2Image')} className="text-xs w-full text-gray-500 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100" />
             </div>
           </div>
         </div>
@@ -236,8 +236,19 @@ export default function TranscriptPage() {
       </div>
 
       {/* ── PRINT AREA ── */}
-      <div className="flex-1 overflow-y-auto py-10 px-4 print:p-0 print:overflow-visible">
-        <div className="max-w-[210mm] min-h-[297mm] mx-auto bg-white shadow-2xl print:shadow-none relative overflow-hidden">
+      <div className="flex-1 overflow-y-auto py-10 px-4 print:p-0 print:overflow-visible print:bg-white">
+        <style dangerouslySetInnerHTML={{ __html: `
+          @media print {
+            @page { size: A4 portrait; margin: 0; }
+            /* Hide sidebar and all non-print UI */
+            nav, header, aside, .print\\:hidden { display: none !important; }
+            /* Reset all wrapper backgrounds */
+            html, body, #__next, #__next > div { background: white !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; height: auto !important; }
+            /* Only force color-adjust on the transcript itself */
+            .cert-print-area { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+          }
+        `}} />
+        <div className="cert-print-area max-w-[210mm] min-h-[297mm] mx-auto bg-white shadow-2xl print:shadow-none relative overflow-hidden print:mx-0">
           
           {/* Watermark */}
           <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none z-0">
