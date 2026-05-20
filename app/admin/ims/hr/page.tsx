@@ -175,7 +175,7 @@ export default function HRDashboard() {
   // ── Salary CRUD ──
   const handlePayoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!payoutForm.employee_name.trim() || payoutForm.amount <= 0) return toast.error("Name and amount required")
+    if (!payoutForm.user_id || payoutForm.amount <= 0) return toast.error("Employee and amount required")
     try {
       const created = await createHrSalaryPayout({ ...payoutForm, created_by: currentUser?.id })
       setPayouts(prev => [created, ...prev])
@@ -193,7 +193,7 @@ export default function HRDashboard() {
   // ── Performance CRUD ──
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!reviewForm.employee_name.trim()) return toast.error("Employee name required")
+    if (!reviewForm.employee_id) return toast.error("Employee required")
     try {
       const created = await createHrPerformanceReview({ ...reviewForm, reviewed_by: currentUser?.id })
       setReviews(prev => [created, ...prev])
@@ -1217,10 +1217,13 @@ export default function HRDashboard() {
               <form onSubmit={handlePayoutSubmit} className="space-y-3">
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">Employee *</label>
-                  <select required value={payoutForm.employee_name} onChange={e => setPayoutForm(p => ({ ...p, employee_name: e.target.value }))}
+                  <select required value={payoutForm.user_id} onChange={e => {
+                      const emp = employees.find(emp => emp.id === e.target.value);
+                      setPayoutForm(p => ({ ...p, user_id: e.target.value, employee_name: emp ? (emp.full_name || emp.email) : "" }))
+                    }}
                     className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-500">
                     <option value="">Select Employee</option>
-                    {employees.map(e => <option key={e.id} value={e.full_name || e.email}>{e.full_name || e.email}</option>)}
+                    {employees.map(e => <option key={e.id} value={e.id}>{e.full_name || e.email}</option>)}
                   </select>
                 </div>
                 {[['Month (YYYY-MM)', 'month', 'month', payoutForm.month], ['Amount (LKR)', 'amount', 'number', payoutForm.amount], ['Paid On', 'paid_on', 'date', payoutForm.paid_on]].map(([label, key, type, val]) => (
@@ -1259,10 +1262,13 @@ export default function HRDashboard() {
               <form onSubmit={handleReviewSubmit} className="space-y-3">
                 <div>
                   <label className="block text-gray-600 text-sm mb-1">Employee *</label>
-                  <select required value={reviewForm.employee_name} onChange={e => setReviewForm(p => ({ ...p, employee_name: e.target.value }))}
+                  <select required value={reviewForm.employee_id} onChange={e => {
+                      const emp = employees.find(emp => emp.id === e.target.value);
+                      setReviewForm(p => ({ ...p, employee_id: e.target.value, employee_name: emp ? (emp.full_name || emp.email) : "" }))
+                    }}
                     className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-500">
                     <option value="">Select Employee</option>
-                    {employees.map(e => <option key={e.id} value={e.full_name || e.email}>{e.full_name || e.email}</option>)}
+                    {employees.map(e => <option key={e.id} value={e.id}>{e.full_name || e.email}</option>)}
                   </select>
                 </div>
                 <div>
