@@ -106,7 +106,8 @@ export default function HRDashboard() {
   const loadData = useCallback(async () => {
     setLoading(true)
     try {
-      const [lData, pData, rData] = await Promise.all([
+      const [e, lData, pData, rData] = await Promise.all([
+        getAllProfiles(),
         getHrLeaveRequestsAction(),
         getHrSalaryPayoutsAction(),
         getHrPerformanceReviewsAction()
