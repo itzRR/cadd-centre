@@ -52,7 +52,7 @@ export default function AdminMessagesPage() {
                   <p className="text-gray-500">No messages yet</p>
                 </div>
               ) : (
-                <Table>
+                <Table className="whitespace-nowrap">
                   <TableHeader>
                     <TableRow>
                       <TableHead>Status</TableHead>

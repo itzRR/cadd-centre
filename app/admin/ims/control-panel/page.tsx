@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import React from "react"
 import { useState, useEffect, useCallback } from "react"
@@ -386,7 +386,7 @@ export default function IMSControlPanelPage() {
             </h3>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm whitespace-nowrap">
               <thead className="text-xs text-gray-500 uppercase bg-gray-50">
                 <tr>
                   {["User", "Email", "Login Time", "IP Address", "Device"].map(h => (

@@ -155,7 +155,7 @@ export default function ReportsPage() {
             <div className="h-32 bg-gray-100 rounded animate-pulse" />
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm whitespace-nowrap">
                 <thead>
                   <tr className="border-b bg-gray-50">
                     <th className="text-left py-3 px-4">Student</th>
@@ -188,7 +188,7 @@ export default function ReportsPage() {
         <CardHeader><CardTitle>Course-wise Performance Report</CardTitle></CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm whitespace-nowrap">
               <thead>
                 <tr className="border-b bg-gray-50">
                   <th className="text-left py-3 px-4">Course</th>
@@ -220,7 +220,7 @@ export default function ReportsPage() {
         <CardHeader><CardTitle>Attendance Report</CardTitle></CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm whitespace-nowrap">
               <thead>
                 <tr className="border-b bg-gray-50">
                   <th className="text-left py-3 px-4">Batch</th>
@@ -250,7 +250,7 @@ export default function ReportsPage() {
         <CardHeader><CardTitle>Certification Report</CardTitle></CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm whitespace-nowrap">
               <thead>
                 <tr className="border-b bg-gray-50">
                   <th className="text-left py-3 px-4">Course</th>
