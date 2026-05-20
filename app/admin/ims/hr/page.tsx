@@ -81,7 +81,7 @@ export default function HRDashboard() {
   const emptyPayout = { user_id: "", employee_name: "", month: format(new Date(), "yyyy-MM"), amount: 0, paid_on: format(new Date(), "yyyy-MM-dd"), notes: "", created_by: null }
   const [payoutForm, setPayoutForm] = useState(emptyPayout)
 
-  const emptyReview: HrPerformanceReview = { id: "", employee_id: "", employee_name: "", quarter: `Q${Math.ceil((new Date().getMonth() + 1) / 3)} ${new Date().getFullYear()}`, score: 8, notes: "", reviewed_by: null }
+  const emptyReview = { employee_id: "", employee_name: "", quarter: `Q${Math.ceil((new Date().getMonth() + 1) / 3)} ${new Date().getFullYear()}`, score: 8, notes: "", reviewed_by: null }
   const [reviewForm, setReviewForm] = useState(emptyReview)
 
   const emptyUserForm = { 
@@ -1189,8 +1189,14 @@ export default function HRDashboard() {
                 {isHead && (
                   <div>
                     <label className="block text-gray-600 text-sm mb-1">Employee Name *</label>
-                    <input required value={leaveForm.employee_name} onChange={e => setLeaveForm(p => ({ ...p, employee_name: e.target.value }))}
-                      className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-500" />
+                    <select required value={leaveForm.user_id} onChange={e => {
+                        const emp = employees.find(emp => emp.id === e.target.value);
+                        setLeaveForm(p => ({ ...p, user_id: e.target.value, employee_name: emp ? (emp.full_name || emp.email) : "" }))
+                      }}
+                      className="w-full bg-gray-50 text-gray-900 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-500">
+                      <option value="">Select Employee</option>
+                      {employees.map(e => <option key={e.id} value={e.id}>{e.full_name || e.email}</option>)}
+                    </select>
                   </div>
                 )}
                 {!isHead && (
@@ -1223,7 +1229,7 @@ export default function HRDashboard() {
                 </div>
                 <div className="flex gap-3 pt-2">
                   <button type="button" onClick={() => setShowLeaveModal(false)} className="flex-1 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl border border-gray-200">Cancel</button>
-                  <button type="submit" onClick={() => !isHead && setLeaveForm(p => ({ ...p, employee_name: currentUser?.name }))}
+                  <button type="submit" onClick={() => !isHead && setLeaveForm(p => ({ ...p, employee_name: currentUser?.name, user_id: currentUser?.id }))}
                     className="flex-1 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-gray-900 rounded-xl font-semibold">Submit</button>
                 </div>
               </form>
